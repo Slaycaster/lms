@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 
-class Company extends Model
+class Borrower extends Model
 {
     use CrudTrait;
 
@@ -14,12 +14,11 @@ class Company extends Model
 	| GLOBAL VARIABLES
 	|--------------------------------------------------------------------------
 	*/
-
-	protected $table = 'companies';
+	protected $table = 'borrowers';
 	protected $primaryKey = 'id';
 	// protected $guarded = [];
 	protected $hidden = ['id', 'created_at', 'updated_at'];
-	protected $fillable = ['company_name', 'company_code', 'company_address'];
+	protected $fillable = ['borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_home_address', 'borrower_email', 'borrower_civil_status', 'borrower_birth_date', 'borrower_employment_date', 'borrower_assignment_date', 'borrower_spouse_name', 'borrower_no_of_children', 'company_id'];
 	public $timestamps = true;
 
 	/*
@@ -34,15 +33,16 @@ class Company extends Model
 	|--------------------------------------------------------------------------
 	*/
 
+	public function company()
+	{
+		return $this->belongsTo('App\Company', 'company_id', 'id');
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| SCOPES
 	|--------------------------------------------------------------------------
 	*/
-	public function borrowers()
-	{
-		return $this->hasMany('App\Borrower', 'company_id');
-	}
 
 	/*
 	|--------------------------------------------------------------------------

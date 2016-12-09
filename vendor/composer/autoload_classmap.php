@@ -6,7 +6,16 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'CreateBorrowerCredentialsTable' => $baseDir . '/database/migrations/2016_12_09_064047_create_borrower_credentials_table.php',
+    'CreateBorrowersTable' => $baseDir . '/database/migrations/2016_12_08_051046_create_borrowers_table.php',
+    'CreateCompaniesTable' => $baseDir . '/database/migrations/2016_12_05_065435_create_companies_table.php',
+    'CreateLoanApplicationsTable' => $baseDir . '/database/migrations/2016_12_09_064630_create_loan_applications_table.php',
+    'CreateLoanInterestsTable' => $baseDir . '/database/migrations/2016_12_09_064226_create_loan_interests_table.php',
+    'CreateLoanPaymentTermsTable' => $baseDir . '/database/migrations/2016_12_09_082930_create_loan_payment_terms_table.php',
+    'CreateLoanPaymentsTable' => $baseDir . '/database/migrations/2016_12_09_065035_create_loan_payments_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+    'CreatePaymentTermsTable' => $baseDir . '/database/migrations/2016_12_09_064506_create_payment_terms_table.php',
+    'CreatePermissionTables' => $baseDir . '/database/migrations/2016_05_10_130540_create_permission_tables.php',
     'CreateRevisionsTable' => $vendorDir . '/venturecraft/revisionable/src/migrations/2013_04_09_062329_create_revisions_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',

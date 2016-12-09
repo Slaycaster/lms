@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 
-class Company extends Model
+class LoanInterest extends Model
 {
     use CrudTrait;
 
@@ -15,11 +15,11 @@ class Company extends Model
 	|--------------------------------------------------------------------------
 	*/
 
-	protected $table = 'companies';
+	protected $table = 'loan_interests';
 	protected $primaryKey = 'id';
 	// protected $guarded = [];
 	protected $hidden = ['id', 'created_at', 'updated_at'];
-	protected $fillable = ['company_name', 'company_code', 'company_address'];
+	protected $fillable = ['loan_interest_name', 'loan_interest_rate'];
 	public $timestamps = true;
 
 	/*
@@ -39,10 +39,6 @@ class Company extends Model
 	| SCOPES
 	|--------------------------------------------------------------------------
 	*/
-	public function borrowers()
-	{
-		return $this->hasMany('App\Borrower', 'company_id');
-	}
 
 	/*
 	|--------------------------------------------------------------------------

@@ -31,6 +31,7 @@
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>
 
           <li><a href="{{ url('admin/companies') }}"><i class="fa fa-building"></i> <span>Companies</span></a></li>
+          <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-user-plus"></i> <span>Loan Borrowers</span></a></li>
 
 
           <!-- ======================================= -->
