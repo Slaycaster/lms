@@ -28,9 +28,16 @@
               <li><a href="{{ url('admin/permission') }}"><i class="fa fa-key"></i> <span>Permissions</span></a></li>
             </ul>
           </li>
-          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>
+          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}
+          </span></a></li>
+          <li><a href="{{ url('admin/companies') }}"><i class="fa fa-file-text-o"></i> <span>Loan Application</span></a></li>
 
+          <li class="header">MAINTENANCE</li>
           <li><a href="{{ url('admin/companies') }}"><i class="fa fa-building"></i> <span>Companies</span></a></li>
+          <li><a href="{{ url('admin/loan_interests') }}"><i class="fa fa-percent"></i> <span>Loan Interests</span></a></li>
+          <li><a href="{{ url('admin/loan_payment_terms') }}"><i class="fa fa-industry"></i> <span>Loan Payment Terms</span></a></li>
+
+          <li class="header">MASTER ENTRY</li>
           <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-user-plus"></i> <span>Loan Borrowers</span></a></li>
 
 

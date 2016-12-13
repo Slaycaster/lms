@@ -20,7 +20,7 @@ class LoanInterestCrudController extends CrudController
 
     	$this->crud->setModel('App\LoanInterest');
     	$this->crud->setRoute('admin/loan_interests');
-    	$this->crud->setEntityNameStrings('loan_interest', 'loan_interests');
+    	$this->crud->setEntityNameStrings('Loan Interest', 'Loan Interests');
 
     	$this->crud->setColumns
     	(

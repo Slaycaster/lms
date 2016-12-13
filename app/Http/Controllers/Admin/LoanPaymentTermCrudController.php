@@ -12,7 +12,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\LoanPaymentTermStoreRequest as LoanPaymentTermStoreRequest;
 use App\Http\Requests\LoanPaymentTermUpdateRequest as LoanPaymentTermUpdateRequest;
 
-class LoanInterestCrudController extends CrudController
+class LoanPaymentTermCrudController extends CrudController
 {
     public function __construct()
     {
@@ -20,7 +20,7 @@ class LoanInterestCrudController extends CrudController
 
     	$this->crud->setModel('App\LoanPaymentTerm');
     	$this->crud->setRoute('admin/loan_payment_terms');
-    	$this->crud->setEntityNameStrings('loan_payment_term', 'loan_payment_terms');
+    	$this->crud->setEntityNameStrings('Payment Term', 'Payment Terms');
 
     	$this->crud->setColumns
     	(

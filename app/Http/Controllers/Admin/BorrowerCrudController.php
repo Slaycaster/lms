@@ -98,6 +98,19 @@ class BorrowerCrudController extends CrudController
     		]
     	);
 
+        $this->crud->addField
+        (
+            [
+                //Relationship - Company
+                'label' => 'Company',
+                'type' => 'select',
+                'name' => 'company_id',
+                'entity' => 'company',
+                'attribute' => 'company_name',
+                'model' => 'App\Company'
+            ]
+        );
+
     	$this->crud->addField
     	(
     		[
@@ -194,7 +207,7 @@ class BorrowerCrudController extends CrudController
     	(
     		[
     			'name' => 'borrower_no_of_children',
-    			'label' => 'No. of children (if any)'
+    			'label' => 'No. of children (if any)',
     			'type' => 'number'
     		]
     	);
