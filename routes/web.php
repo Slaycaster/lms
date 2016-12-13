@@ -23,6 +23,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     CRUD::resource('borrowers', 'Admin\BorrowerCrudController');
     CRUD::resource('loan_interests', 'Admin\LoanInterestCrudController');
     CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
-  
+    Route::get('loan_applications', 'LoanApplicationController@index');
+ 	Route::get('borrowers_data', 'LoanApplicationController@borrowers'); 
   // [...] other routes
 });

@@ -30,7 +30,11 @@
           </li>
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}
           </span></a></li>
-          <li><a href="{{ url('admin/companies') }}"><i class="fa fa-file-text-o"></i> <span>Loan Application</span></a></li>
+
+          <li class="header">LOAN MANAGEMENT</li>
+          <li><a href="{{ url('admin/loan_applications') }}"><i class="fa fa-file-text-o"></i> <span>Loan Application</span></a></li>
+          <li><a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span></a></li>
+          <li><a href="#"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
 
           <li class="header">MAINTENANCE</li>
           <li><a href="{{ url('admin/companies') }}"><i class="fa fa-building"></i> <span>Companies</span></a></li>
