@@ -47,7 +47,31 @@ class CompanyCrudController extends CrudController
     					'name' => 'company_address',
     					'label' => 'Address'
     				]
-    			)
+    			),
+
+                $this->crud->addColumn
+                (
+                    [
+                        'name' => 'company_contact_no',
+                        'label' => 'Contact #'
+                    ]
+                ),
+
+                $this->crud->addColumn
+                (
+                    [
+                        'name' => 'company_email',
+                        'label' => 'E-mail'
+                    ]
+                ),
+
+                $this->crud->addColumn
+                (
+                    [
+                        'name' => 'company_website'.
+                        'label' => 'Website'
+                    ]
+                )
     		]
     	);
 
@@ -80,6 +104,36 @@ class CompanyCrudController extends CrudController
     			'type' => 'address'
     		]
     	);
+
+        $this->crud->addField
+        (
+            [
+                //Text
+                'name' => 'company_contact_no',
+                'label' => 'Contact #',
+                'type' => 'text'
+            ]
+        );
+
+        $this->crud->addField
+        (
+            [
+                //Text
+                'name' => 'company_email'.
+                'label' => 'E-mail',
+                'type' => 'text'
+            ]
+        );
+
+        $this->crud->addField
+        (
+            [
+                //Text
+                'name' => 'company_website',
+                'label' => 'Website',
+                'type' => 'text'
+            ]
+        );
     }
 
     public function store(CompanyStoreRequest $request)

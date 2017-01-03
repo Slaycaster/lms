@@ -33,7 +33,15 @@
 
           <li class="header">LOAN MANAGEMENT</li>
           <li><a href="{{ url('admin/loan_applications') }}"><i class="fa fa-file-text-o"></i> <span>Loan Application</span></a></li>
-          <li><a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span></a></li>
+
+          <li class="treeview">
+            <a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span> <i class="fa fa-angle-left pull-right"></i></a>
+            <ul class="treeview-menu">
+              <li><a href="{{ url('admin/loan_applications/pending')}}"> <i class="fa fa-circle-o"></i> <span>Pending</span> </a></li>
+              <li><a href="{{ url('admin/loan_applications/declined')}}"> <i class="fa fa-window-close-o"></i> <span>Declined</span></a></li>
+            </ul>
+          </li>
+        
           <li><a href="#"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
 
           <li class="header">MAINTENANCE</li>

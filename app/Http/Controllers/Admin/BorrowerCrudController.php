@@ -101,6 +101,17 @@ class BorrowerCrudController extends CrudController
         $this->crud->addField
         (
             [
+                //Select_from_array
+                'name' => 'borrower_status',
+                'label' => 'Type',
+                'type' => 'select_from_array',
+                'options' => ['Active' => 'Active', 'Resigned' => 'Resigned']
+            ]
+        );
+
+        $this->crud->addField
+        (
+            [
                 //Relationship - Company
                 'label' => 'Company',
                 'type' => 'select',
@@ -193,6 +204,15 @@ class BorrowerCrudController extends CrudController
     			'type' => 'date'
     		]
     	);
+
+        $this->crud->addField
+        (
+            [
+                'name' => 'borrower_resignation_date',
+                'label' => 'Resignation Date',
+                'type' => 'date'
+            ]
+        );
 
     	$this->crud->addField
     	(

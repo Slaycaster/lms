@@ -14,14 +14,17 @@
 
 @section('content')
 	<div class="row">
-    <div class="col-md-6">
+  <form action="{{url('admin/loan_applications/save')}}" method="POST">
+    {{ csrf_field() }}
+    <div class="col-md-8">
       <div class="panel panel-default">
         <div class="panel-heading">
-          Select Loan Borrower
+          Select
         </div>
 
         <div class="panel-body">
-          <table class="table table-bordered table-responsive" id="users-table">
+          <h4>Choose the Borrower</h4>
+          <table class="display responsive no-wrap" id="users-table" width="100%">
             <thead>
               <tr>
                 <th>Type</th>
@@ -34,17 +37,56 @@
               </tr>
             </thead>
           </table>
+          <hr>
+          <!-- Co-Maker Form Group -->
+          <div class="form-group">
+            <h4>Choose the first Co-Maker</h4>
+            <div class="input-group">
+              <table class="table table-bordered" id="comaker1-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Employment Date</th>
+                    <th>Assignment Date</th>
+                    <th>Select</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+          <hr>
+          <!-- Co-Maker Form Group -->
+          <div class="form-group">
+            <h4>Choose the second Co-Maker</h4>
+            <div class="input-group">
+              <table class="table table-bordered" id="comaker2-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Employment Date</th>
+                    <th>Assignment Date</th>
+                    <th>Select</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-		<div class="col-md-6">
-			<div class="panel panel-primary">
+    <div class="col-md-4">
+      <div class="panel panel-primary">
         <div class="panel-heading">
           Loan Application Details
         </div>
 
         <div class="panel-body">
-          <form>
               <!-- Date & Time Form Group -->
               <div class="form-group">
                   <label for="time_date" class="control-label">
@@ -74,33 +116,9 @@
                 <textarea name="purpose" class="form-control"></textarea>
               </div>
 
-
-              <!-- Co-Maker Row Group -->
-              <div class="row">
-                <div class="col-xs-6 col-sm-4">
-                    <!-- Co-Maker Form Group -->
-                    <div class="form-group">
-                      <label for="comaker1" class="control-label">Co-Maker 1</label>
-                      <div class="input-group">
-                        <input type="text" name="comaker1" class="form-control">
-                      </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-6 col-sm-4">
-                    <!-- Co-Maker Form Group -->
-                    <div class="form-group">
-                      <label for="comaker2" class="control-label">Co-Maker 2</label>
-                      <div class="input-group">
-                        <input type="text" name="comaker2" class="form-control">
-                      </div>
-                    </div>
-                </div>
-              </div>
-
               <!-- Payment Terms x Loan Interest Row Group -->
               <div class="row">
-                <div class="col-xs-6 col-sm-4">
+                <div class="col-md-9 col-sm-5">
                     <!-- Payment Terms Form Group -->
                     <div class="form-group">
                       <label for="payment_term_id" class="control-label">Payment Terms</label>
@@ -110,7 +128,7 @@
                     </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-4">
+                <div class="col-xs-9 col-sm-5">
                     <!-- Loan Interest Form Group -->
                     <div class="form-group">
                       <label for="loan_interest_id" class="control-label">Loan Interest</label>
@@ -120,6 +138,27 @@
                     </div>              
                 </div>                
               </div>
+
+                  <!-- Filing Fees Form Group -->
+                  <div class="form-group">
+                    <label for="filing_fee" class="control-label">Filing Fee</label>
+                    <div class="input-group">
+                      <span class="input-group-addon">₱</span>
+                      <input type="text" name="filing_fee" class="form-control">
+                      <span class="input-group-addon">.00</span>
+                    </div>
+                  </div>
+
+
+                  <!-- Service Fee From Group -->
+                  <div class="form-group">
+                    <label for="service_fee" class="control-label">Service Fee</label>
+                    <div class="input-group">
+                      <span class="input-group-addon">₱</span>
+                      <input type="text" name="service_fee" class="form-control">
+                      <span class="input-group-addon">.00</span>
+                    </div>
+                  </div>
 
               <button type="submit" class="btn btn-block btn-primary btn-sm">Submit Loan Application</button>
           </form>
@@ -131,9 +170,50 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $('#users-table').DataTable({
+        responsive: true,
         processing: true,
         serverSide: true,
         ajax: '{!! url('admin/borrowers_data') !!}',
+        columns: [
+          {data: 0, name: 'borrower_type'},
+          {data: 1, name: 'borrower_last_name'},
+          {data: 2, name: 'borrower_first_name'},
+          {data: 3, name: 'borrower_middle_name'},
+          {data: 4, name: 'borrower_employment_date'},
+          {data: 5, name: 'borrower_assignment_date'},
+          {data: 6, name: 'Actions', orderable: false, searchable: false}
+        ]
+      });
+    });
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#comaker1-table').DataTable({
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        ajax: '{!! url('admin/comaker1_data') !!}',
+        columns: [
+          {data: 0, name: 'borrower_type'},
+          {data: 1, name: 'borrower_last_name'},
+          {data: 2, name: 'borrower_first_name'},
+          {data: 3, name: 'borrower_middle_name'},
+          {data: 4, name: 'borrower_employment_date'},
+          {data: 5, name: 'borrower_assignment_date'},
+          {data: 6, name: 'Actions', orderable: false, searchable: false}
+        ]
+      });
+    });
+  </script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#comaker2-table').DataTable({
+        responsive: true,
+        processing: true,
+        serverSide: true,
+        ajax: '{!! url('admin/comaker2_data') !!}',
         columns: [
           {data: 0, name: 'borrower_type'},
           {data: 1, name: 'borrower_last_name'},

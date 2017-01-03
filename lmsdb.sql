@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.5.2
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 13, 2016 at 05:31 PM
--- Server version: 10.1.13-MariaDB
--- PHP Version: 5.6.23
+-- Host: localhost
+-- Generation Time: Jan 03, 2017 at 08:34 AM
+-- Server version: 10.1.16-MariaDB
+-- PHP Version: 5.6.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `borrowers` (
   `id` int(10) UNSIGNED NOT NULL,
   `borrower_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `borrower_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `borrower_last_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `borrower_first_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `borrower_middle_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -38,6 +39,7 @@ CREATE TABLE `borrowers` (
   `borrower_birth_date` date NOT NULL,
   `borrower_employment_date` date NOT NULL,
   `borrower_assignment_date` date NOT NULL,
+  `borrower_resignation_date` date DEFAULT NULL,
   `borrower_spouse_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `borrower_no_of_children` int(10) UNSIGNED DEFAULT NULL,
   `company_id` int(11) NOT NULL,
@@ -49,8 +51,10 @@ CREATE TABLE `borrowers` (
 -- Dumping data for table `borrowers`
 --
 
-INSERT INTO `borrowers` (`id`, `borrower_type`, `borrower_last_name`, `borrower_first_name`, `borrower_middle_name`, `borrower_home_address`, `borrower_email`, `borrower_civil_status`, `borrower_birth_date`, `borrower_employment_date`, `borrower_assignment_date`, `borrower_spouse_name`, `borrower_no_of_children`, `company_id`, `created_at`, `updated_at`) VALUES
-(1, 'Regular', 'Fernandez', 'Denimar', 'Fajardo', 'Valenzuela City 3S (Karuhatan Branch), Karuhatan, Philippines', 'fdenimar@gmail.com', 'Single', '1995-06-23', '2016-07-01', '2016-07-02', NULL, NULL, 2, '2016-12-11 22:10:42', '2016-12-11 22:10:42');
+INSERT INTO `borrowers` (`id`, `borrower_type`, `borrower_status`, `borrower_last_name`, `borrower_first_name`, `borrower_middle_name`, `borrower_home_address`, `borrower_email`, `borrower_civil_status`, `borrower_birth_date`, `borrower_employment_date`, `borrower_assignment_date`, `borrower_resignation_date`, `borrower_spouse_name`, `borrower_no_of_children`, `company_id`, `created_at`, `updated_at`) VALUES
+(1, 'Regular', 'Active', 'Fernandez', 'Denimar', 'Fajardo', 'Valenzuela City 3S (Karuhatan Branch), Karuhatan, Philippines', 'fdenimar@gmail.com', 'Single', '1995-06-23', '2016-07-01', '2016-07-02', NULL, NULL, NULL, 2, '2016-12-11 22:10:42', '2016-12-11 22:10:42'),
+(2, 'Regular', 'Active', 'De Mesa', 'Luke', NULL, 'Shaw Boulevard, Mandaluyong, Philippines', 'lukevincentdemesa@gmail.com', 'Single', '1995-06-21', '2016-12-21', '2016-12-25', NULL, NULL, NULL, 2, '2016-12-13 18:31:12', '2016-12-13 18:31:12'),
+(3, 'Regular', 'Active', 'Dela Cruz', 'Juan', NULL, 'Camp Crame, Quezon CIty', 'jcdelacruz@gmail.com', 'Single', '1991-03-24', '2016-12-20', '2016-12-22', NULL, NULL, NULL, 2, '2017-01-02 01:40:44', '2017-01-02 01:40:44');
 
 -- --------------------------------------------------------
 
@@ -77,6 +81,9 @@ CREATE TABLE `companies` (
   `company_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `company_code` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `company_address` text COLLATE utf8_unicode_ci NOT NULL,
+  `company_contact_no` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_website` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -85,9 +92,9 @@ CREATE TABLE `companies` (
 -- Dumping data for table `companies`
 --
 
-INSERT INTO `companies` (`id`, `company_name`, `company_code`, `company_address`, `created_at`, `updated_at`) VALUES
-(1, 'Moo Loans, Inc.', 'MLI', 'Alabang-Zapote Road, Muntinlupa, Philippines', '2016-12-11 21:36:15', '2016-12-11 21:36:15'),
-(2, 'i-PROMOTE People Enterprise, Inc.', 'IPPEI', 'Shaw Boulevard, Mandaluyong, Philippines', '2016-12-11 21:36:31', '2016-12-11 21:36:31');
+INSERT INTO `companies` (`id`, `company_name`, `company_code`, `company_address`, `company_contact_no`, `company_email`, `company_website`, `created_at`, `updated_at`) VALUES
+(1, 'Moo Loans, Inc.', 'MLI', 'Alabang-Zapote Road, Muntinlupa, Philippines', NULL, NULL, NULL, '2016-12-11 21:36:15', '2016-12-11 21:36:15'),
+(2, 'i-PROMOTE People Enterprise, Inc.', 'IPPEI', 'Shaw Boulevard, Mandaluyong, Philippines', NULL, NULL, NULL, '2016-12-11 21:36:31', '2016-12-11 21:36:31');
 
 -- --------------------------------------------------------
 
@@ -100,14 +107,24 @@ CREATE TABLE `loan_applications` (
   `loan_application_amount` double NOT NULL,
   `loan_application_purpose` text COLLATE utf8_unicode_ci NOT NULL,
   `loan_application_status` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `loan_application_comaker_name1` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `loan_application_comaker_name2` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `loan_application_filing_fee` double NOT NULL,
+  `loan_application_service_fee` double NOT NULL,
+  `loan_application_remarks` text COLLATE utf8_unicode_ci,
+  `loan_application_comaker_id1` int(11) NOT NULL,
+  `loan_application_comaker_id2` int(11) NOT NULL,
   `loan_borrower_id` int(11) NOT NULL,
   `payment_term_id` int(11) NOT NULL,
   `loan_interest_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `loan_applications`
+--
+
+INSERT INTO `loan_applications` (`id`, `loan_application_amount`, `loan_application_purpose`, `loan_application_status`, `loan_application_filing_fee`, `loan_application_service_fee`, `loan_application_remarks`, `loan_application_comaker_id1`, `loan_application_comaker_id2`, `loan_borrower_id`, `payment_term_id`, `loan_interest_id`, `created_at`, `updated_at`) VALUES
+(1, 25000, 'For my niece''s birthday', 'Declined', 100, 100, 'Too much loan amount', 2, 3, 1, 1, 1, '2017-01-02 01:48:23', '2017-01-02 23:26:36');
 
 -- --------------------------------------------------------
 
@@ -356,7 +373,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Ron Rapanot', 'ronaldrapanot@yahoo.com', '$2y$10$7XLCinSl61mOHsiN5yUPTOX7xKLn9RIcQz66L.LZvKI5ZLl5.qRfq', NULL, '2016-12-11 21:33:09', '2016-12-13 08:27:23');
+(1, 'Ron Rapanot', 'ronaldrapanot@yahoo.com', '$2y$10$7XLCinSl61mOHsiN5yUPTOX7xKLn9RIcQz66L.LZvKI5ZLl5.qRfq', 'YyKJUwecfx9QmcLqxvK9ByFJxHBOZlib0eE48RuBA7DzilwqK5F9QFQ40cTO', '2016-12-11 21:33:09', '2017-01-02 01:36:15');
 
 --
 -- Indexes for dumped tables
@@ -473,7 +490,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `borrowers`
 --
 ALTER TABLE `borrowers`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `borrower_credentials`
 --
@@ -488,7 +505,7 @@ ALTER TABLE `companies`
 -- AUTO_INCREMENT for table `loan_applications`
 --
 ALTER TABLE `loan_applications`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `loan_interests`
 --

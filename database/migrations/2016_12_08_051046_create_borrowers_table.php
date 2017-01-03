@@ -16,6 +16,7 @@ class CreateBorrowersTable extends Migration
         Schema::create('borrowers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('borrower_type');
+            $table->string('borrower_status');
             $table->string('borrower_last_name');
             $table->string('borrower_first_name');
             $table->string('borrower_middle_name')->nullable();
@@ -25,6 +26,7 @@ class CreateBorrowersTable extends Migration
             $table->date('borrower_birth_date');
             $table->date('borrower_employment_date');
             $table->date('borrower_assignment_date');
+            $table->date('borrower_resignation_date')->nullable();
             $table->string('borrower_spouse_name')->nullable();
             $table->unsignedInteger('borrower_no_of_children')->nullable();
             $table->integer('company_id');

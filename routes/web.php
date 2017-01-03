@@ -24,6 +24,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     CRUD::resource('loan_interests', 'Admin\LoanInterestCrudController');
     CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
     Route::get('loan_applications', 'LoanApplicationController@index');
- 	Route::get('borrowers_data', 'LoanApplicationController@borrowers'); 
+    Route::get('loan_applications/details/{id}', 'LoanApplicationController@details');
+    Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
+    Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
+    Route::post('loan_applications/save', 'LoanApplicationController@save');
+    Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
+ 	Route::get('borrowers_data', 'LoanApplicationController@borrowers');
+ 	Route::get('comaker1_data', 'LoanApplicationController@comaker1');
+ 	Route::get('comaker2_data', 'LoanApplicationController@comaker2'); 
   // [...] other routes
 });
+
+Route::get('loan_applications/pending/data', 'LoanApplicationController@pending_data');
+Route::get('loan_applications/declined/data', 'LoanApplicationController@declined_data');
