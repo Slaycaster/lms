@@ -2,6 +2,7 @@
 
 namespace Spatie\Permission\Traits;
 
+use Illuminate\Support\Collection;
 use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\Contracts\Role;
 
@@ -37,6 +38,42 @@ trait HasRoles
     }
 
     /**
+     * Scope the user query to certain roles only.
+     *
+     * @param string|array|Role|\Illuminate\Support\Collection $roles
+     *
+     * @return bool
+     */
+    public function scopeRole($query, $roles)
+    {
+        if ($roles instanceof Collection) {
+            $roles = $roles->toArray();
+        }
+
+        if (!is_array($roles)) {
+            $roles = [$roles];
+        }
+
+        $roles = array_map(function ($role) {
+            if ($role instanceof Role) {
+                return $role;
+            }
+
+            return app(Role::class)->findByName($role);
+        }, $roles);
+
+        return $query->whereHas('roles', function ($query) use ($roles) {
+            $query->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->orWhere('id', $role->id);
+                }
+            });
+        });
+
+        return $query;
+    }
+
+    /**
      * Assign the given role to the user.
      *
      * @param array|string|\Spatie\Permission\Models\Role ...$roles
@@ -51,7 +88,6 @@ trait HasRoles
                 return $this->getStoredRole($role);
             })
             ->all();
-
 
         $this->roles()->saveMany($roles);
 

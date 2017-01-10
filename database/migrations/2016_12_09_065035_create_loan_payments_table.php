@@ -16,6 +16,7 @@ class CreateLoanPaymentsTable extends Migration
         Schema::create('loan_payments', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('loan_application_id');
+            $table->double('loan_payment_amount');
             $table->text('remarks');
             $table->timestamps();
         });

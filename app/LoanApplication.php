@@ -55,6 +55,11 @@ class LoanApplication extends Model
 		return $this->belongsTo('App\Borrower', 'loan_application_comaker_id2', 'id');
 	}
 
+	public function loan_payments()
+	{
+		return $this->hasMany('App\LoanPayment', 'loan_application_id');
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| SCOPES

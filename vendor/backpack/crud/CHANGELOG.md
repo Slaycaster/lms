@@ -20,6 +20,41 @@ All Notable changes to `Backpack CRUD` will be documented in this file
 - Nothing
 
 
+
+## [3.1.50] - 2017-01-08
+
+### Added
+- Chinese (Traditional) translation, thanks to [Isaac Kwan](https://github.com/isaackwan);
+- You can now create a CRUD field to overwrite the primary key, thanks to [Isaac Kwan](https://github.com/isaackwan);
+
+### Fixed
+- Escaped table name for ENUM column types, so reserved PHP/MySQL names can also be used for table names; Fixes #261;
+- CrudTrait's isColumnNullable() should now work for multiple-database systems, by getting the connection type automatically;
+- Can use DB prefixed tables in CrudTrait's isColumnNullable(); fixes #300;
+- Radio field type could not be used inside Settings; Now it can;
+
+
+## [3.1.49] - 2017-01-08
+
+### Fixed
+- select_from_array field triggered an "Undefined index: value" error; fixes #312 thanks to [Chris Thompson](https://christhompsontldr.com/);
+
+
+## [3.1.48] - 2016-12-14
+
+### Fixed
+- Prevent double-json-encoding on complicated field types, when using attribute casting; Fixes #259;
+
+
+## [3.1.47] - 2016-12-14
+
+### Fixed
+- Don't mutate date/datetime if they are empty. It will default to now;
+- select_from_array has a new option: "allows_multiple";
+- syncPivot is now done before saving the main entity in Update::edit();
+- added beforeColumn(), afterColumn(), beforeField() and afterField() methods to more easily reorder fields and columns - big up to [Ben Sutter](https://github.com/b8ne) for this feature;
+
+
 ## [3.1.46] - 2016-12-13
 
 ### Fixed

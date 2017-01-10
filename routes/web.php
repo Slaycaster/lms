@@ -37,3 +37,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 
 Route::get('loan_applications/pending/data', 'LoanApplicationController@pending_data');
 Route::get('loan_applications/declined/data', 'LoanApplicationController@declined_data');
+Route::get('loan_payments/applications', 'LoanPaymentController@approved_data');

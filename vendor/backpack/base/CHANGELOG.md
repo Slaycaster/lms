@@ -22,6 +22,47 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - Nothing
 
 
+## [0.7.14] - 2017-01-08
+
+### Fixed
+- Collapsed sidebar alignment issue; Fixes #77;
+
+
+
+## [0.7.13] - 2017-01-08
+
+### Fixed
+- Developers can now change the "users" table name without changing anything else (other than the table used on the User model); fixes #70;
+
+
+## [0.7.12] - 2017-01-08
+
+### Added
+- Dutch translation, thanks to [Stan Daniëls](https://github.com/standaniels);
+
+### Fixed
+- Auth routes can now be easily overwritten, wether the admin prefix was specified or not, thanks to [Pavol Tanuška](https://github.com/pavoltanuska);
+- Sidebar user placeholder image now works for non-utf-8-character names too, thanks to [ozeranskiy](https://github.com/ozeranskiy);
+
+
+## [0.7.11] - 2016-12-21
+
+### Fixed
+- only load the generators if the classes exist;
+
+
+## [0.7.10] - 2016-12-21
+
+### Added
+- laracasts/generators require-dev dependency;
+
+
+## [0.7.9] - 2016-12-21
+
+### Added
+- backpack/generators require-dev dependency;
+
+
 ## [0.7.8] - 2016-12-13
 
 ### Added

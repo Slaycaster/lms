@@ -38,6 +38,11 @@ class Borrower extends Model
 		return $this->belongsTo('App\Company', 'company_id', 'id');
 	}
 
+	public function loan_applications()
+	{
+		return $this->hasMany('App\LoanApplication', 'borrower_id');
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| SCOPES
