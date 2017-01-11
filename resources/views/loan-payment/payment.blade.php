@@ -58,6 +58,8 @@
 						/*==================================================================
 								Check if already paid for the month. NO ADVANCING
 						====================================================================*/
+
+						
 						foreach($key[0]->loan_payments as $payment_history)
 						{
 							$payment_history_date = date('M Y', strtotime($payment_history->created_at));
