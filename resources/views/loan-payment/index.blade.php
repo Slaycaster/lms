@@ -28,9 +28,9 @@
 			                <th>First Name</th>
 			                <th>Company</th>
 			                <th>Amount</th>
-			                <th>Payment Terms</th>
-			                <th>Interest</th>
 			                <th>Total Paid</th>
+			                <th>Interest</th>
+			                <th>Payment Terms</th>
 			                <th>Actions</th>
 			              </tr>
 			        	</thead>
@@ -46,15 +46,15 @@
 		      $('#users-table').DataTable({
 		        processing: true,
 		        serverSide: true,
-		        ajax: '{!! url('loan_applications/pending/data') !!}',
+		        ajax: '{!! url('loan_payments/applications') !!}',
 		        columns: [
 		          {data: '13.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
 		          {data: '13.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
 		          {data: '13.company.company_code', name: 'loan_borrower.company.company_name'},
 		          {data: '0', name: 'loan_applications.loan_application_amount'},
+		          {data: '16', name: 'loan_payments', searchable: false},
 		          {data: '15.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
 		          {data: '14.loan_interest_name', name: 'loan_interest.loan_interest_name'},
-		          {data: '16', name: 'loan_payments', searchable:false},
 		          {data: '17', name: 'Actions', orderable: false, searchable: false}
 		        ]
 		      });

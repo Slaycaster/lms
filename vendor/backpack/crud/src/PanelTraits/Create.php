@@ -19,10 +19,8 @@ trait Create
      */
     public function create($data)
     {
-        $data = $this->decodeJsonCastedAttributes($data, 'create');
-        $data = $this->compactFakeFields($data, 'create');
-
-        $item = $this->model->create($data);
+        $values_to_store = $this->compactFakeFields($data, 'create');
+        $item = $this->model->create($values_to_store);
 
         // if there are any relationships available, also sync those
         $this->syncPivot($item, $data);

@@ -13,7 +13,15 @@ trait FakeColumns
         $fake_field_columns_to_encode = [];
 
         // get the right fields according to the form type (create/update)
-        $fields = $this->getFields($form);
+        switch (strtolower($form)) {
+            case 'update':
+                $fields = $this->update_fields;
+                break;
+
+            default:
+                $fields = $this->create_fields;
+                break;
+        }
 
         foreach ($fields as $k => $field) {
             // if it's a fake field

@@ -23,12 +23,26 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     CRUD::resource('borrowers', 'Admin\BorrowerCrudController');
     CRUD::resource('loan_interests', 'Admin\LoanInterestCrudController');
     CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
+
+    /*=============================================
+                    Loan Application
+    ===============================================*/
     Route::get('loan_applications', 'LoanApplicationController@index');
     Route::get('loan_applications/details/{id}', 'LoanApplicationController@details');
     Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
     Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
     Route::post('loan_applications/save', 'LoanApplicationController@save');
     Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
+
+    /*==============================================
+                      Loan Payment
+    ================================================*/
+    Route::get('loan_payments', 'LoanPaymentController@index');
+    Route::get('loan_payments/{id}', 'LoanPaymentController@payment_view');
+
+    /*==============================================
+                    AJAX-loaded Data
+    ================================================*/
  	Route::get('borrowers_data', 'LoanApplicationController@borrowers');
  	Route::get('comaker1_data', 'LoanApplicationController@comaker1');
  	Route::get('comaker2_data', 'LoanApplicationController@comaker2'); 

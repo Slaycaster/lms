@@ -42,7 +42,7 @@
             </ul>
           </li>
         
-          <li><a href="#"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
+          <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
 
           <li class="header">MAINTENANCE</li>
           <li><a href="{{ url('admin/companies') }}"><i class="fa fa-building"></i> <span>Companies</span></a></li>

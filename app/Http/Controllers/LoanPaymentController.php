@@ -24,6 +24,19 @@ class LoanPaymentController extends Controller
 		return view('loan-payment.index');
 	}
 
+    public function payment_view($id)
+    {
+        $loan_application = LoanApplication::where('id', '=', $id)
+            ->with('loan_borrower')
+            ->with('loan_borrower.company')
+            ->with('loan_interest')
+            ->with('loan_payment_term')
+            ->with('loan_payments')
+            ->get();
+        return view('loan-payment.payment')
+            ->with('loan_application', compact('loan_application'));
+    }
+
 	/*==============================================================
                         AJAX-loaded data
 	==============================================================*/
@@ -39,7 +52,7 @@ class LoanPaymentController extends Controller
             ->select('loan_applications.*');
 
         return Datatables::of($loan_applications)
-            ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+            ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
             ->add_column('loan_payments', function($loan_application) {
             	return $loan_application->loan_payments->sum('loan_payment_amount');
             })

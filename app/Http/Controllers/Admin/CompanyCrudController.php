@@ -68,7 +68,7 @@ class CompanyCrudController extends CrudController
                 $this->crud->addColumn
                 (
                     [
-                        'name' => 'company_website'.
+                        'name' => 'company_website',
                         'label' => 'Website'
                     ]
                 )
@@ -119,7 +119,7 @@ class CompanyCrudController extends CrudController
         (
             [
                 //Text
-                'name' => 'company_email'.
+                'name' => 'company_email',
                 'label' => 'E-mail',
                 'type' => 'text'
             ]
