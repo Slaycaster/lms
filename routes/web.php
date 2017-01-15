@@ -39,6 +39,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     ================================================*/
     Route::get('loan_payments', 'LoanPaymentController@index');
     Route::get('loan_payments/{id}', 'LoanPaymentController@payment_view');
+    Route::post('loan_payments/process_payment', 'LoanPaymentController@process_payment');
+    Route::post('loan_payments/process_due_payment', 'LoanPaymentController@process_due_payment');
 
     /*==============================================
                     AJAX-loaded Data

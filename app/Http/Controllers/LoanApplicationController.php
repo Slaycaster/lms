@@ -92,13 +92,16 @@ class LoanApplicationController extends Controller
         if (isset($_POST['approve']))
         {
             $loan_application->loan_application_status = "Approved";
+            Session::flash('message', 'Loan Application Approved!');
         } 
         else if (isset($_POST['decline']))
         {
             $loan_application->loan_application_status = "Declined";
+            Session::flash('message', 'Loan Application Declined!');
         }
         $loan_application->loan_application_remarks = Request::input('remarks');
         $loan_application->save();
+
 
         return Redirect::to('admin/loan_applications');
     }

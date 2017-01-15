@@ -53,8 +53,8 @@
 		          {data: '13.company.company_code', name: 'loan_borrower.company.company_name'},
 		          {data: '0', name: 'loan_applications.loan_application_amount'},
 		          {data: '16', name: 'loan_payments', searchable: false},
-		          {data: '15.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
 		          {data: '14.loan_interest_name', name: 'loan_interest.loan_interest_name'},
+		          {data: '15.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
 		          {data: '17', name: 'Actions', orderable: false, searchable: false}
 		        ]
 		      });
