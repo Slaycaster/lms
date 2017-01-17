@@ -53,9 +53,9 @@
           <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-user-plus"></i> <span>Loan Borrowers</span></a></li>
 
           <li class="header">REPORTS</li>
-          <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-document"></i> <span>Approved Loan Applications</span></a></li>
-          <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-document"></i> <span>Loan Collection</span></a></li>
-          <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-document"></i> <span>Income Share</span></a></li>
+          <li><a href="{{ url('admin/reports/loan_applications') }}"><i class="fa fa-file-o"></i> <span>Approved Loan Applications</span></a></li>
+          <li><a href="{{ url('#') }}"><i class="fa fa-file-o"></i> <span>Loan Collection</span></a></li>
+          <li><a href="{{ url('#') }}"><i class="fa fa-file-o"></i> <span>Income Share</span></a></li>
 
           <!-- ======================================= -->
           <li class="header">{{ trans('backpack::base.user') }}</li>

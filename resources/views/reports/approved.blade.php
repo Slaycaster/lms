@@ -24,7 +24,7 @@
         <div class="panel-body">
           <h4><span class = "fa fa-clock-o"></span> By Month</h4>
           <hr>
-          <form method="get" action="{{url('reports/sales/branch')}}" target="_blank">
+          <form method="post" action="{{url('reports/loan_applications/pdf')}}" target="_blank">
             <div class="form-group">
                       <label>Date:</label>
 
