@@ -25,21 +25,16 @@ class LoanInterestCrudController extends CrudController
     	$this->crud->setColumns
     	(
     		[
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'loan_interest_name',
     					'label' => 'Loan Interest Name'
-    				]
-    			),
-
-    			$this->crud->addColumn
-    			(
+    				],
+    			
     				[
     					'name' => 'loan_interest_rate',
     					'label' => 'Rate'
     				]
-    			)
+    			
     		]
     	);
 

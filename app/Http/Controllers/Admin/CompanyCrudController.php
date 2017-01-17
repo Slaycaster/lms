@@ -25,53 +25,40 @@ class CompanyCrudController extends CrudController
     	$this->crud->setColumns
     	(
     		[
-    			$this->crud->addColumn
-    			(
+    			
     				[
     					'name' => 'company_name',
     					'label' => 'Company Name'
-    				]
-    			),
+    				],
+    			
 
-    			$this->crud->addColumn
-    			(
+    			
     				[
     					'name' => 'company_code',
     					'label' => 'Code'
-    				]
-    			),
+    				],
+    			
 
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'company_address',
     					'label' => 'Address'
-    				]
-    			),
+    				],
 
-                $this->crud->addColumn
-                (
                     [
                         'name' => 'company_contact_no',
                         'label' => 'Contact #'
-                    ]
-                ),
-
-                $this->crud->addColumn
-                (
+                    ],
+            
                     [
                         'name' => 'company_email',
                         'label' => 'E-mail'
-                    ]
-                ),
-
-                $this->crud->addColumn
-                (
+                    ],
+                
                     [
                         'name' => 'company_website',
                         'label' => 'Website'
                     ]
-                )
+                
     		]
     	);
 

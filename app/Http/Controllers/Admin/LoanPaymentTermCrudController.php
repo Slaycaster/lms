@@ -25,21 +25,15 @@ class LoanPaymentTermCrudController extends CrudController
     	$this->crud->setColumns
     	(
     		[
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'loan_payment_term_name',
     					'label' => 'Payment Term Name'
-    				]
-    			),
+    				],
 
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'loan_payment_term_no_of_months',
     					'label' => 'No. of Months'
     				]
-    			)
     		]
     	);
 

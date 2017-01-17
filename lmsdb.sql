@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 03, 2017 at 08:34 AM
+-- Generation Time: Jan 17, 2017 at 05:47 PM
 -- Server version: 10.1.16-MariaDB
 -- PHP Version: 5.6.24
 
@@ -124,7 +124,7 @@ CREATE TABLE `loan_applications` (
 --
 
 INSERT INTO `loan_applications` (`id`, `loan_application_amount`, `loan_application_purpose`, `loan_application_status`, `loan_application_filing_fee`, `loan_application_service_fee`, `loan_application_remarks`, `loan_application_comaker_id1`, `loan_application_comaker_id2`, `loan_borrower_id`, `payment_term_id`, `loan_interest_id`, `created_at`, `updated_at`) VALUES
-(1, 25000, 'For my niece''s birthday', 'Declined', 100, 100, 'Too much loan amount', 2, 3, 1, 1, 1, '2017-01-02 01:48:23', '2017-01-02 23:26:36');
+(1, 25000, 'For my niece''s birthday', 'Approved', 100, 100, '', 2, 3, 1, 1, 1, '2017-01-02 01:48:23', '2017-01-14 01:15:02');
 
 -- --------------------------------------------------------
 
@@ -145,7 +145,7 @@ CREATE TABLE `loan_interests` (
 --
 
 INSERT INTO `loan_interests` (`id`, `loan_interest_name`, `loan_interest_rate`, `created_at`, `updated_at`) VALUES
-(1, '1 percent', 1, '2016-12-11 22:33:42', '2016-12-11 22:33:42');
+(1, '5 percent', 5, '2016-12-11 22:33:42', '2016-12-11 22:33:42');
 
 -- --------------------------------------------------------
 
@@ -156,6 +156,7 @@ INSERT INTO `loan_interests` (`id`, `loan_interest_name`, `loan_interest_rate`, 
 CREATE TABLE `loan_payments` (
   `id` int(10) UNSIGNED NOT NULL,
   `loan_application_id` int(11) NOT NULL,
+  `loan_payment_amount` double NOT NULL,
   `remarks` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -237,6 +238,13 @@ CREATE TABLE `payment_terms` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `payment_terms`
+--
+
+INSERT INTO `payment_terms` (`id`, `payment_term_name`, `payment_term_no_of_months`, `created_at`, `updated_at`) VALUES
+(1, '12 months', 12, '2017-01-17 16:45:17', '2017-01-17 16:45:17');
 
 -- --------------------------------------------------------
 
@@ -530,7 +538,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `payment_terms`
 --
 ALTER TABLE `payment_terms`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `permissions`
 --

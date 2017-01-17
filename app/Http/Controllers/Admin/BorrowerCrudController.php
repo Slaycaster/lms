@@ -25,56 +25,38 @@ class BorrowerCrudController extends CrudController
     	$this->crud->setColumns
     	(
     		[
-    			$this->crud->addColumn
-    			(
+    			
     				[
     					'name' => 'borrower_type',
     					'label' => 'Type'
-    				]
-    			),
+    				],
+    			
 
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'borrower_last_name',
     					'label' => 'Last Name'
-    				]
-    			),
+    				],
 
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'borrower_first_name',
     					'label' => 'First Name'
-    				]
-    			),
+    				],
 
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'borrower_middle_name',
     					'label' => 'Middle Name'
-    				]
-    			),
-
-    			$this->crud->addColumn
-    			(
+    				],
+    			
     				[
     					'name' => 'borrower_employment_date',
     					'label' => 'Employment Date'
-    				]
-    			),
+    				],
 
-    			$this->crud->addColumn
-    			(
     				[
     					'name' => 'borrower_assignment_date',
     					'label' => 'Assignment Date'
-    				]
-    			),
+    				],
 
-    			$this->crud->addColumn
-    			(
     				[
     					'label' => 'Company',
     					'type' => 'select',
@@ -83,7 +65,7 @@ class BorrowerCrudController extends CrudController
     					'attribute' => 'company_code',
     					'model' => 'App\Company'
     				]
-    			)
+    			
     		]
     	);
 
