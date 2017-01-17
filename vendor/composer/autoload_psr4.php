@@ -57,6 +57,7 @@ return array(
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
     'Barryvdh\\elFinderFlysystemDriver\\' => array($vendorDir . '/barryvdh/elfinder-flysystem-driver/src'),
     'Barryvdh\\Elfinder\\' => array($vendorDir . '/barryvdh/laravel-elfinder/src'),
+    'Barryvdh\\DomPDF\\' => array($vendorDir . '/barryvdh/laravel-dompdf/src'),
     'Backpack\\PermissionManager\\' => array($vendorDir . '/backpack/permissionmanager/src'),
     'Backpack\\CRUD\\' => array($vendorDir . '/backpack/crud/src'),
     'Backpack\\Base\\' => array($vendorDir . '/backpack/base/src'),

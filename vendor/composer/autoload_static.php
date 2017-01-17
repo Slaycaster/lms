@@ -8,8 +8,8 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
+        '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
@@ -122,6 +122,7 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         array (
             'Barryvdh\\elFinderFlysystemDriver\\' => 33,
             'Barryvdh\\Elfinder\\' => 18,
+            'Barryvdh\\DomPDF\\' => 16,
             'Backpack\\PermissionManager\\' => 27,
             'Backpack\\CRUD\\' => 14,
             'Backpack\\Base\\' => 14,
@@ -339,6 +340,10 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         array (
             0 => __DIR__ . '/..' . '/barryvdh/laravel-elfinder/src',
         ),
+        'Barryvdh\\DomPDF\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/barryvdh/laravel-dompdf/src',
+        ),
         'Backpack\\PermissionManager\\' => 
         array (
             0 => __DIR__ . '/..' . '/backpack/permissionmanager/src',
@@ -464,6 +469,7 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         'App\\Http\\Controllers\\Auth\\ResetPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ResetPasswordController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\LoanApplicationController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoanApplicationController.php',
+        'App\\Http\\Controllers\\LoanPaymentController' => __DIR__ . '/../..' . '/app/Http/Controllers/LoanPaymentController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
@@ -478,6 +484,7 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         'App\\Http\\Requests\\LoanPaymentTermUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/LoanPaymentTermUpdateRequest.php',
         'App\\LoanApplication' => __DIR__ . '/../..' . '/app/LoanApplication.php',
         'App\\LoanInterest' => __DIR__ . '/../..' . '/app/LoanInterest.php',
+        'App\\LoanPayment' => __DIR__ . '/../..' . '/app/LoanPayment.php',
         'App\\LoanPaymentTerm' => __DIR__ . '/../..' . '/app/LoanPaymentTerm.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -532,6 +539,9 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         'Backpack\\PermissionManager\\app\\Http\\Requests\\UserUpdateCrudRequest' => __DIR__ . '/..' . '/backpack/permissionmanager/src/app/Http/Requests/UserUpdateCrudRequest.php',
         'Backpack\\PermissionManager\\app\\Models\\Permission' => __DIR__ . '/..' . '/backpack/permissionmanager/src/app/Models/Permission.php',
         'Backpack\\PermissionManager\\app\\Models\\Role' => __DIR__ . '/..' . '/backpack/permissionmanager/src/app/Models/Role.php',
+        'Barryvdh\\DomPDF\\Facade' => __DIR__ . '/..' . '/barryvdh/laravel-dompdf/src/Facade.php',
+        'Barryvdh\\DomPDF\\PDF' => __DIR__ . '/..' . '/barryvdh/laravel-dompdf/src/PDF.php',
+        'Barryvdh\\DomPDF\\ServiceProvider' => __DIR__ . '/..' . '/barryvdh/laravel-dompdf/src/ServiceProvider.php',
         'Barryvdh\\Elfinder\\Connector' => __DIR__ . '/..' . '/barryvdh/laravel-elfinder/src/Connector.php',
         'Barryvdh\\Elfinder\\Console\\PublishCommand' => __DIR__ . '/..' . '/barryvdh/laravel-elfinder/src/Console/PublishCommand.php',
         'Barryvdh\\Elfinder\\Elfinder' => __DIR__ . '/..' . '/barryvdh/laravel-elfinder/src/Elfinder.php',
@@ -544,6 +554,7 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         'Barryvdh\\elFinderFlysystemDriver\\Plugin\\HasDir' => __DIR__ . '/..' . '/barryvdh/elfinder-flysystem-driver/src/Plugin/HasDir.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
+        'Carbon\\Exceptions\\InvalidDateException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/InvalidDateException.php',
         'ClassPreloader\\ClassList' => __DIR__ . '/..' . '/classpreloader/classpreloader/src/ClassList.php',
         'ClassPreloader\\ClassLoader' => __DIR__ . '/..' . '/classpreloader/classpreloader/src/ClassLoader.php',
         'ClassPreloader\\ClassNode' => __DIR__ . '/..' . '/classpreloader/classpreloader/src/ClassNode.php',
@@ -2269,6 +2280,7 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         'Intervention\\Image\\Imagick\\Commands\\ContrastCommand' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Imagick/Commands/ContrastCommand.php',
         'Intervention\\Image\\Imagick\\Commands\\CropCommand' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Imagick/Commands/CropCommand.php',
         'Intervention\\Image\\Imagick\\Commands\\DestroyCommand' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Imagick/Commands/DestroyCommand.php',
+        'Intervention\\Image\\Imagick\\Commands\\ExifCommand' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Imagick/Commands/ExifCommand.php',
         'Intervention\\Image\\Imagick\\Commands\\FillCommand' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Imagick/Commands/FillCommand.php',
         'Intervention\\Image\\Imagick\\Commands\\FitCommand' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Imagick/Commands/FitCommand.php',
         'Intervention\\Image\\Imagick\\Commands\\FlipCommand' => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image/Imagick/Commands/FlipCommand.php',
@@ -4308,6 +4320,7 @@ class ComposerStaticInitc3c2a5c4f6dbb379dec7bd33eb850aa6
         'elFinder' => __DIR__ . '/..' . '/studio-42/elfinder/php/elFinder.class.php',
         'elFinderConnector' => __DIR__ . '/..' . '/studio-42/elfinder/php/elFinderConnector.class.php',
         'elFinderLibGdBmp' => __DIR__ . '/..' . '/studio-42/elfinder/php/libs/GdBmp.php',
+        'elFinderPlugin' => __DIR__ . '/..' . '/studio-42/elfinder/php/elFinderPlugin.php',
         'elFinderPluginAutoResize' => __DIR__ . '/..' . '/studio-42/elfinder/php/plugins/AutoResize/plugin.php',
         'elFinderPluginAutoRotate' => __DIR__ . '/..' . '/studio-42/elfinder/php/plugins/AutoRotate/plugin.php',
         'elFinderPluginNormalizer' => __DIR__ . '/..' . '/studio-42/elfinder/php/plugins/Normalizer/plugin.php',
