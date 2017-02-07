@@ -1,13 +1,14 @@
 <?php
 
-use App\LoanApplication
+use App\LoanApplication;
 
 	$timestamp = time()+date("Z");
 	$today = gmdate("Y/m/d",$timestamp);
-	$date = Session::get('date', $today);
+	//$date = Session::get('date', $today);
 	$company_id = Session::get('company_id', 1);
 
 	$loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
+			->where('company_id', '=', $company_id)
             ->with('loan_borrower')
             ->with('loan_borrower.company')
             ->with('loan_interest')
@@ -16,6 +17,7 @@ use App\LoanApplication
             ->get();
 
     $loan_application_count = LoanApplication::where('loan_application_status', '=', 'Approved')
+    		->where('company_id', '=', $company_id)
             ->with('loan_borrower')
             ->with('loan_borrower.company')
             ->with('loan_interest')
@@ -28,7 +30,7 @@ use App\LoanApplication
 <!DOCTYPE html5>
 <html>
 	<head>
-		<title>Sales Report - {{$date}} | Maria Jose Salon</title>
+		<title>Approved Loan Applications | Loan Management System</title>
 
 		<style type="text/css">
 		    table
@@ -96,7 +98,7 @@ use App\LoanApplication
 		<p style="text-align: center;">
 	        <normal style="font-size: 18px">Moo Loans Inc.</normal>
 	        <br>
-	        <strong>APPROVED LOAN APPLICATION REPORT<br>as of {{$date}}</strong>
+	        <strong>APPROVED LOAN APPLICATION REPORT<br><!--as of {{$date}} --></strong>
 	    </p>
 
 	    <table border="1" width="520">
@@ -122,7 +124,7 @@ use App\LoanApplication
 		    	<?php
 		    		$monthlyInterest = $loan_application->loan_application_amount * ($loan_application->loan_interest->loan_interest_rate * .01);
 		    		$totalInterest = $monthlyInterest * $loan_application->loan_payment_term->loan_payment_term_no_of_months;
-					$totalLoan = $loan_application->loan_application_amount +  $loan_application->loan_application_filing_fee + $loan_application->loan_application_service_fee + ($monthlyInterest * 12);
+					$totalLoan = $loan_application->loan_application_amount +  $loan_application->loan_application_filing_fee + $loan_application->loan_application_service_fee + ($monthlyInterest * $loan_application->loan_payment_term->loan_payment_term_no_of_months);
 		    	?>
 		    	<tr>
 		    		<td>{{ $loan_application->id }}</td>
@@ -143,6 +145,6 @@ use App\LoanApplication
 	    	</tbody>
 	    </table>
 	    <br>
-	    <h3>Active Loan Applications: {{$loan_application_count}}</h3>
+	    <h5>Active Loan Applications: {{$loan_application_count}}</h5>
 	</body>
 </html>

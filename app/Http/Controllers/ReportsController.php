@@ -17,21 +17,21 @@ class ReportsController extends Controller
     public function approved_loan_application_view()
     {
     	$companies = Company::pluck('company_name', 'id');
-    	return view('reports.approved.blade.php')
+    	return view('reports.approved')
             ->with('companies', $companies);
     }
 
     public function loan_collection_view()
     {
     	$companies = Company::pluck('company_name', 'id');
-    	return view('reports.loan_collection.blade.php')
+    	return view('reports.loan_collection')
             ->with('companies', $companies);
     }
 
     public function income_share_view()
     {
     	$companies = Company::pluck('company_name', 'id');
-    	return view('reports.income_share.blade.php')
+    	return view('reports.income_share')
             ->with('companies', $companies);
     }
 
@@ -41,7 +41,7 @@ class ReportsController extends Controller
     public function approved_loan_application()
     {
         Session::put('company_id', Request::input('company_id'));
-        Session::put('date', Request::input('date'));
+        //Session::put('date', Request::input('date'));
         $pdf = PDF::loadView('reports.approved-pdf')->setPaper('Letter');
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
@@ -50,10 +50,10 @@ class ReportsController extends Controller
         return $pdf->stream();
     }
 
-    public function loan_collection_view()
+    public function loan_collection()
     {
         Session::put('company_id', Request::input('company_id'));
-        Session::put('date', Request::input('date'));
+        //Session::put('date', Request::input('date'));
         $pdf = PDF::loadView('reports.loan_collection-pdf')->setPaper('Letter');
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();

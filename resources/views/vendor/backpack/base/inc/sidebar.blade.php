@@ -54,7 +54,7 @@
 
           <li class="header">REPORTS</li>
           <li><a href="{{ url('admin/reports/loan_applications') }}"><i class="fa fa-file-o"></i> <span>Approved Loan Applications</span></a></li>
-          <li><a href="{{ url('#') }}"><i class="fa fa-file-o"></i> <span>Loan Collection</span></a></li>
+          <li><a href="{{ url('admin/reports/loan_collections') }}"><i class="fa fa-file-o"></i> <span>Loan Collection & Outstanding</span></a></li>
           <li><a href="{{ url('#') }}"><i class="fa fa-file-o"></i> <span>Income Share</span></a></li>
 
           <!-- ======================================= -->

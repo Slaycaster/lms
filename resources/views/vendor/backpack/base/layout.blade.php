@@ -31,6 +31,9 @@
     <!-- BackPack Base CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/backpack/backpack.base.css') }}">
 
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet" href="{{ asset('css/datepicker.css') }}">
+
     @yield('after_styles')
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -113,6 +116,9 @@
     <script src="{{ asset('vendor/adminlte') }}/plugins/slimScroll/jquery.slimscroll.min.js"></script>
     <script src="{{ asset('vendor/adminlte') }}/plugins/fastclick/fastclick.js"></script>
     <script src="{{ asset('vendor/adminlte') }}/dist/js/app.min.js"></script>
+
+    <!-- Bootstrap Datepicker JS -->
+    <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
 
     <!-- page script -->
     <script type="text/javascript">

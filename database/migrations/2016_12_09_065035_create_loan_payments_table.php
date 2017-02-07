@@ -17,6 +17,7 @@ class CreateLoanPaymentsTable extends Migration
             $table->increments('id');
             $table->integer('loan_application_id');
             $table->double('loan_payment_amount');
+            $table->integer('loan_payment_count')
             $table->text('remarks');
             $table->timestamps();
         });

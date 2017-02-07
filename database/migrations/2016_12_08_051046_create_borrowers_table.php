@@ -26,6 +26,8 @@ class CreateBorrowersTable extends Migration
             $table->date('borrower_birth_date');
             $table->date('borrower_employment_date');
             $table->date('borrower_assignment_date');
+            $table->double('borrower_salary_gross_pay');
+            $table->double('borrower_monthly_expenses');
             $table->date('borrower_resignation_date')->nullable();
             $table->string('borrower_spouse_name')->nullable();
             $table->unsignedInteger('borrower_no_of_children')->nullable();

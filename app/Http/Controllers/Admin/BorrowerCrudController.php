@@ -22,6 +22,9 @@ class BorrowerCrudController extends CrudController
     	$this->crud->setRoute('admin/borrowers');
     	$this->crud->setEntityNameStrings('borrower', 'borrowers');
 
+        $this->crud->enableAjaxTable(); 
+        $this->crud->enableExportButtons();
+
     	$this->crud->setColumns
     	(
     		[
@@ -56,6 +59,16 @@ class BorrowerCrudController extends CrudController
     					'name' => 'borrower_assignment_date',
     					'label' => 'Assignment Date'
     				],
+
+                    [
+                        'name' => 'borrower_salary_gross_pay',
+                        'label' => 'Salary Gross Pay'
+                    ],
+
+                    [
+                        'name' => 'borrower_monthly_expenses',
+                        'label' => 'Monthly Expenses'
+                    ],
 
     				[
     					'label' => 'Company',
@@ -186,6 +199,23 @@ class BorrowerCrudController extends CrudController
     			'type' => 'date'
     		]
     	);
+
+        $this->crud->addField
+        (
+            [
+                'name' => 'borrower_salary_gross_pay',
+                'label' => 'Salary Gross Pay',
+                ''
+            ]
+        );
+
+        $this->crud->addField
+        (
+            [
+                'name' => 'borrower_monthly_expenses',
+                'label' => 'Monthly Expenses'
+            ]
+        );
 
         $this->crud->addField
         (

@@ -47,6 +47,7 @@ class LoanPaymentController extends Controller
         $loan_payment = new LoanPayment();
         $loan_payment->loan_application_id = Request::input('loan_application_id');
         $loan_payment->loan_payment_amount = Request::input('amount');
+        $loan_payment->loan_payment_count = 1;
         $loan_payment->remarks = Request::input('remarks');
         $loan_payment->save();
 
@@ -62,6 +63,7 @@ class LoanPaymentController extends Controller
         $loan_payment = new LoanPayment();
         $loan_payment->loan_application_id = Request::input('loan_application_id');
         $loan_payment->loan_payment_amount = Request::input('due_amount');
+        $loan_payment->loan_payment_count = 1 + $monthsUnpaid;
         $loan_payment->remarks = Request::input('due_remarks') . ' (Delayed payment for about ' . $monthsUnpaid . ' months. ';
         $loan_payment->save();
 
