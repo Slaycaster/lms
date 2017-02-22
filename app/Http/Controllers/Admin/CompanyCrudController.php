@@ -38,6 +38,11 @@ class CompanyCrudController extends CrudController
     					'name' => 'company_code',
     					'label' => 'Code'
     				],
+
+                    [
+                        'name' => 'company_income_share',
+                        'label' => 'Income Share (%)'
+                    ],
     			
 
     				[
@@ -87,6 +92,16 @@ class CompanyCrudController extends CrudController
     			'type' => 'text'
     		]
     	);
+
+        $this->crud->addField
+        (
+            [
+                //Text
+                'name' => 'company_income_share',
+                'label' => 'Income Share',
+                'type' => 'number'
+            ]
+        );
 
     	$this->crud->addField
     	(

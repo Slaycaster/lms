@@ -28,6 +28,7 @@ class CompanyStoreRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
         return [
             'company_name' => 'required|unique:companies,company_name',
             'company_code' => 'required|unique:companies,company_code',
+            'company_income_share' => 'required',
             'company_address' => 'required'
         ];
     }

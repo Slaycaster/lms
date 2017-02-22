@@ -55,7 +55,7 @@ class LoanInterestCrudController extends CrudController
     			//Text
     			'name' => 'loan_interest_rate',
     			'label' => 'Rate',
-    			'type' => 'text'
+    			'type' => 'number'
     		]
     	);
     }
