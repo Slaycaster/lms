@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_applications/details/{id}', 'LoanApplicationController@details');
     Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
     Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
+    Route::get('loan_applications/promissory_note/{id}', 'LoanApplicationController@promissory_note');
     Route::post('loan_applications/save', 'LoanApplicationController@save');
     Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
 
