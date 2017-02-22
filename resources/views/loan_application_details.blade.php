@@ -94,7 +94,6 @@
 			<div class="panel panel-warning">
 				<div class="panel-heading">
 					Loan Application Details
-					<a href="#" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Generate Promissory Note</a>
 				</div>
 				<div class="panel-body">
 					<div class="row">

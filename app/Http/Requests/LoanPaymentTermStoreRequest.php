@@ -27,7 +27,8 @@ class LoanPaymentTermStoreRequest extends \Backpack\CRUD\app\Http\Requests\CrudR
     {
         return [
             'loan_payment_term_name' => 'required|unique:loan_payment_terms,loan_payment_term_name',
-            'loan_payment_term_no_of_months' => 'required'
+            'loan_payment_term_no_of_months' => 'required',
+            'loan_payment_term_collection_cycle' => 'required',
         ];
     }
 }

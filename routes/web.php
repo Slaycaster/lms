@@ -18,22 +18,29 @@ Route::get('/', function () {
 // Admin Interface Routes
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
-  // Backpack\CRUD: Define the resources for the entities you want to CRUD.
-    CRUD::resource('companies', 'Admin\CompanyCrudController');
+    Route::group(['middleware' => ['role:Super Administrator']], function () {
+        CRUD::resource('companies', 'Admin\CompanyCrudController');
+        CRUD::resource('loan_interests', 'Admin\LoanInterestCrudController');
+        CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
+    });
+
+    Route::group(['middleware' => ['role:Approving Body'], 'middleware' => ['role:Super Administrator']], function () {
+        /*=============================================
+                    Loan Application
+        ===============================================*/        
+        Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
+        Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
+        Route::post('loan_applications/save', 'LoanApplicationController@save');
+        Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
+    });
+
     CRUD::resource('borrowers', 'Admin\BorrowerCrudController');
-    CRUD::resource('loan_interests', 'Admin\LoanInterestCrudController');
-    CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
 
     /*=============================================
                     Loan Application
     ===============================================*/
     Route::get('loan_applications', 'LoanApplicationController@index');
     Route::get('loan_applications/details/{id}', 'LoanApplicationController@details');
-    Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
-    Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
-    Route::get('loan_applications/promissory_note/{id}', 'LoanApplicationController@promissory_note');
-    Route::post('loan_applications/save', 'LoanApplicationController@save');
-    Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
 
     /*==============================================
                       Loan Payment
@@ -42,6 +49,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_payments/{id}', 'LoanPaymentController@payment_view');
     Route::post('loan_payments/process_payment', 'LoanPaymentController@process_payment');
     Route::post('loan_payments/process_due_payment', 'LoanPaymentController@process_due_payment');
+    Route::get('loan_payments/promissory_note/{id}', 'LoanPaymentController@promissory_note');
 
     /*==============================================
                         Reports

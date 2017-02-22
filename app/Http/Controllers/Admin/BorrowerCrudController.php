@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-
+use Illuminate\Http\Request;
 /*
 ----------------------------------------------------------------------------------------------
 	VALIDATION: change the requests to match your own file names if you need form validation
@@ -11,18 +11,24 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 */
 use App\Http\Requests\BorrowerStoreRequest as BorrowerStoreRequest;
 use App\Http\Requests\BorrowerUpdateRequest as BorrowerUpdateRequest;
-
+use App\User;
+use Illuminate\Support\Facades\Auth;
 class BorrowerCrudController extends CrudController
 {
-    public function __construct()
+
+
+    public function setup()
     {
-    	parent::__construct();
+        parent::setup();
 
-    	$this->crud->setModel('App\Borrower');
-    	$this->crud->setRoute('admin/borrowers');
-    	$this->crud->setEntityNameStrings('borrower', 'borrowers');
-
-        $this->crud->enableAjaxTable(); 
+        if (!(Auth::user()->company->id == 1))
+        {
+            $this->crud->addClause('where', 'company_id', '=', Auth::user()->company->id);
+        }
+        $this->crud->setModel('App\Borrower');
+        $this->crud->setRoute('admin/borrowers');
+        $this->crud->setEntityNameStrings('borrower', 'borrowers');
+        
         $this->crud->enableExportButtons();
 
     	$this->crud->setColumns
@@ -149,7 +155,7 @@ class BorrowerCrudController extends CrudController
     		[
     			'name' => 'borrower_home_address',
     			'label' => 'Home Address',
-    			'type' => 'address'
+    			'type' => 'text'
     		]
     	);
 

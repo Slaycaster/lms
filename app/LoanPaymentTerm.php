@@ -19,7 +19,7 @@ class LoanPaymentTerm extends Model
 	protected $primaryKey = 'id';
 	// protected $guarded = [];
 	protected $hidden = ['id', 'created_at', 'updated_at'];
-	protected $fillable = ['loan_payment_term_name', 'loan_payment_term_no_of_months'];
+	protected $fillable = ['loan_payment_term_name', 'loan_payment_term_no_of_months', 'loan_payment_term_collection_cycle'];
 	public $timestamps = true;
 
 	/*

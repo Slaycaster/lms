@@ -38,6 +38,7 @@ use App\LoanApplication;
 		    p, strong, h3
 		    {
 		    	font-family: helvetica;
+		    	font-size: 14px;
 		    }
 		    img 
 		    {
@@ -91,7 +92,7 @@ use App\LoanApplication;
 	        <br>
 	        <strong>PROMISSORY NOTE<br></strong>
 	    </p>
-
+	    <br>
 	    @foreach($loan_applications as $loan_application)
 	    	<?php
 	    		$monthlyInterest = $loan_application->loan_application_amount * ($loan_application->loan_interest->loan_interest_rate * .01);
@@ -99,20 +100,20 @@ use App\LoanApplication;
 				$totalLoan = $loan_application->loan_application_amount +  $loan_application->loan_application_filing_fee + $loan_application->loan_application_service_fee + ($monthlyInterest * $loan_application->loan_payment_term->loan_payment_term_no_of_months);
 	    	?>
 
-	    	<p>Date: {{ $loan_application->created_at }}</p>
-	    	<p>Application ID: {{ $loan_application->id }}</p>
-	    	<br>
-	    	<p>Borrower's Name: {{ $loan_application->loan_borrower->borrower_first_name }} {{ $loan_application->loan_borrower->borrower_middle_name }} {{ $loan_application->loan_borrower->borrower_last_name }}
+	    	<p><strong>Date:</strong> {{ date('F j, Y', strtotime($today)) }} <br> <strong>Application ID:</strong> {{ $loan_application->id }}</p>
+	    	<p><strong>Borrower's Name:</strong> {{ $loan_application->loan_borrower->borrower_first_name }} {{ $loan_application->loan_borrower->borrower_middle_name }} {{ $loan_application->loan_borrower->borrower_last_name }}
+	    		<br>
+	    		<strong>Address:</strong> {{ $loan_application->loan_borrower->borrower_home_address }}
 	    	</p>
-	    	<p>Address: {{ $loan_application->loan_borrower->borrower_home_address }}</p>
-	    	<br>
-	    	<p>Co-Maker's Name: {{ $loan_application->comaker1->borrower_first_name }} {{ $loan_application->comaker1->borrower_middle_name }} {{ $loan_application->comaker1->borrower_last_name }}</p>
-	    	<p>Address: {{ $loan_application->comaker1->borrower_home_address }}</p>
-	    	<br>
-	    	<p>Co-Maker's Name: {{ $loan_application->comaker2->borrower_first_name }} {{ $loan_application->comaker2->borrower_middle_name }} {{ $loan_application->comaker2->borrower_last_name }}</p>
-	    	<p>Address: {{ $loan_application->comaker2->borrower_home_address }}</p>
-	    	<br>
-	    	<p>I agree to pay to the order of <strong>Moo Loans, Inc.</strong> ('Lender'), with office address at 5th Floor, Richville Corporate Tower, 1107 Alabang-Zapote Rd., Muntinlupa City the total amount of PHP <strong>{{ $loan_application->loan_application_amount }}</strong>, plus interest thereon at the rate of <strong>{{ $loan_application->loan_interest->loan_interest_rate }}</strong>% per month, together with filing and service fees amounting to PHP {{ $totalLoan }} for each installment, to be paid every 15th and 30th of the month, starting on {{ $loan_application->updated_at }}. Payments shall be first applied to the interest and then the balance to the principal.</p>
+	    	<p><strong>Co-Maker's Name:</strong> {{ $loan_application->comaker1->borrower_first_name }} {{ $loan_application->comaker1->borrower_middle_name }} {{ $loan_application->comaker1->borrower_last_name }}
+	    		<br>
+	    		<strong>Address:</strong> {{ $loan_application->comaker1->borrower_home_address }}
+	    	</p>
+	    	<p><strong>Co-Maker's Name:</strong> {{ $loan_application->comaker2->borrower_first_name }} {{ $loan_application->comaker2->borrower_middle_name }} {{ $loan_application->comaker2->borrower_last_name }}
+	    		<br>
+	    		<strong>Address:</strong> {{ $loan_application->comaker2->borrower_home_address }}
+	    	</p>
+	    	<p>I agree to pay to the order of <strong>Moo Loans, Inc.</strong> ('Lender'), with office address at 5th Floor, Richville Corporate Tower, 1107 Alabang-Zapote Rd., Muntinlupa City the total amount of <strong>PHP {{ $loan_application->loan_application_amount }}</strong>, plus interest thereon at the rate of <strong>{{ $loan_application->loan_interest->loan_interest_rate }} %</strong> per month, together with filing and service fees amounting to <strong>PHP {{ $totalLoan }}</strong> for each installment, to be paid every 15th and 30th of the month, starting on <strong>{{ date('F j, Y', strtotime($loan_application->updated_at)) }}</strong>. Payments shall be first applied to the interest and then the balance to the principal.</p>
 
 	    	<p>It is further agreed that in case my salary cannot meet my outstanding loan obligation, I hereby authorize <strong>{{ $loan_application->loan_borrower->company->company_name }}</strong> to collect from my savings deposit, 13th month pay, sick leave or vacation leave, bonus, termination or separate pay, or any other renumeration or monetary benefit due me. It is furthermore agreed that in case none of the above can meet my outstanding loan obligation my co-maker(s) shall assume said loan obligation.</p>
 
@@ -122,14 +123,17 @@ use App\LoanApplication;
 
 	    	<p>The parties hereby indicate by their respective signatures below that they have read and agreed with all the terms and conditions of this Note.</p>
 
-	    	<br>
+	    	<br><br>
 
-	    	<p>Borrower's Signature: {{ $loan_application->loan_borrower->borrower_first_name }} {{ $loan_application->loan_borrower->borrower_middle_name }} {{ $loan_application->loan_borrower->borrower_last_name }} &nbsp; Date:</p>
+	    	<p><strong>Borrower's Signature:</strong> {{ $loan_application->loan_borrower->borrower_first_name }} {{ $loan_application->loan_borrower->borrower_middle_name }} {{ $loan_application->loan_borrower->borrower_last_name }} <br><strong>Date:</strong></p>
 	    	<br>
-	    	<p>Co-Maker's Signature: {{ $loan_application->comaker1->borrower_first_name }} {{ $loan_application->comaker1->borrower_middle_name }} {{ $loan_application->comaker1->borrower_last_name }} &nbsp; Date:</p>
-	    	<p>Co-Maker's Signature: {{ $loan_application->comaker2->borrower_first_name }} {{ $loan_application->comaker2->borrower_middle_name }} {{ $loan_application->comaker2->borrower_last_name }} &nbsp; Date:</p>
-	    	<p>Endorsed by:                        &nbsp; Date:</p>
-	    	<p>Lender's Signature:                        &nbsp; Date:</p>
+	    	<p><strong>Co-Maker's Signature:</strong> {{ $loan_application->comaker1->borrower_first_name }} {{ $loan_application->comaker1->borrower_middle_name }} {{ $loan_application->comaker1->borrower_last_name }} <br> <strong>Date:</strong></p>
+	    	<br>
+	    	<p><strong>Co-Maker's Signature:</strong> {{ $loan_application->comaker2->borrower_first_name }} {{ $loan_application->comaker2->borrower_middle_name }} {{ $loan_application->comaker2->borrower_last_name }} <br> <strong>Date:</strong></p>
+	    	<br>
+	    	<p><strong>Endorsed by:</strong> <br> <strong>Date:</strong></p>
+	    	<br>
+	    	<p><strong>Lender's Signature:</strong> <br> <strong>Date:</strong></p>
 	    @endforeach 
 
 	   

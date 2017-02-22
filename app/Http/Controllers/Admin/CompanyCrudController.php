@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-
+use Illuminate\Support\Facades\Auth;
 /*
 ----------------------------------------------------------------------------------------------
 	VALIDATION: change the requests to match your own file names if you need form validation
@@ -21,7 +21,9 @@ class CompanyCrudController extends CrudController
     	$this->crud->setModel('App\Company');
     	$this->crud->setRoute('admin/companies');
     	$this->crud->setEntityNameStrings('company', 'companies');
-
+        $this->crud->removeButton('delete');
+        $this->crud->removeButton('edit');
+            
     	$this->crud->setColumns
     	(
     		[
@@ -31,7 +33,6 @@ class CompanyCrudController extends CrudController
     					'label' => 'Company Name'
     				],
     			
-
     			
     				[
     					'name' => 'company_code',
@@ -57,6 +58,11 @@ class CompanyCrudController extends CrudController
                     [
                         'name' => 'company_website',
                         'label' => 'Website'
+                    ],
+
+                    [
+                        'name' => 'company_notes',
+                        'label' => 'Notes'
                     ]
                 
     		]
@@ -118,6 +124,16 @@ class CompanyCrudController extends CrudController
                 //Text
                 'name' => 'company_website',
                 'label' => 'Website',
+                'type' => 'text'
+            ]
+        );
+
+        $this->crud->addField
+        (
+            [
+                //Text
+                'name' => 'company_notes',
+                'label' => 'Notes',
                 'type' => 'text'
             ]
         );

@@ -33,7 +33,12 @@ class LoanPaymentTermCrudController extends CrudController
     				[
     					'name' => 'loan_payment_term_no_of_months',
     					'label' => 'No. of Months'
-    				]
+    				],
+
+                    [
+                        'name' => 'loan_payment_term_collection_cycle',
+                        'label' => 'Collection Cycle'
+                    ]
     		]
     	);
 
@@ -53,9 +58,19 @@ class LoanPaymentTermCrudController extends CrudController
     			//Text
     			'name' => 'loan_payment_term_no_of_months',
     			'label' => 'No. of Months',
-    			'type' => 'text'
+    			'type' => 'number'
     		]
     	);
+
+        $this->crud->addField
+        (
+            [
+                //Text
+                'name' => 'loan_payment_term_collection_cycle',
+                'label' => 'Collection Cycle(s)',
+                'type' => 'number'
+            ] 
+        );
     }
 
     public function store(LoanPaymentTermStoreRequest $request)

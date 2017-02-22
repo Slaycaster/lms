@@ -50,7 +50,7 @@
 		        columns: [
 		          {data: '13.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
 		          {data: '13.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
-		          {data: '13.company.company_code', name: 'loan_borrower.company.company_name'},
+		          {data: '13.company.company_name', name: 'loan_borrower.company.company_name'},
 		          {data: '0', name: 'loan_applications.loan_application_amount'},
 		          {data: '16', name: 'loan_payments', searchable: false},
 		          {data: '14.loan_interest_name', name: 'loan_interest.loan_interest_name'},

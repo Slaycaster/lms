@@ -17,6 +17,7 @@ class CreateLoanPaymentTermsTable extends Migration
             $table->increments('id');
             $table->string('loan_payment_term_name');
             $table->unsignedInteger('loan_payment_term_no_of_months');
+            $table->unsignedInteger('loan_payment_term_collection_cycle');
             $table->timestamps();
         });
     }

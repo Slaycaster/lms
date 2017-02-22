@@ -10,30 +10,32 @@
           </div>
           <div class="pull-left info">
             <p>{{ Auth::user()->name }}</p>
-            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            <a href="#"><i class="fa fa-circle text-success"></i> {{ Auth::user()->company->company_name }}</a>
           </div>
         </div>
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
           <li class="header">{{ trans('backpack::base.administration') }}</li>
-          <!-- ================================================ -->
-          <!-- ==== Recommended place for admin menu items ==== -->
-          <!-- ================================================ -->
-          <!-- Users, Roles Permissions -->
-          <li class="treeview">
-            <a href="#"><i class="fa fa-group"></i> <span>Users, Roles, Permissions</span> <i class="fa fa-angle-left pull-right"></i></a>
-            <ul class="treeview-menu">
-              <li><a href="{{ url('admin/user') }}"><i class="fa fa-user"></i> <span>Users</span></a></li>
-              <li><a href="{{ url('admin/role') }}"><i class="fa fa-group"></i> <span>Roles</span></a></li>
-              <li><a href="{{ url('admin/permission') }}"><i class="fa fa-key"></i> <span>Permissions</span></a></li>
-            </ul>
-          </li>
+          @role('Super Administrator')
+            <!-- ================================================ -->
+            <!-- ==== Recommended place for admin menu items ==== -->
+            <!-- ================================================ -->
+            <!-- Users, Roles Permissions -->
+            <li class="treeview">
+              <a href="#"><i class="fa fa-group"></i> <span>Users, Roles, Permissions</span> <i class="fa fa-angle-left pull-right"></i></a>
+              <ul class="treeview-menu">
+                <li><a href="{{ url('admin/user') }}"><i class="fa fa-user"></i> <span>Users</span></a></li>
+                <li><a href="{{ url('admin/role') }}"><i class="fa fa-group"></i> <span>Roles</span></a></li>
+                <li><a href="{{ url('admin/permission') }}"><i class="fa fa-key"></i> <span>Permissions</span></a></li>
+              </ul>
+            </li>
+          @endrole
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}
           </span></a></li>
 
           <li class="header">LOAN MANAGEMENT</li>
           <li><a href="{{ url('admin/loan_applications') }}"><i class="fa fa-file-text-o"></i> <span>Loan Application</span></a></li>
-
+          @role('Super Administrator', 'Approving Body')
           <li class="treeview">
             <a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span> <i class="fa fa-angle-left pull-right"></i></a>
             <ul class="treeview-menu">
@@ -41,14 +43,15 @@
               <li><a href="{{ url('admin/loan_applications/declined')}}"> <i class="fa fa-window-close-o"></i> <span>Declined</span></a></li>
             </ul>
           </li>
-        
-          <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
+          @endrole
 
+          <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
+          @role('Super Administrator')
           <li class="header">MAINTENANCE</li>
           <li><a href="{{ url('admin/companies') }}"><i class="fa fa-building"></i> <span>Companies</span></a></li>
           <li><a href="{{ url('admin/loan_interests') }}"><i class="fa fa-percent"></i> <span>Loan Interests</span></a></li>
           <li><a href="{{ url('admin/loan_payment_terms') }}"><i class="fa fa-industry"></i> <span>Loan Payment Terms</span></a></li>
-
+          @endrole
           <li class="header">MASTER ENTRY</li>
           <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-user-plus"></i> <span>Loan Borrowers</span></a></li>
 

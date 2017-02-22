@@ -19,7 +19,7 @@ class Company extends Model
 	protected $primaryKey = 'id';
 	// protected $guarded = [];
 	protected $hidden = ['id', 'created_at', 'updated_at'];
-	protected $fillable = ['company_name', 'company_code', 'company_address', 'company_contact_no', 'company_email', 'company_website'];
+	protected $fillable = ['company_name', 'company_code', 'company_address', 'company_contact_no', 'company_email', 'company_website', 'company_notes'];
 	public $timestamps = true;
 
 	/*

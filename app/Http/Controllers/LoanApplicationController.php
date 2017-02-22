@@ -13,15 +13,20 @@ use App\LoanInterest;
 use App\Borrower;
 use Yajra\Datatables\Datatables;
 
+use App\User;
+use Illuminate\Support\Facades\Auth;
+
 class LoanApplicationController extends Controller
 {
-
 /*==============================================================
                         Laravel Views
 ==============================================================*/
 
     public function index()
     {
+        if (!(Auth::user()->company->id == 1))
+        {
+        }
     	$payment_terms = LoanPaymentTerm::pluck('loan_payment_term_name', 'id');
     	$loan_interests = LoanInterest::pluck('loan_interest_name', 'id');
     	$loan_applications = LoanApplication::all();
@@ -54,21 +59,6 @@ class LoanApplicationController extends Controller
             ->with('loan_application', compact('loan_application'));
     }
 
-/*==============================================================
-                    DOMPDF Views
-==============================================================*/
-
-    public function promissory_note($id)
-    {
-        Session::put('application_id', $id);
-        //Session::put('date', Request::input('date'));
-        $pdf = PDF::loadView('reports.promissory-pdf')->setPaper('Letter');
-        $pdf->output();
-        $dom_pdf = $pdf->getDomPDF();
-        $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();
-    }
 
 /*==============================================================
                     Eloquent Backend Scripts
@@ -129,57 +119,129 @@ class LoanApplicationController extends Controller
 
     public function borrowers()
     {
-    	$borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
-    	return Datatables::of($borrowers)
-    		->add_column('Actions', '{{Form::radio(\'borrower_id\', $id, false)}}')
-    		->remove_column('id')
-    		->make();
+        if (Auth::user()->company->id == 1)
+        {
+        	$borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
+        	return Datatables::of($borrowers)
+        		->add_column('Actions', '{{Form::radio(\'borrower_id\', $id, false)}}')
+        		->remove_column('id')
+        		->make();
+        }
+        else
+        {
+            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date'])
+                ->where('company_id', '=', Auth::user()->company->id);
+            return Datatables::of($borrowers)
+                ->add_column('Actions', '{{Form::radio(\'borrower_id\', $id, false)}}')
+                ->remove_column('id')
+                ->make();
+        }
     }
 
     public function comaker1()
     {
-        $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
-        return Datatables::of($borrowers)
-            ->add_column('Actions', '{{Form::radio(\'comaker1_id\', $id, false)}}')
-            ->remove_column('id')
-            ->make();
+        if (Auth::user()->company->id == 1)
+        {
+            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
+            return Datatables::of($borrowers)
+                ->add_column('Actions', '{{Form::radio(\'comaker1_id\', $id, false)}}')
+                ->remove_column('id')
+                ->make();
+        }
+        else
+        {
+            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date'])
+                ->where('company_id', '=', Auth::user()->company->id);
+            return Datatables::of($borrowers)
+                ->add_column('Actions', '{{Form::radio(\'comaker1_id\', $id, false)}}')
+                ->remove_column('id')
+                ->make();
+        }
     }
 
     public function comaker2()
     {
-        $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
-        return Datatables::of($borrowers)
-            ->add_column('Actions', '{{Form::radio(\'comaker2_id\', $id, false)}}')
-            ->remove_column('id')
-            ->make();
+        if (Auth::user()->company->id == 1)
+        {
+            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
+            return Datatables::of($borrowers)
+                ->add_column('Actions', '{{Form::radio(\'comaker2_id\', $id, false)}}')
+                ->remove_column('id')
+                ->make();
+        }
+        else
+        {
+            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date'])
+                ->where('company_id', '=', Auth::user()->company->id);
+            return Datatables::of($borrowers)
+                ->add_column('Actions', '{{Form::radio(\'comaker2_id\', $id, false)}}')
+                ->remove_column('id')
+                ->make();
+        }
     }
 
     public function pending_data()
     {
-        $loan_applications = LoanApplication::where('loan_application_status', '=', 'Pending')
-            ->with('loan_borrower')
-            ->with('loan_interest')
-            ->with('loan_payment_term')
-            ->with('loan_borrower.company')
-            ->select('loan_applications.*');
-        return Datatables::of($loan_applications)
-            ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
-            ->remove_column('id')
-            ->make();
+        if (Auth::user()->company->id == 1)
+        {
+            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Pending')
+                ->with('loan_borrower')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->remove_column('id')
+                ->make();
+        }
+        else
+        {
+            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Pending')
+                ->with(['loan_borrower' => function($q) {
+                    $q->where('company_id', '=', Auth::user()->company->id);
+                }])
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->remove_column('id')
+                ->make();   
+        }
     }
 
     public function declined_data()
     {
-        $loan_applications = LoanApplication::where('loan_application_status', '=', 'Declined')
-            ->with('loan_borrower')
-            ->with('loan_interest')
-            ->with('loan_payment_term')
-            ->with('loan_borrower.company')
-            ->select('loan_applications.*');
-        return Datatables::of($loan_applications)
-            ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
-            ->remove_column('id')
-            ->make();
+        if (Auth::user()->company->id == 1)
+        {
+            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Declined')
+                ->with('loan_borrower')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->remove_column('id')
+                ->make();
+        }
+        else
+        {
+            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Declined')
+                ->with(['loan_borrower' => function($q) {
+                    $q->where('company_id', '=', Auth::user()->company->id);
+                }])
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->remove_column('id')
+                ->make();   
+        }
     }
 
 }

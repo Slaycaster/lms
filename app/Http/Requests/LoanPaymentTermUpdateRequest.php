@@ -27,7 +27,8 @@ class LoanPaymentTermUpdateRequest extends \Backpack\CRUD\app\Http\Requests\Crud
     {
         return [
             'loan_payment_term_name' => 'required',
-            'loan_payment_term_no_of_months' => 'required'
+            'loan_payment_term_no_of_months' => 'required',
+            'loan_payment_term_collection_cycle' => 'required',
         ];
     }
 }
