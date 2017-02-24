@@ -184,7 +184,7 @@ class BorrowerCrudController extends CrudController
 			    'name' => 'borrower_birth_date',
 			    'label' => 'Birthday',
 			    'attributes' => [
-                    'placeholder' => 'mm/dd/yyyy'
+                    'placeholder' => 'yyyy-mm-dd'
                 ]
 			]
     	);
@@ -197,7 +197,7 @@ class BorrowerCrudController extends CrudController
     			'label' => 'Employment Date',
     			'type' => 'text',
                 'attributes' => [
-                    'placeholder' => 'mm/dd/yyyy'
+                    'placeholder' => 'yyyy-mm-dd'
                 ]
     		]
     	);
@@ -209,7 +209,7 @@ class BorrowerCrudController extends CrudController
     			'label' => 'Assignment Date',
     			'type' => 'text',
                 'attributes' => [
-                    'placeholder' => 'mm/dd/yyyy'
+                    'placeholder' => 'yyyy-mm-dd'
                 ]
     		]
     	);
@@ -238,7 +238,7 @@ class BorrowerCrudController extends CrudController
                 'name' => 'borrower_resignation_date',
                 'label' => 'Resignation Date',
                 'attributes' => [
-                    'placeholder' => 'mm/dd/yyyy'
+                    'placeholder' => 'yyyy-mm-dd'
                 ]
             ]
         );
