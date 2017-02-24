@@ -183,7 +183,7 @@ class BorrowerCrudController extends CrudController
     		[   // Date
 			    'name' => 'borrower_birth_date',
 			    'label' => 'Birthday',
-			    'type' => 'date'
+			    'type' => 'text'
 			]
     	);
 
@@ -193,7 +193,8 @@ class BorrowerCrudController extends CrudController
     			//Date
     			'name' => 'borrower_employment_date',
     			'label' => 'Employment Date',
-    			'type' => 'date'
+    			'type' => 'text',
+                'placeholder' => 'mm/dd/yyyy'
     		]
     	);
 
@@ -202,7 +203,8 @@ class BorrowerCrudController extends CrudController
     		[
     			'name' => 'borrower_assignment_date',
     			'label' => 'Assignment Date',
-    			'type' => 'date'
+    			'type' => 'text',
+                'placeholder' => 'mm/dd/yyyy'
     		]
     	);
 
@@ -210,8 +212,8 @@ class BorrowerCrudController extends CrudController
         (
             [
                 'name' => 'borrower_salary_gross_pay',
-                'label' => 'Salary Gross Pay',
-                ''
+                'label' => 'Salary Gross Pay'
+                'type' => 'text'
             ]
         );
 
@@ -220,6 +222,7 @@ class BorrowerCrudController extends CrudController
             [
                 'name' => 'borrower_monthly_expenses',
                 'label' => 'Monthly Expenses'
+                'type' => 'text'
             ]
         );
 
