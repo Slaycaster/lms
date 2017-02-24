@@ -212,7 +212,7 @@ class BorrowerCrudController extends CrudController
         (
             [
                 'name' => 'borrower_salary_gross_pay',
-                'label' => 'Salary Gross Pay'
+                'label' => 'Salary Gross Pay',
                 'type' => 'text'
             ]
         );
@@ -221,7 +221,7 @@ class BorrowerCrudController extends CrudController
         (
             [
                 'name' => 'borrower_monthly_expenses',
-                'label' => 'Monthly Expenses'
+                'label' => 'Monthly Expenses',
                 'type' => 'text'
             ]
         );
