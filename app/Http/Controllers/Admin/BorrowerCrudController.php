@@ -21,13 +21,14 @@ class BorrowerCrudController extends CrudController
     {
         parent::setup();
 
-        if (!(Auth::user()->company->id == 1))
-        {
-            $this->crud->addClause('where', 'company_id', '=', Auth::user()->company->id);
-        }
         $this->crud->setModel('App\Borrower');
         $this->crud->setRoute('admin/borrowers');
         $this->crud->setEntityNameStrings('borrower', 'borrowers');
+        if (!(Auth::user()->company->id == 1))
+        {
+            //$this->crud->query = $this->crud->query->where('company_id', Auth::user()->company->id); 
+            $this->crud->addClause('where', 'company_id', '=', Auth::user()->company->id);
+        }
         
         $this->crud->enableExportButtons();
 
