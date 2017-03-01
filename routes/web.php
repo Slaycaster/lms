@@ -24,7 +24,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
         CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
     });
 
-    Route::group(['middleware' => ['role:Approving Body'], 'middleware' => ['role:Super Administrator']], function () {
+    Route::group(['middleware' => ['role:Approving Body']], function () {
+        /*=============================================
+                    Loan Application
+        ===============================================*/        
+        Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
+        Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
+        Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
+    });
+
+    Route::group(['middleware' => ['role:Super Administrator']], function() {
         /*=============================================
                     Loan Application
         ===============================================*/        
