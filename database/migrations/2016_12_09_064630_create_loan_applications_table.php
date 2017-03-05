@@ -13,20 +13,24 @@ class CreateLoanApplicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('loan_applications', function (Blueprint $table) {
+        Schema::create('loan_applications', function (Blueprint $table)
+        {
             $table->increments('id');
+            $table->bit('loan_application_is_active');
             $table->double('loan_application_amount');
             $table->text('loan_application_purpose');
             $table->string('loan_application_status');
             $table->double('loan_application_filing_fee');
             $table->double('loan_application_service_fee');
             $table->text('loan_application_remarks');
+            $table->date('loan_application_disbursement_date');
             //RELATIONSHIPS
             $table->integer('loan_application_comaker_id1'); //(borrower_id)
             $table->integer('loan_application_comaker_id2'); //(borrower_id)
             $table->integer('loan_borrower_id');
             $table->integer('payment_term_id');
             $table->integer('loan_interest_id');
+            $table->integer('payment_schedule_id');
             $table->timestamps();
         });
     }

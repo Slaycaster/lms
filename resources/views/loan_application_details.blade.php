@@ -137,6 +137,14 @@
 		                </div>
 		              </div>
 
+		              <div class="form-group">
+		                <label for="disbursement_date" class="control-label">Disbursement Date</label>
+		                <div class="input-group">
+		                  <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+		                  <input type="text" name="disbursement_date" class="form-control" placeholder="yyyy-mm-dd">
+		                </div>
+		              </div>
+
 		              <!-- Remarks Form Group -->
 		              <div class="form-group">
 		                <label for="remarks" class="control-label">Remarks</label>

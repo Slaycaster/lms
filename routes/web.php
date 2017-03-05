@@ -18,30 +18,19 @@ Route::get('/', function () {
 // Admin Interface Routes
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
-    Route::group(['middleware' => ['role:Super Administrator']], function () {
+    Route::group(['middleware' => ['role:Super_Administrator']], function () {
         CRUD::resource('companies', 'Admin\CompanyCrudController');
         CRUD::resource('loan_interests', 'Admin\LoanInterestCrudController');
         CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
+        CRUD::resource('payment_schedules', 'Admin\PaymentScheduleCrudController');
     });
 
-    Route::group(['middleware' => ['role:Super Administrator']], function() {
-        /*=============================================
-                    Loan Application
-        ===============================================*/        
-        Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
-        Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
-        Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
-    });
-    
-    Route::group(['middleware' => ['role:Approving Body']], function () {
-        /*=============================================
-                    Loan Application
-        ===============================================*/        
-        Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
-        Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
-        Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
-    });
-
+    /*=============================================
+                Loan Application
+    ===============================================*/        
+    Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
+    Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
+    Route::post('loan_applications/process_application', 'LoanApplicationController@process_application');
 
     CRUD::resource('borrowers', 'Admin\BorrowerCrudController');
 
@@ -79,6 +68,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
   // [...] other routes
 });
 
+Route::get('loan_applications/active/data', 'LoanApplicationController@active_data');
 Route::get('loan_applications/pending/data', 'LoanApplicationController@pending_data');
 Route::get('loan_applications/declined/data', 'LoanApplicationController@declined_data');
 Route::get('loan_payments/applications', 'LoanPaymentController@approved_data');

@@ -16,6 +16,47 @@
 	@foreach($loan_application as $key)
 
 	<?php
+
+		$paidForTheMonth = false;
+		$current_date = date('M Y');
+
+		$monthsPaid = 0;
+		$monthsUnpaid = 0;
+		$monthsToBePaid = 0;
+
+		$monthlyInterest = $key[0]->loan_application_amount * ($key[0]->loan_interest->loan_interest_rate * .01);
+
+		$totalLoan = $key[0]->loan_application_amount +  $key[0]->loan_application_filing_fee + $key[0]->loan_application_service_fee + ($monthlyInterest * $key[0]->loan_payment_term->loan_payment_term_no_of_months);
+
+		//Starting Month and Year for your payment since the loan was approved
+		$paymentStartDate = (new DateTime(date('Y-m-d', strtotime($key[0]->loan_application_disbursement_date))))->modify('first day of this month');
+
+		//Current Date formatted for DB's datetimestamp
+		$currentDate = (new DateTime(date('Y-m-d')))->modify('first day of this month');
+
+		//Ending Month and year for your payment since the loan was approved
+		$paymentEndDate = (new DateTime(date('Y-m-d', strtotime($key[0]->loan_application_disbursement_date .'+'. $key[0]->loan_payment_term->loan_payment_term_no_of_months . 'months'))))->modify('first day of this month');
+
+		//1 month payment interval
+		$paymentInterval = DateInterval::createFromDateString($key[0]->payment_schedule->payment_schedule_days_interval . ' days');
+		$paymentPeriod = new DatePeriod($paymentStartDate, $paymentInterval, $paymentEndDate);
+		$paymentPeriodToCurrentDate = new DatePeriod($currentDate, $paymentInterval, $paymentEndDate);
+
+		//Count the payment period from the start to the current date
+		$paymentPeriodToCurrentDate_count = count($paymentPeriodToCurrentDate);
+
+		//Getting how many months already paid
+		foreach($key[0]->loan_payments as $loan_payment)
+		{
+			$monthsPaid += (int)$loan_payment->loan_payment_count;
+		}
+
+		//Getting how many months having late payments (due)
+		$monthsUnpaid = $paymentPeriodToCurrentDate_count - $monthsPaid;
+		$monthsToBePaid = $key[0]->loan_payment_term->loan_payment_term_no_of_months - $paymentPeriodToCurrentDate_count;
+		
+
+		/*
 		$paidForTheMonth = false;
 		$current_date = date('M Y');
 
@@ -53,42 +94,6 @@
 		//Getting how many months having late payments (due)
 		$monthsUnpaid = $paymentPeriodToCurrentDate_count - $monthsPaid;
 		$monthsToBePaid = $key[0]->loan_payment_term->loan_payment_term_no_of_months - $paymentPeriodToCurrentDate_count;
-
-		/*==================================================================
-							Checks for balances and dues.
-		====================================================================
-
-		foreach($paymentPeriod as $dt)
-		{
-			$payment_period_date = $dt->format('M Y');
-			$payment_history_date = new Date();
-
-			foreach($key[0]->loan_payments as $payment_history)
-			{
-				$payment_history_date = date('M Y', strtotime($payment_history->created_at));
-			}
-
-			if (strtotime($payment_period_date) == strtotime($payment_history_date))
-			{
-				$monthsPaid = $monthsPaid + 1;
-				if(strtotime($payment_period_date) == strtotime($current_date))
-				{
-					$paidForTheMonth = true;			
-				}
-			}
-
-			else if (strtotime($payment_period_date) >= strtotime($current_date))
-			{
-				$monthsToBePaid = $monthsToBePaid + 1;
-			}
-
-			else if (strtotime($payment_period_date) < strtotime($current_date))
-			{
-				$monthsUnpaid = $monthsUnpaid + 1;
-			}
-
-
-		}
 		*/
 	?>
 
@@ -280,6 +285,33 @@
 			</div>
 		</div>
 		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Payment Schedules
+				</div>
+
+				<div class="panel-body">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td><strong>Date</strong></td>
+								<td><strong>Amount</strong></td>
+							</tr>
+						</thead>
+
+						<tbody>
+							@foreach($key[0]->loan_payments as $payments)
+								<tr>
+									<td>{{ date('M j, Y - H:i:s', strtotime($payments->created_at)) }}</td>
+									<td>{{$payments->loan_payment_amount}}</td>
+									<td>{{ $payments->remarks }}</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+				</div>
+			</div>
+
 			<div class="panel panel-success">
 				<div class="panel-heading">
 					Payment History

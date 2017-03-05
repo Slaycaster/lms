@@ -160,6 +160,16 @@
                     </div>
                   </div>
 
+                  <!-- Service Fee From Group -->
+                  <div class="form-group">
+                    <label for="disbursement_date" class="control-label">Loan Disbursement Date </label>
+                    <div class="input-group">
+                      <span class="input-group-addon">₱</span>
+                      <input type="text" name="service_fee" class="form-control">
+                      <span class="input-group-addon">.00</span>
+                    </div>
+                  </div>
+
               <button type="submit" class="btn btn-block btn-primary btn-sm">Submit Loan Application</button>
           </form>
         </div>

@@ -16,7 +16,7 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
           <li class="header">{{ trans('backpack::base.administration') }}</li>
-          @role('Super Administrator')
+          @role('Super_Administrator')
             <!-- ================================================ -->
             <!-- ==== Recommended place for admin menu items ==== -->
             <!-- ================================================ -->
@@ -34,8 +34,17 @@
           </span></a></li>
 
           <li class="header">LOAN MANAGEMENT</li>
-          <li><a href="{{ url('admin/loan_applications') }}"><i class="fa fa-file-text-o"></i> <span>Loan Application</span></a></li>
-          @role('Approving Body')
+
+          <li class="treeview">
+            <a href="#"><i class="fa fa-certificate"></i> <span>Loan Applications</span> <i class="fa fa-angle-left pull-right"></i></a> 
+            <ul class="treeview-menu">
+              <li><a href="{{ url('admin/loan_applications') }}"><i class="fa fa-file-text-o"></i> <span>Apply for a Loan Application</span></a></li>
+              <li><a href="{{ url('admin/loan_applications/active') }}"><i class="fa fa-circle-o"></i> <span>Approve/Decline Loan Applications</span></a></li>
+              <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
+            </ul>
+          </li>
+          <!--
+          @hasanyrole('Super_Administrator')
           <li class="treeview">
             <a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span> <i class="fa fa-angle-left pull-right"></i></a>
             <ul class="treeview-menu">
@@ -44,19 +53,8 @@
             </ul>
           </li>
           @endrole
-
-          @role('Super Administrator')
-          <li class="treeview">
-            <a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span> <i class="fa fa-angle-left pull-right"></i></a>
-            <ul class="treeview-menu">
-              <li><a href="{{ url('admin/loan_applications/pending')}}"> <i class="fa fa-circle-o"></i> <span>Pending</span> </a></li>
-              <li><a href="{{ url('admin/loan_applications/declined')}}"> <i class="fa fa-window-close-o"></i> <span>Declined</span></a></li>
-            </ul>
-          </li>
-          @endrole
-
-          <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
-          @role('Super Administrator')
+          -->
+          @role('Super_Administrator')
           <li class="header">MAINTENANCE</li>
           <li><a href="{{ url('admin/companies') }}"><i class="fa fa-building"></i> <span>Companies</span></a></li>
           <li><a href="{{ url('admin/loan_interests') }}"><i class="fa fa-percent"></i> <span>Loan Interests</span></a></li>

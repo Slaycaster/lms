@@ -36,6 +36,11 @@ class LoanApplicationController extends Controller
     		->with('loan_interests', $loan_interests);
     }
 
+    public function active_view()
+    {
+        return view('loan_application_active');
+    }
+
     public function pending_view()
     {
         return view('loan_application_pending');
@@ -70,6 +75,7 @@ class LoanApplicationController extends Controller
             Save the current transaction to the database
         ---------------------------------------------------*/
         $loan_application = new LoanApplication();
+        $loan_application->loan_application_is_active = 1;
         $loan_application->loan_application_amount = Request::input('amount');
         $loan_application->loan_application_purpose = Request::input('purpose');
         $loan_application->loan_application_status = "Pending";
@@ -98,6 +104,7 @@ class LoanApplicationController extends Controller
         if (isset($_POST['approve']))
         {
             $loan_application->loan_application_status = "Approved";
+            $loan_application->loan_application_disbursement_date = Request::input('disbursement_date');
             Session::flash('message', 'Loan Application Approved!');
         } 
         else if (isset($_POST['decline']))
@@ -177,6 +184,42 @@ class LoanApplicationController extends Controller
                 ->add_column('Actions', '{{Form::radio(\'comaker2_id\', $id, false)}}')
                 ->remove_column('id')
                 ->make();
+        }
+    }
+
+    public function active_data()
+    {
+        if (Auth::user()->company->id == 1)
+        {
+            $loan_applications = LoanApplication::where('loan_application_is_active', '=', '1')
+                ->where('loan_application_status', '=', 'Pending')
+                ->orWhere('loan_application_status', '=', 'Declined')
+                ->with('loan_borrower')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
+                ->remove_column('id')
+                ->make();
+        }
+        else
+        {
+            $loan_applications = LoanApplication::where('loan_application_is_active', '=', '1')
+                ->with(['loan_borrower' => function($q) {
+                    $q->where('company_id', '=', Auth::user()->company->id);
+                }])
+                ->where('loan_application_status', '=', 'Pending')
+                ->orWhere('loan_application_status', '=', 'Declined')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
+                ->remove_column('id')
+                ->make();   
         }
     }
 
