@@ -100,8 +100,7 @@ class LoanPaymentController extends Controller
 
 	public function approved_data()
     {
-        if(!(Auth::user()->company->id == 1))
-        {
+        
             $loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
                 ->with(['loan_borrower' => function($q) {
                     $q->where('company_id', '=', Auth::user()->company->id);
@@ -111,17 +110,7 @@ class LoanPaymentController extends Controller
                 ->with('loan_borrower.company')
                 ->with('loan_payments')
                 ->select('loan_applications.*');
-        }
-        else
-        {
-            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
-                ->with('loan_borrower')
-                ->with('loan_interest')
-                ->with('loan_payment_term')
-                ->with('loan_borrower.company')
-                ->with('loan_payments')
-                ->select('loan_applications.*');
-        }
+        
 
         return Datatables::of($loan_applications)
             ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a> <a href=\'{{ url(\'admin/loan_payments/promissory_note/\' . $id )}}\' class=\'btn btn-warning btn-xs\'> Generate Promissory Note </a>')

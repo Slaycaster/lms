@@ -48,14 +48,14 @@
 		        serverSide: true,
 		        ajax: '{!! url('loan_payments/applications') !!}',
 		        columns: [
-		          {data: '13.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
-		          {data: '13.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
-		          {data: '13.company.company_name', name: 'loan_borrower.company.company_name'},
-		          {data: '0', name: 'loan_applications.loan_application_amount'},
+		          {data: '16.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
+		          {data: '16.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
+		          {data: '16.company.company_name', name: 'loan_borrower.company.company_name'},
+		          {data: '1', name: 'loan_applications.loan_application_amount'},
 		          {data: '16', name: 'loan_payments', searchable: false},
-		          {data: '14.loan_interest_name', name: 'loan_interest.loan_interest_name'},
-		          {data: '15.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
-		          {data: '17', name: 'Actions', orderable: false, searchable: false}
+		          {data: '17.loan_interest_name', name: 'loan_interest.loan_interest_name'},
+		          {data: '18.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
+		          {data: '20', name: 'Actions', orderable: false, searchable: false}
 		        ]
 		      });
 		    });

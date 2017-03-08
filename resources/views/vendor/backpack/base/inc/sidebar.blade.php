@@ -44,7 +44,6 @@
             </ul>
           </li>
           <!--
-          @hasanyrole('Super_Administrator')
           <li class="treeview">
             <a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span> <i class="fa fa-angle-left pull-right"></i></a>
             <ul class="treeview-menu">
@@ -52,13 +51,15 @@
               <li><a href="{{ url('admin/loan_applications/declined')}}"> <i class="fa fa-window-close-o"></i> <span>Declined</span></a></li>
             </ul>
           </li>
-          @endrole
           -->
           @role('Super_Administrator')
+          
           <li class="header">MAINTENANCE</li>
           <li><a href="{{ url('admin/companies') }}"><i class="fa fa-building"></i> <span>Companies</span></a></li>
           <li><a href="{{ url('admin/loan_interests') }}"><i class="fa fa-percent"></i> <span>Loan Interests</span></a></li>
           <li><a href="{{ url('admin/loan_payment_terms') }}"><i class="fa fa-industry"></i> <span>Loan Payment Terms</span></a></li>
+          <li><a href="{{ url('admin/payment_schedules') }}"><i class="fa fa-calendar"></i> <span>Payment Schedules</span></a></li>
+
           @endrole
           <li class="header">MASTER ENTRY</li>
           <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-user-plus"></i> <span>Loan Borrowers</span></a></li>

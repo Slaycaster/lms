@@ -14,17 +14,13 @@ class RoleMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $role, $permission)
+    public function handle($request, Closure $next, $role)
     {
         if (Auth::guest()) {
             return redirect($urlOfYourLoginPage);
         }
 
         if (! $request->user()->hasRole($role)) {
-           abort(403);
-        }
-
-        if (! $request->user()->can($permission)) {
            abort(403);
         }
         

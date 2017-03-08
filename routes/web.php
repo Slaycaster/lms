@@ -38,6 +38,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
                     Loan Application
     ===============================================*/
     Route::get('loan_applications', 'LoanApplicationController@index');
+    Route::get('loan_applications/active', 'LoanApplicationController@active_view');
     Route::get('loan_applications/details/{id}', 'LoanApplicationController@details');
     Route::post('loan_applications/save', 'LoanApplicationController@save');
 

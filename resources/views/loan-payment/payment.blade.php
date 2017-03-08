@@ -56,6 +56,7 @@
 		$monthsToBePaid = $key[0]->loan_payment_term->loan_payment_term_no_of_months - $paymentPeriodToCurrentDate_count;
 		
 
+
 		/*
 		$paidForTheMonth = false;
 		$current_date = date('M Y');
@@ -176,7 +177,7 @@
 						</form>
 			          @else
 			              @if($paidForTheMonth)
-			              		<p class="text-success">Payment already made this month.</p>
+			              		<p class="text-success">Payment already made this payment schedule.</p>
 			              @else
 				              <form action="{{ url('admin/loan_payments/process_payment') }}" method="POST">
 				              		
@@ -187,7 +188,7 @@
 					                <label for="amount" class="control-label">Monthly Payment</label>
 					                <div class="input-group">
 					                  <span class="input-group-addon">₱</span>
-					                  <input type="text" name="amount" class="form-control" value="{!! round(($totalLoan / $key[0]->loan_payment_term->loan_payment_term_no_of_months), 2) !!}">
+					                  <input type="text" name="amount" class="form-control" value="{!! round(($totalLoan / $key[0]->loan_payment_term->loan_payment_term_no_of_months) * $key[0]->payment_schedule->payment_schedule_days_interval / 30, 2) !!}">
 					                </div>
 					              </div>
 
@@ -295,16 +296,15 @@
 						<thead>
 							<tr>
 								<td><strong>Date</strong></td>
-								<td><strong>Amount</strong></td>
+								
 							</tr>
 						</thead>
 
 						<tbody>
-							@foreach($key[0]->loan_payments as $payments)
+							@foreach($paymentPeriod as $dt)
 								<tr>
-									<td>{{ date('M j, Y - H:i:s', strtotime($payments->created_at)) }}</td>
-									<td>{{$payments->loan_payment_amount}}</td>
-									<td>{{ $payments->remarks }}</td>
+									<td>{{ $dt->format('M j, Y') }}</td>
+									
 								</tr>
 							@endforeach
 						</tbody>
@@ -337,7 +337,6 @@
 							<tr>
 								<td><strong>Date</strong></td>
 								<td><strong>Amount</strong></td>
-								<td><strong>Remarks</strong></td>
 							</tr>
 						</thead>
 
@@ -346,7 +345,8 @@
 								<tr>
 									<td>{{ date('M j, Y - H:i:s', strtotime($payments->created_at)) }}</td>
 									<td>{{$payments->loan_payment_amount}}</td>
-									<td>{{ $payments->remarks }}</td>
+									<!-- Monthly Loan * Days Inteval / 30 -->
+									<td>{{ round(($totalLoan / $key[0]->loan_payment_term->loan_payment_term_no_of_months) * $key[0]->payment_schedule->payment_schedule_days_interval / 30, 2) }}</td>
 								</tr>
 							@endforeach
 						</tbody>
