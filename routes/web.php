@@ -26,7 +26,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     });
 
     /*=============================================
-                Loan Application
+            Approve/Decline Loan Application
     ===============================================*/        
     Route::get('loan_applications/pending', 'LoanApplicationController@pending_view');
     Route::get('loan_applications/declined', 'LoanApplicationController@declined_view');
@@ -38,7 +38,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
                     Loan Application
     ===============================================*/
     Route::get('loan_applications', 'LoanApplicationController@index');
-    Route::get('loan_applications/active', 'LoanApplicationController@active_view');
+    Route::get('loan_applications/create', 'LoanApplicationController@create');
+    Route::get('loan_applications/active', 'LoanApplicationController@active');
     Route::get('loan_applications/details/{id}', 'LoanApplicationController@details');
     Route::post('loan_applications/save', 'LoanApplicationController@save');
 
@@ -69,7 +70,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
   // [...] other routes
 });
 
+//Soon this will be in /admin route to protect the data from public.
+Route::get('loan_applications/index/data', 'LoanApplicationController@index_data');
 Route::get('loan_applications/active/data', 'LoanApplicationController@active_data');
-Route::get('loan_applications/pending/data', 'LoanApplicationController@pending_data');
-Route::get('loan_applications/declined/data', 'LoanApplicationController@declined_data');
 Route::get('loan_payments/applications', 'LoanPaymentController@approved_data');

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\LoanApplication;
 use App\LoanPaymentTerm;
+use App\PaymentSchedule;
 use App\LoanInterest;
 use App\Borrower;
 use Yajra\Datatables\Datatables;
@@ -24,21 +25,25 @@ class LoanApplicationController extends Controller
 
     public function index()
     {
-        if (!(Auth::user()->company->id == 1))
-        {
-        }
-    	$payment_terms = LoanPaymentTerm::pluck('loan_payment_term_name', 'id');
-    	$loan_interests = LoanInterest::pluck('loan_interest_name', 'id');
-    	$loan_applications = LoanApplication::all();
-    	return view('loan_application')
-    		->with('loan_applications', $loan_applications)
-    		->with('payment_terms', $payment_terms)
-    		->with('loan_interests', $loan_interests);
+        return view('loan_application_index');
     }
 
-    public function active_view()
+    public function active()
     {
         return view('loan_application_active');
+    }
+
+    public function create()
+    {
+        $payment_terms = LoanPaymentTerm::pluck('loan_payment_term_name', 'id');
+        $loan_interests = LoanInterest::pluck('loan_interest_name', 'id');
+        $payment_schedules = PaymentSchedule::pluck('payment_schedule_name', 'id');
+        $loan_applications = LoanApplication::all();
+        return view('loan_application')
+            ->with('loan_applications', $loan_applications)
+            ->with('payment_terms', $payment_terms)
+            ->with('payment_schedules', $payment_schedules)
+            ->with('loan_interests', $loan_interests);
     }
 
     public function pending_view()
@@ -59,7 +64,7 @@ class LoanApplicationController extends Controller
             ->with('loan_interest')
             ->with('loan_payment_term')
             ->get();
-        //dd($loan_application);
+
         return view('loan_application_details')
             ->with('loan_application', compact('loan_application'));
     }
@@ -91,7 +96,7 @@ class LoanApplicationController extends Controller
 
         Session::flash('message', 'Loan Application successfully saved! It is now currently pending for approval.');
 
-        return Redirect::to('admin/loan_applications');
+        return Redirect::to('admin/loan_applications/create');
     }
 
     public function process_application()
@@ -187,6 +192,40 @@ class LoanApplicationController extends Controller
         }
     }
 
+    public function index_data()
+    {
+        if (Auth::user()->company->id == 1)
+        {
+            $loan_applications = LoanApplication::where('loan_application_is_active', '=', '1')
+                ->with('loan_borrower')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*')
+                ->orderBy('id', 'desc');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->remove_column('id')
+                ->make();
+        }
+        else
+        {
+            $loan_applications = LoanApplication::where('loan_application_is_active', '=', '1')
+                ->with(['loan_borrower' => function($q) {
+                    $q->where('company_id', '=', Auth::user()->company->id);
+                }])
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*')
+                ->orderBy('id', 'desc');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->remove_column('id')
+                ->make();   
+        }
+    }
+
     public function active_data()
     {
         if (Auth::user()->company->id == 1)
@@ -198,7 +237,8 @@ class LoanApplicationController extends Controller
                 ->with('loan_interest')
                 ->with('loan_payment_term')
                 ->with('loan_borrower.company')
-                ->select('loan_applications.*');
+                ->select('loan_applications.*')
+                ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
                 ->remove_column('id')
@@ -215,14 +255,15 @@ class LoanApplicationController extends Controller
                 ->with('loan_interest')
                 ->with('loan_payment_term')
                 ->with('loan_borrower.company')
-                ->select('loan_applications.*');
+                ->select('loan_applications.*')
+                ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
                 ->remove_column('id')
                 ->make();   
         }
     }
-
+/*
     public function pending_data()
     {
         if (Auth::user()->company->id == 1)
@@ -286,5 +327,5 @@ class LoanApplicationController extends Controller
                 ->make();   
         }
     }
-
+*/
 }

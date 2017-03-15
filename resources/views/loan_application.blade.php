@@ -17,70 +17,6 @@
   <form action="{{url('admin/loan_applications/save')}}" method="POST">
     {{ csrf_field() }}
     <div class="col-md-8">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Select
-        </div>
-
-        <div class="panel-body">
-          <h4>Choose the Borrower</h4>
-          <table class="display responsive no-wrap" id="users-table" width="100%">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Employment Date</th>
-                <th>Assignment Date</th>
-                <th>Select</th>
-              </tr>
-            </thead>
-          </table>
-          <hr>
-          <!-- Co-Maker Form Group -->
-          <div class="form-group">
-            <h4>Choose the first Co-Maker</h4>
-            <div class="input-group">
-              <table class="table table-bordered" id="comaker1-table">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Middle Name</th>
-                    <th>Employment Date</th>
-                    <th>Assignment Date</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-          </div>
-          <hr>
-          <!-- Co-Maker Form Group -->
-          <div class="form-group">
-            <h4>Choose the second Co-Maker</h4>
-            <div class="input-group">
-              <table class="table table-bordered" id="comaker2-table">
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Middle Name</th>
-                    <th>Employment Date</th>
-                    <th>Assignment Date</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
       <div class="panel panel-primary">
         <div class="panel-heading">
           Loan Application Details
@@ -90,7 +26,7 @@
               <!-- Date & Time Form Group -->
               <div class="form-group">
                   <label for="time_date" class="control-label">
-                      Date & Time
+                      Application Date & Time
                   </label>
                   <div>
                       <?php
@@ -118,7 +54,7 @@
 
               <!-- Payment Terms x Loan Interest Row Group -->
               <div class="row">
-                <div class="col-md-9 col-sm-5">
+                <div class="col-md-3 col-sm-5">
                     <!-- Payment Terms Form Group -->
                     <div class="form-group">
                       <label for="payment_term_id" class="control-label">Payment Terms</label>
@@ -128,7 +64,7 @@
                     </div>
                 </div>
 
-                <div class="col-xs-9 col-sm-5">
+                <div class="col-md-3 col-sm-5">
                     <!-- Loan Interest Form Group -->
                     <div class="form-group">
                       <label for="loan_interest_id" class="control-label">Loan Interest</label>
@@ -136,10 +72,23 @@
                         {{ Form::select('loan_interest_id', $loan_interests, null, ['class' => 'form-control']) }}
                       </div>
                     </div>              
-                </div>                
+                </div>
+
+                <div class="col-md-3 col-sm-5">
+                    <!-- Loan Interest Form Group -->
+                    <div class="form-group">
+                      <label for="payment_schedule_id" class="control-label">Payment Schedule</label>
+                      <div class="input-group">
+                        {{ Form::select('payment_schedule_id', $payment_schedules, null, ['class' => 'form-control']) }}
+                      </div>
+                    </div>              
+                </div>  
               </div>
 
-                  <!-- Filing Fees Form Group -->
+              <div class="row">
+
+                <!-- Filing Fees Form Group -->
+                <div class="col-md-6 col-sm-10">
                   <div class="form-group">
                     <label for="filing_fee" class="control-label">Filing Fee</label>
                     <div class="input-group">
@@ -148,8 +97,9 @@
                       <span class="input-group-addon">.00</span>
                     </div>
                   </div>
+                </div>
 
-
+                <div class="col-md-6 col-sm-10">
                   <!-- Service Fee From Group -->
                   <div class="form-group">
                     <label for="service_fee" class="control-label">Service Fee</label>
@@ -159,14 +109,16 @@
                       <span class="input-group-addon">.00</span>
                     </div>
                   </div>
+                </div>
+
+              </div>
 
                   <!-- Service Fee From Group -->
                   <div class="form-group">
                     <label for="disbursement_date" class="control-label">Loan Disbursement Date </label>
                     <div class="input-group">
-                      <span class="input-group-addon">₱</span>
-                      <input type="text" name="service_fee" class="form-control">
-                      <span class="input-group-addon">.00</span>
+                      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                      <input class="datepicker" name="service_fee" class="form-control">
                     </div>
                   </div>
 
@@ -174,7 +126,67 @@
           </form>
         </div>
       </div>
-		</div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Select
+        </div>
+
+        <div class="panel-body">
+          <h4>Choose the Borrower</h4>
+          <table class="display responsive no-wrap" id="users-table" width="100%" data-page-length='5'>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Select</th>
+              </tr>
+            </thead>
+          </table>
+          <hr>
+          <!-- Co-Maker Form Group -->
+          <div class="form-group">
+            <h4>Choose the first Co-Maker</h4>
+            <div class="input-group">
+              <table class="table table-bordered" id="comaker1-table" data-page-length='5'>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Select</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+          <hr>
+          <!-- Co-Maker Form Group -->
+          <div class="form-group">
+            <h4>Choose the second Co-Maker</h4>
+            <div class="input-group">
+              <table class="table table-bordered" id="comaker2-table" data-page-length='5'>
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Select</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 	</div>
   @section('after_scripts')
   <script type="text/javascript">
@@ -189,11 +201,14 @@
           {data: 1, name: 'borrower_last_name'},
           {data: 2, name: 'borrower_first_name'},
           {data: 3, name: 'borrower_middle_name'},
-          {data: 4, name: 'borrower_employment_date'},
-          {data: 5, name: 'borrower_assignment_date'},
           {data: 6, name: 'Actions', orderable: false, searchable: false}
         ]
       });
+    });
+
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        startDate: '-3d'
     });
   </script>
 
@@ -209,8 +224,6 @@
           {data: 1, name: 'borrower_last_name'},
           {data: 2, name: 'borrower_first_name'},
           {data: 3, name: 'borrower_middle_name'},
-          {data: 4, name: 'borrower_employment_date'},
-          {data: 5, name: 'borrower_assignment_date'},
           {data: 6, name: 'Actions', orderable: false, searchable: false}
         ]
       });
@@ -229,12 +242,12 @@
           {data: 1, name: 'borrower_last_name'},
           {data: 2, name: 'borrower_first_name'},
           {data: 3, name: 'borrower_middle_name'},
-          {data: 4, name: 'borrower_employment_date'},
-          {data: 5, name: 'borrower_assignment_date'},
           {data: 6, name: 'Actions', orderable: false, searchable: false}
         ]
       });
     });
   </script>
+
+
   @endsection
 @endsection
