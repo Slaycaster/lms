@@ -29,13 +29,13 @@
 		$totalLoan = $key[0]->loan_application_amount +  $key[0]->loan_application_filing_fee + $key[0]->loan_application_service_fee + ($monthlyInterest * $key[0]->loan_payment_term->loan_payment_term_no_of_months);
 
 		//Starting Month and Year for your payment since the loan was approved
-		$paymentStartDate = (new DateTime(date('Y-m-d', strtotime($key[0]->loan_application_disbursement_date))))->modify('first day of this month');
+		$paymentStartDate = (new DateTime(date('Y-m-d', strtotime($key[0]->loan_application_disbursement_date))));
 
 		//Current Date formatted for DB's datetimestamp
 		$currentDate = (new DateTime(date('Y-m-d')))->modify('first day of this month');
 
 		//Ending Month and year for your payment since the loan was approved
-		$paymentEndDate = (new DateTime(date('Y-m-d', strtotime($key[0]->loan_application_disbursement_date .'+'. $key[0]->loan_payment_term->loan_payment_term_no_of_months . 'months'))))->modify('first day of this month');
+		$paymentEndDate = (new DateTime(date('Y-m-d', strtotime($key[0]->loan_application_disbursement_date .'+'. $key[0]->loan_payment_term->loan_payment_term_no_of_months . 'months'))));
 
 		//1 month payment interval
 		$paymentInterval = DateInterval::createFromDateString($key[0]->payment_schedule->payment_schedule_days_interval . ' days');
@@ -55,47 +55,6 @@
 		$monthsUnpaid = $paymentPeriodToCurrentDate_count - $monthsPaid;
 		$monthsToBePaid = $key[0]->loan_payment_term->loan_payment_term_no_of_months - $paymentPeriodToCurrentDate_count;
 		
-
-
-		/*
-		$paidForTheMonth = false;
-		$current_date = date('M Y');
-
-		$monthsPaid = 0;
-		$monthsUnpaid = 0;
-		$monthsToBePaid = 0;
-
-		$monthlyInterest = $key[0]->loan_application_amount * ($key[0]->loan_interest->loan_interest_rate * .01);
-
-		$totalLoan = $key[0]->loan_application_amount +  $key[0]->loan_application_filing_fee + $key[0]->loan_application_service_fee + ($monthlyInterest * $key[0]->loan_payment_term->loan_payment_term_no_of_months);
-
-		//Starting Month and Year for your payment since the loan was approved
-		$paymentStartDate = (new DateTime(date('Y-m-d', strtotime($key[0]->updated_at))))->modify('first day of this month');
-
-		//Current Date formatted for DB's datetimestamp
-		$currentDate = (new DateTime(date('Y-m-d')))->modify('first day of this month');
-
-		//Ending Month and year for your payment since the loan was approved
-		$paymentEndDate = (new DateTime(date('Y-m-d', strtotime($key[0]->updated_at .'+'. $key[0]->loan_payment_term->loan_payment_term_no_of_months . 'months'))))->modify('first day of this month');
-
-		//1 month payment interval
-		$paymentInterval = DateInterval::createFromDateString('1 month');
-		$paymentPeriod = new DatePeriod($paymentStartDate, $paymentInterval, $paymentEndDate);
-		$paymentPeriodToCurrentDate = new DatePeriod($currentDate, $paymentInterval, $paymentEndDate);
-
-		//Count the payment period from the start to the current date
-		$paymentPeriodToCurrentDate_count = count($paymentPeriodToCurrentDate);
-
-		//Getting how many months already paid
-		foreach($key[0]->loan_payments as $loan_payment)
-		{
-			$monthsPaid += (int)$loan_payment->loan_payment_count;
-		}
-
-		//Getting how many months having late payments (due)
-		$monthsUnpaid = $paymentPeriodToCurrentDate_count - $monthsPaid;
-		$monthsToBePaid = $key[0]->loan_payment_term->loan_payment_term_no_of_months - $paymentPeriodToCurrentDate_count;
-		*/
 	?>
 
 	<div class="row">

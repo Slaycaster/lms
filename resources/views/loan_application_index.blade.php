@@ -27,6 +27,7 @@
 					<table class="table table-bordered" id="users-table" data-page-length='10'>
 			            <thead>
 			              <tr>
+			              	<th>ID</th>
 			              	<th>Status</th>
 			                <th>Last Name</th>
 			                <th>First Name</th>
@@ -50,14 +51,15 @@
 		        serverSide: true,
 		        ajax: '{!! url('loan_applications/index/data') !!}',
 		        columns: [
-		          {data: '3', name: 'loan_applications.loan_application_status'},
-		          {data: '16.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
-		          {data: '16.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
-		          {data: '16.company.company_code', name: 'loan_borrower.company.company_name'},
-		          {data: '1', name: 'loan_applications.loan_application_amount'},
-		          {data: '18.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
-		          {data: '17.loan_interest_name', name: 'loan_interest.loan_interest_name'},
-		          {data: '19', name: 'Actions', orderable: false, searchable: false}
+		          {data: '0', name: 'loan_applications.id'},
+		          {data: '4', name: 'loan_applications.loan_application_status'},
+		          {data: '17.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
+		          {data: '17.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
+		          {data: '17.company.company_code', name: 'loan_borrower.company.company_name'},
+		          {data: '2', name: 'loan_applications.loan_application_amount'},
+		          {data: '19.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
+		          {data: '18.loan_interest_name', name: 'loan_interest.loan_interest_name'},
+		          {data: '20', name: 'Actions', orderable: false, searchable: false}
 		        ]
 		      });
 		    });

@@ -71,6 +71,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 });
 
 //Soon this will be in /admin route to protect the data from public.
+Route::post('loan_applications/precompute', 'LoanApplicationController@precompute');
 Route::get('loan_applications/index/data', 'LoanApplicationController@index_data');
 Route::get('loan_applications/active/data', 'LoanApplicationController@active_data');
 Route::get('loan_payments/applications', 'LoanPaymentController@approved_data');

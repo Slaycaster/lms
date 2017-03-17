@@ -28,9 +28,10 @@
 			                <th>Last Name</th>
 			                <th>First Name</th>
 			                <th>Company</th>
-			                <th>Amount</th>
-			                <th>Payment Terms</th>
+			                <th>Principal Amount</th>
 			                <th>Interest</th>
+			                <th>Total Amount</th>
+			                <th>Payment Terms</th>
 			                <th>Actions</th>
 			              </tr>
 			        	</thead>

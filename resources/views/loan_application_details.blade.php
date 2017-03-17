@@ -15,82 +15,7 @@
 @section('content')
 	@foreach($loan_application as $key)
 	<div class="row">
-		<div class="col-md-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					Borrower Details
-				</div>
-				<div class="panel-body">
-
-						<div class="row">
-							
-							<div class="col-md-12">
-								<h4><strong>{{ $key[0]->loan_borrower->borrower_last_name }}, {{ $key[0]->loan_borrower->borrower_first_name }} {{ $key[0]->loan_borrower->borrower_middle_name }}</strong>
-								</h4>
-								<p>
-									
-									<strong>Borrower's Address:</strong> {{ $key[0]->loan_borrower->borrower_home_address }}
-									<br>
-									<strong>E-mail:</strong> {{ $key[0]->loan_borrower->borrower_email }}
-									<br>
-									<strong>Civil Status:</strong> {{ $key[0]->loan_borrower->borrower_civil_status }}
-									<br>
-									<strong>Birth Date:</strong> {{ $key[0]->loan_borrower->borrower_birth_date }}
-									<br>
-									<strong>Employment Date:</strong> {{ $key[0]->loan_borrower->borrower_employment_date }}
-									<br>
-									<strong>Assignment Date:</strong> {{ $key[0]->loan_borrower->borrower_assignment_date }}
-									<br>
-									<strong>Company:</strong> {{ $key[0]->loan_borrower->company->company_name }} ({{ $key[0]->loan_borrower->company->company_code }})
-								</p>
-							</div>
-							<div class="col-md-12">
-								<h3>Co-Maker 1:</h3>
-								<h4><strong>{{ $key[0]->comaker1->borrower_last_name }}, {{ $key[0]->comaker1->borrower_first_name }} {{ $key[0]->comaker1->borrower_middle_name }}</strong>
-								</h4>
-								<p>
-									
-									<strong>Borrower's Address:</strong> {{ $key[0]->comaker1->borrower_home_address }}
-									<br>
-									<strong>E-mail:</strong> {{ $key[0]->comaker1->borrower_email }}
-									<br>
-									<strong>Civil Status:</strong> {{ $key[0]->comaker1->borrower_civil_status }}
-									<br>
-									<strong>Birth Date:</strong> {{ $key[0]->comaker1->borrower_birth_date }}
-									<br>
-									<strong>Employment Date:</strong> {{ $key[0]->comaker1->borrower_employment_date }}
-									<br>
-									<strong>Assignment Date:</strong> {{ $key[0]->comaker1->borrower_assignment_date }}
-									<br>
-									<strong>Company:</strong> {{ $key[0]->comaker1->company->company_name }} ({{ $key[0]->comaker1->company->company_code }})
-								</p>
-							</div>
-							<div class="col-md-12">
-								<h3>Co-Maker 2:</h3>
-								<h4><strong>{{ $key[0]->comaker2->borrower_last_name }}, {{ $key[0]->comaker2->borrower_first_name }} {{ $key[0]->comaker2->borrower_middle_name }}</strong>
-								</h4>
-								<p>
-									
-									<strong>Borrower's Address:</strong> {{ $key[0]->comaker2->borrower_home_address }}
-									<br>
-									<strong>E-mail:</strong> {{ $key[0]->comaker2->borrower_email }}
-									<br>
-									<strong>Civil Status:</strong> {{ $key[0]->comaker2->borrower_civil_status }}
-									<br>
-									<strong>Birth Date:</strong> {{ $key[0]->comaker2->borrower_birth_date }}
-									<br>
-									<strong>Employment Date:</strong> {{ $key[0]->comaker2->borrower_employment_date }}
-									<br>
-									<strong>Assignment Date:</strong> {{ $key[0]->comaker2->borrower_assignment_date }}
-									<br>
-									<strong>Company:</strong> {{ $key[0]->comaker2->company->company_name }} ({{ $key[0]->comaker2->company->company_code }})
-								</p>
-							</div>
-						</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6">
+	<div class="col-md-8">
 			<div class="panel panel-warning">
 				<div class="panel-heading">
 					Loan Application Details
@@ -105,21 +30,48 @@
 							<h3>Created at:</h3>
 							<p>{{ $key[0]->created_at }}</p>
 						</div>
-						<div class="col-md-12">
-							<h3>Amount:</h3>
-							<p>PHP {{ $key[0]->loan_application_amount }}.00</p>
+						<div class="col-md-6">
+							<h3>Principal Amount:</h3>
+							<p>PHP {{ $key[0]->loan_application_amount }}</p>
+						</div>
+						<div class="col-md-6">
+							<h3>Interest:</h3>
+							<p>{{ $key[0]->loan_interest->loan_interest_name }}</p>
 						</div>
 						<div class="col-md-6">
 							<h3>Payment Terms:</h3>
 							<p>{{ $key[0]->loan_payment_term->loan_payment_term_name }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Interest:</h3>
-							<p>{{ $key[0]->loan_interest->loan_interest_name }}</p>
+							<h3>Total Amount:</h3>
+							<p>PHP {{ $key[0]->loan_application_total_amount }}</p>
+						</div>
+						<div class="col-md-6">
+							<h3>Periodic Rate:</h3>
+							<p>PHP {{ $key[0]->loan_application_periodic_rate }}</p>
 						</div>
 						<div class="col-md-12">
 							<h3>Purpose:</h3>
 							<p>{{ $key[0]->loan_application_purpose }}</p>
+						</div>
+						<div class="col-md-12">
+							<h3>Payment Schedules:</h3>
+							<table class="table table-hover table-responsive" id="payment_scheds" data-page-length='5'>
+	                          <thead>
+	                            <tr>
+	                              <th>Date</th>
+	                              <th>Amount</th>
+	                            </tr>
+	                            <tbody>
+	                              @foreach($key[0]->payment_collections as $payment_collection)
+	                              	<tr>
+	                              		<td>{{ $payment_collection->payment_collection_date }}</td>
+	                              		<td>{{ $payment_collection->payment_collection_amount }}</td>
+	                              	</tr>
+	                              @endforeach
+	                            </tbody>
+	                          </thead>
+	                        </table>
 						</div>
 					</div>
 					<hr>
@@ -158,6 +110,82 @@
 				</div>
 			</div>
 		</div>
+		<div class="col-md-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					Client Details
+				</div>
+				<div class="panel-body">
+
+						<div class="row">
+							
+							<div class="col-md-12">
+								<h4><strong>{{ $key[0]->loan_borrower->borrower_last_name }}, {{ $key[0]->loan_borrower->borrower_first_name }} {{ $key[0]->loan_borrower->borrower_middle_name }}</strong>
+								</h4>
+								<p>
+									
+									<strong>Client's Address:</strong> {{ $key[0]->loan_borrower->borrower_home_address }}
+									<br>
+									<strong>E-mail:</strong> {{ $key[0]->loan_borrower->borrower_email }}
+									<br>
+									<strong>Civil Status:</strong> {{ $key[0]->loan_borrower->borrower_civil_status }}
+									<br>
+									<strong>Birth Date:</strong> {{ $key[0]->loan_borrower->borrower_birth_date }}
+									<br>
+									<strong>Employment Date:</strong> {{ $key[0]->loan_borrower->borrower_employment_date }}
+									<br>
+									<strong>Assignment Date:</strong> {{ $key[0]->loan_borrower->borrower_assignment_date }}
+									<br>
+									<strong>Company:</strong> {{ $key[0]->loan_borrower->company->company_name }} ({{ $key[0]->loan_borrower->company->company_code }})
+								</p>
+							</div>
+							<div class="col-md-12">
+								<h3>Co-Maker 1:</h3>
+								<h4><strong>{{ $key[0]->comaker1->borrower_last_name }}, {{ $key[0]->comaker1->borrower_first_name }} {{ $key[0]->comaker1->borrower_middle_name }}</strong>
+								</h4>
+								<p>
+									
+									<strong>Client's Address:</strong> {{ $key[0]->comaker1->borrower_home_address }}
+									<br>
+									<strong>E-mail:</strong> {{ $key[0]->comaker1->borrower_email }}
+									<br>
+									<strong>Civil Status:</strong> {{ $key[0]->comaker1->borrower_civil_status }}
+									<br>
+									<strong>Birth Date:</strong> {{ $key[0]->comaker1->borrower_birth_date }}
+									<br>
+									<strong>Employment Date:</strong> {{ $key[0]->comaker1->borrower_employment_date }}
+									<br>
+									<strong>Assignment Date:</strong> {{ $key[0]->comaker1->borrower_assignment_date }}
+									<br>
+									<strong>Company:</strong> {{ $key[0]->comaker1->company->company_name }} ({{ $key[0]->comaker1->company->company_code }})
+								</p>
+							</div>
+							<div class="col-md-12">
+								<h3>Co-Maker 2:</h3>
+								<h4><strong>{{ $key[0]->comaker2->borrower_last_name }}, {{ $key[0]->comaker2->borrower_first_name }} {{ $key[0]->comaker2->borrower_middle_name }}</strong>
+								</h4>
+								<p>
+									
+									<strong>Client's Address:</strong> {{ $key[0]->comaker2->borrower_home_address }}
+									<br>
+									<strong>E-mail:</strong> {{ $key[0]->comaker2->borrower_email }}
+									<br>
+									<strong>Civil Status:</strong> {{ $key[0]->comaker2->borrower_civil_status }}
+									<br>
+									<strong>Birth Date:</strong> {{ $key[0]->comaker2->borrower_birth_date }}
+									<br>
+									<strong>Employment Date:</strong> {{ $key[0]->comaker2->borrower_employment_date }}
+									<br>
+									<strong>Assignment Date:</strong> {{ $key[0]->comaker2->borrower_assignment_date }}
+									<br>
+									<strong>Company:</strong> {{ $key[0]->comaker2->company->company_name }} ({{ $key[0]->comaker2->company->company_code }})
+								</p>
+							</div>
+						</div>
+				</div>
+			</div>
+		</div>
+
 		@endforeach
 	</div>
 @endsection

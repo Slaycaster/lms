@@ -18,6 +18,9 @@ class CreateLoanApplicationsTable extends Migration
             $table->increments('id');
             $table->bit('loan_application_is_active');
             $table->double('loan_application_amount');
+            $table->double('loan_application_total_amount');
+            $table->double('loan_application_interest');
+            $table->double('loan_application_periodic_rate');
             $table->text('loan_application_purpose');
             $table->string('loan_application_status');
             $table->double('loan_application_filing_fee');

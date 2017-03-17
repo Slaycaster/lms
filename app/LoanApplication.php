@@ -65,6 +65,11 @@ class LoanApplication extends Model
 		return $this->hasMany('App\LoanPayment', 'loan_application_id');
 	}
 
+	public function payment_collections()
+	{
+		return $this->hasMany('App\PaymentCollection', 'loan_application_id');
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| SCOPES
