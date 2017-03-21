@@ -64,11 +64,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     /*==============================================
                     AJAX-loaded Data
     ================================================*/
- 	Route::get('borrowers_data', 'LoanApplicationController@borrowers');
- 	Route::get('comaker1_data', 'LoanApplicationController@comaker1');
- 	Route::get('comaker2_data', 'LoanApplicationController@comaker2'); 
+    Route::get('comaker1_data', 'LoanApplicationController@comaker1');
+    Route::get('comaker2_data', 'LoanApplicationController@comaker2'); 
   // [...] other routes
 });
+ 	Route::get('borrowers_data', 'LoanApplicationController@borrowers');
 
 //Soon this will be in /admin route to protect the data from public.
 Route::post('loan_applications/precompute', 'LoanApplicationController@precompute');

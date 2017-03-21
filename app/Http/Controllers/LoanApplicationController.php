@@ -163,6 +163,7 @@ class LoanApplicationController extends Controller
         $loan_application->loan_borrower_id = Request::input('borrower_id');
         $loan_application->payment_term_id = Request::input('payment_term_id');
         $loan_application->loan_interest_id = Request::input('loan_interest_id');
+        $loan_application->payment_schedule_id = Request::input('payment_schedule_id');
         $loan_application->save();
 
         //Query the id of the recently saved Loan Application
@@ -214,6 +215,7 @@ class LoanApplicationController extends Controller
                         AJAX-loaded data
 ==============================================================*/
 
+/*
     public function borrowers()
     {
         if (Auth::user()->company->id == 1)
@@ -233,6 +235,18 @@ class LoanApplicationController extends Controller
                 ->remove_column('id')
                 ->make();
         }
+    }
+*/
+
+    public function borrowers()
+    {
+        $param1 = Request::input('para1');
+            $borrowers = Borrower::select(['id', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name'])
+                ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
+                ->get();
+            return json_encode($borrowers, JSON_PRETTY_PRINT);
+        
+        
     }
 
     public function comaker1()

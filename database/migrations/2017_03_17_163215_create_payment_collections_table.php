@@ -18,7 +18,7 @@ class CreatePaymentCollectionsTable extends Migration
             $table->date('payment_collection_date');
             $table->date('payment_collection_amount');
             $table->integer('loan_application_id');
-            $table->bit('is_paid');
+            $table->integer('is_paid');
             $table->timestamps();
         });
     }

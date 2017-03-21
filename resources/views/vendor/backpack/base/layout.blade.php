@@ -34,6 +34,9 @@
     <!-- Bootstrap Datepicker CSS -->
     <link rel="stylesheet" href="{{ asset('css/datepicker.css') }}">
 
+    <!-- tAutocomlete CSS -->
+    <link rel="stylesheet" href="{{ asset('css/tautocomplete.css') }}">
+
     @yield('after_styles')
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -108,7 +111,7 @@
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <!-- DataTables -->
     <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-
+    
     <script>window.jQuery || document.write('<script src="{{ asset('vendor/adminlte') }}/plugins/jQuery/jQuery-2.2.0.min.js"><\/script>')</script>
     <!-- Bootstrap 3.3.5 -->
     <script src="{{ asset('vendor/adminlte') }}/bootstrap/js/bootstrap.min.js"></script>
@@ -119,6 +122,9 @@
 
     <!-- Bootstrap Datepicker JS -->
     <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+
+    <!-- tAutocomplete -->
+    <script src="{{ asset('js/tautocomplete.js') }}"></script>
 
     <!-- page script -->
     <script type="text/javascript">

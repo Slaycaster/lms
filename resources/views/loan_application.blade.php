@@ -19,7 +19,7 @@
     <div class="col-md-8">
       <div class="panel panel-primary">
         <div class="panel-heading">
-          Loan Application Details
+          Loan Application Form
         </div>
 
         <div class="panel-body">
@@ -42,6 +42,17 @@
                           $timestamp = time()+date("Z");
                           echo gmdate("Y/m/d H:i:s",$timestamp);
                       ?>
+                  </div>
+              </div>
+
+              <!-- Client Form Group -->
+              <div class="form-group">
+                  <label for="borrower">
+                    Borrower
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
+                    <input id="borrower" type="text" name="borrower" class="form-control" autocomplete="off">
                   </div>
               </div>
 
@@ -146,7 +157,6 @@
               <hr>
 
               <button type="submit" class="btn btn-block btn-primary btn-sm">Submit Loan Application</button>
-          </form>
         </div>
       </div>
     </div>
@@ -158,18 +168,7 @@
         </div>
 
         <div class="panel-body">
-          <h4>Choose the Borrower</h4>
-          <table class="display responsive no-wrap" id="users-table" width="100%" data-page-length='5'>
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Select</th>
-              </tr>
-            </thead>
-          </table>
+          
           <hr>
           <!-- Co-Maker Form Group -->
           <div class="form-group">
@@ -210,6 +209,7 @@
       </div>
     </div>
 
+          </form>
         <!-- Modal (Pop up when detail button clicked) -->
         <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -258,6 +258,41 @@
     
 	</div>
   @section('after_scripts')
+  <script type="text/javascript">
+   $(document).ready(function() {
+
+      var clientData = $("#borrower").tautocomplete({
+        width: "500px",
+        columns: ['ID', 'Last Name', 'First Name', 'Middle Name'],
+        placeholder: "Search Client by Last Name",
+        norecord: "No Records Found",
+        ajax: {
+          url: '{!! url('/borrowers_data') !!}',
+          type: 'GET',
+          data: {para1: document.getElementById('borrower').value},
+          success: function (data) {
+            var filterData = [];
+            var searchData = eval("/" + clientData.searchdata() + "/gi");
+            $.each(data, function(i, v) {
+              if(v.borrower_last_name.search(new RegExp(searchData)) != -1)
+              {
+                filterData.push(v);  
+              }
+            });
+            return filterData;
+          }
+        },
+        onchange: function ()
+        {
+          //when the user finally clicks a record
+          alert(clientData.text());
+        }
+        
+        
+      });
+   });
+
+  </script>
   <script type="text/javascript">
     $(document).ready(function() {
       $('#users-table').DataTable({
