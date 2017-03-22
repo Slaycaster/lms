@@ -344,7 +344,8 @@ class LoanApplicationController extends Controller
 
     public function active_data()
     {
-        
+        if (Auth::user()->company->id == 1)
+        {
             $loan_applications = LoanApplication::where('loan_application_is_active', '=', '1')
                 ->where('loan_application_status', '=', 'Pending')
                 ->orWhere('loan_application_status', '=', 'Declined')
@@ -357,6 +358,24 @@ class LoanApplicationController extends Controller
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
                 ->make(); 
+        }
+        else
+        {
+            $loan_applications = LoanApplication::where('loan_application_is_active', '=', '1')
+                ->with(['loan_borrower' => function($q) {
+                    $q->where('company_id', '=', Auth::user()->company->id);
+                }])
+                ->where('loan_application_status', '=', 'Pending')
+                ->orWhere('loan_application_status', '=', 'Declined')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*')
+                ->orderBy('id', 'desc');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->make(); 
+        }  
     }
 
     public function precompute()

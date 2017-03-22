@@ -25,6 +25,7 @@
 					<table class="table table-bordered" id="users-table">
 			            <thead>
 			              <tr>
+			              	<th>ID</th>
 			              	<th>Status</th>
 			              	<th>Disbursement Date</th>
 			                <th>Last Name</th>
@@ -51,6 +52,7 @@
 		        serverSide: true,
 		        ajax: '{!! url('loan_applications/active/data') !!}',
 		        columns: [
+		          {data: '0', name: 'loan_applications.id'},
 		          {data: '7', name: 'loan_applications.loan_application_status'},
 		          {data: '11', name: 'loan_applications.loan_application_disbursement_date'},
 		          {data: '20.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
