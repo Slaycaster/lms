@@ -358,7 +358,7 @@
                 highlight: "",
                 hide: [false],
                 ajax: {
-                    url: 'http://localhost/lms/public/borrowers_data',
+                    url: '{!! url('/borrowers_data') !!}',
                     type: "GET",
                     data: function(){var x = { para1: comaker1.searchdata()}; return x;},
                     success: function (data) {
@@ -390,7 +390,7 @@
                 highlight: "",
                 hide: [false],
                 ajax: {
-                    url: 'http://localhost/lms/public/borrowers_data',
+                    url: '{!! url('/borrowers_data') !!}',
                     type: "GET",
                     data: function(){var x = { para1: comaker2.searchdata()}; return x;},
                     success: function (data) {
@@ -422,7 +422,7 @@
         startDate: '-3d'
     });
   </script>
-
+<!--
   <script type="text/javascript">
     $(document).ready(function() {
       $('#comaker1-table').DataTable({
@@ -458,7 +458,7 @@
       });
     });
   </script>
-
+-->
   <script type="text/javascript">
     $("#computeBtn").click(function(){
         $.ajax({
