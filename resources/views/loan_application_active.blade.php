@@ -4,11 +4,12 @@
 @section('header')
     <section class="content-header">
       <h1>
-        Active Loan Applications<small></small>
+        Approve/Decline Loan Applications<small></small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>
-        <li class="active">Active Loan Applications</li>
+        <li><a href="#">Loan Applications</a></li>
+        <li class="active">* Approve/Decline</li>
       </ol>
     </section>
 @endsection
@@ -18,7 +19,7 @@
 		<div class="col-md-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Current Active Loan Applications
+					All Pending/Declined Loan Applications
 				</div>
 
 				<div class="panel-body">

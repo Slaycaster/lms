@@ -7,7 +7,8 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>
-        <li class="active">All Loan Applications</li>
+        <li><a href="#">Loan Applications</a></li>
+        <li class="active">* Loan Applications</li>
       </ol>
     </section>
 @endsection
