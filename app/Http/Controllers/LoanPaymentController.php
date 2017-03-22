@@ -12,7 +12,9 @@ use App\LoanApplication;
 use App\LoanPaymentTerm;
 use App\LoanInterest;
 use App\Borrower;
-use App\LoanPayment;
+//use App\LoanPayment;
+//NEW
+use App\PaymentCollection;
 
 //Third-party
 use Yajra\Datatables\Datatables;
@@ -38,7 +40,7 @@ class LoanPaymentController extends Controller
             ->with('loan_borrower.company')
             ->with('loan_interest')
             ->with('loan_payment_term')
-            ->with('loan_payments')
+            ->with('payment_collections')
             ->get();
         return view('loan-payment.payment')
             ->with('loan_application', compact('loan_application'));
@@ -48,6 +50,16 @@ class LoanPaymentController extends Controller
                     Eloquent backend scripts
     ==============================================================*/
 
+    public function process_payment()
+    {
+
+    }
+
+    public function process_due_payment()
+    {
+
+    }
+/*
     public function process_payment()
     {
         $loan_payment = new LoanPayment();
@@ -77,7 +89,7 @@ class LoanPaymentController extends Controller
 
         return Redirect::to('admin/loan_payments');
     }
-
+*/
     /*==============================================================
                             DOMPDF Views
     ==============================================================*/
@@ -100,24 +112,18 @@ class LoanPaymentController extends Controller
 
 	public function approved_data()
     {
-        
-            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
-                ->with(['loan_borrower' => function($q) {
-                    $q->where('company_id', '=', Auth::user()->company->id);
-                }])
-                ->with('loan_interest')
-                ->with('loan_payment_term')
-                ->with('loan_borrower.company')
-                ->with('loan_payments')
-                ->select('loan_applications.*');
-        
+        $loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
+            /*
+            ->with(['loan_borrower' => function($q) {
+                $q->where('company_id', '=', Auth::user()->company->id);
+            }])
+            */
+            ->with('loan_interest')
+            ->with('loan_payment_term')
+            ->with('loan_borrower.company')
+            ->with('payment_collections')
+            ->get();
 
-        return Datatables::of($loan_applications)
-            ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a> <a href=\'{{ url(\'admin/loan_payments/promissory_note/\' . $id )}}\' class=\'btn btn-warning btn-xs\'> Generate Promissory Note </a>')
-            ->add_column('loan_payments', function($loan_application) {
-            	return $loan_application->loan_payments->sum('loan_payment_amount');
-            })
-            ->remove_column('id')
-            ->make();
+        return json_encode($loan_applications, JSON_PRETTY_PRINT);
     }
 }

@@ -27,9 +27,8 @@
 			                <th>Last Name</th>
 			                <th>First Name</th>
 			                <th>Company</th>
-			                <th>Amount</th>
-			                <th>Total Paid</th>
-			                <th>Interest</th>
+			                <th>Loan Amount</th>
+			                <th>Total Cycles Paid</th>
 			                <th>Payment Terms</th>
 			                <th>Actions</th>
 			              </tr>
@@ -48,10 +47,10 @@
 		        serverSide: true,
 		        ajax: '{!! url('loan_payments/applications') !!}',
 		        columns: [
-		          {data: '16.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
-		          {data: '16.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
-		          {data: '16.company.company_name', name: 'loan_borrower.company.company_name'},
-		          {data: '1', name: 'loan_applications.loan_application_amount'},
+		          {data: '20.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
+		          {data: '20.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
+		          {data: '20.company.company_name', name: 'loan_borrower.company.company_name'},
+		          {data: '3', name: 'loan_applications.loan_application_total_amount'},
 		          {data: '16', name: 'loan_payments', searchable: false},
 		          {data: '17.loan_interest_name', name: 'loan_interest.loan_interest_name'},
 		          {data: '18.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},

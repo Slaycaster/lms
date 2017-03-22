@@ -355,6 +355,8 @@
                 columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
                 placeholder: "Search for Co-Maker 1 by Last Name",
                 norecord: "No Records Found",
+                highlight: "",
+                hide: [false],
                 ajax: {
                     url: 'http://localhost/lms/public/borrowers_data',
                     type: "GET",
@@ -385,6 +387,8 @@
                 columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
                 placeholder: "Search for Co-Maker 2 by Last Name",
                 norecord: "No Records Found",
+                highlight: "",
+                hide: [false],
                 ajax: {
                     url: 'http://localhost/lms/public/borrowers_data',
                     type: "GET",

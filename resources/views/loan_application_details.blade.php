@@ -35,8 +35,8 @@
 							<p>PHP {{ $key[0]->loan_application_amount }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Interest:</h3>
-							<p>{{ $key[0]->loan_interest->loan_interest_name }}</p>
+							<h3>Interest Name - Rate (Total):</h3>
+							<p>{{ $key[0]->loan_interest->loan_interest_name }} - {{ $key[0]->loan_interest->loan_interest_rate }}% ({{ $key[0]->loan_application_interest }})</p>
 						</div>
 						<div class="col-md-6">
 							<h3>Payment Terms:</h3>
@@ -81,19 +81,18 @@
 					<input type="hidden" name="loan_application_id" value="{!! $key[0]->id !!}">
 					<!-- Amount Form Group -->
 		              <div class="form-group">
-		                <label for="amount" class="control-label">Change Loan Amount</label>
+		                <label for="amount" class="control-label">Change Principal Loan Amount</label>
 		                <div class="input-group">
 		                  <span class="input-group-addon">₱</span>
 		                  <input type="text" name="amount" class="form-control" value="{!! $key[0]->loan_application_amount !!}">
-		                  <span class="input-group-addon">.00</span>
 		                </div>
 		              </div>
 
 		              <div class="form-group">
-		                <label for="disbursement_date" class="control-label">Disbursement Date</label>
+		                <label for="disbursement_date" class="control-label">Change Disbursement Date</label>
 		                <div class="input-group">
 		                  <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-		                  <input type="text" name="disbursement_date" class="form-control" placeholder="yyyy-mm-dd">
+		                  <input type="text" name="disbursement_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key[0]->loan_application_disbursement_date !!}">
 		                </div>
 		              </div>
 
@@ -188,4 +187,18 @@
 
 		@endforeach
 	</div>
+	@section('after_scripts')
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var table = $('#payment_scheds').DataTable();
+			});
+		</script>
+
+		<script type="text/javascript">
+		    $('.datepicker').datepicker({
+		        format: 'yyyy-mm-dd',
+		        startDate: '-3d'
+		    });
+	  	</script>
+	@endsection
 @endsection
