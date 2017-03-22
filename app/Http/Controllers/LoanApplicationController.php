@@ -322,7 +322,6 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
-                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
                 ->make();
         }
         else
@@ -337,7 +336,6 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
-                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
                 ->make();   
         }
     }
@@ -356,7 +354,7 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
-                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
                 ->make(); 
         }
         else

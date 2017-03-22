@@ -40,7 +40,6 @@
 			                <th>Interest</th>
 			                <th>Total Loan Amount</th>
 			                <th>Payment Terms</th>
-			                <th>Actions</th>
 			              </tr>
 			        	</thead>
 			        </table>
@@ -66,8 +65,7 @@
 		          {data: '2', name: 'loan_applications.loan_application_amount'},
 		          {data: '4', name: 'loan_applications.loan_application_interest'},
 		          {data: '3', name: 'loan_applications.loan_application_total_amount'},
-		          {data: '22.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
-		          {data: '23', name: 'Actions', orderable: false, searchable: false}
+		          {data: '22.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'}
 		        ]
 		      });
 		    });
