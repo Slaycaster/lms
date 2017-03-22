@@ -23,7 +23,7 @@ class BorrowerCrudController extends CrudController
 
         $this->crud->setModel('App\Borrower');
         $this->crud->setRoute('admin/borrowers');
-        $this->crud->setEntityNameStrings('borrower', 'borrowers');
+        $this->crud->setEntityNameStrings('Client', 'Clients');
         if (!(Auth::user()->company->id == 1))
         {
             //$this->crud->query = $this->crud->query->where('company_id', Auth::user()->company->id); 

@@ -20,7 +20,7 @@
 
           <!--MASTER ENTRY-->
           <li class="header">MASTER ENTRY</li>
-          <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-user-plus"></i> <span>Loan Borrowers</span></a></li>
+          <li><a href="{{ url('admin/borrowers') }}"><i class="fa fa-user-plus"></i> <span>Client Registration</span></a></li>
 
           <!--LOAN MANAGEMENT-->
           <li class="header">LOAN MANAGEMENT</li>
