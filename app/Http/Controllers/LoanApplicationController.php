@@ -81,6 +81,7 @@ class LoanApplicationController extends Controller
 
     public function save(Request $request)
     {
+        /*
         $rules = [
             'loan_application_amount' => 'required|numeric',
             'filing_fee' => 'required|numeric',
@@ -96,18 +97,19 @@ class LoanApplicationController extends Controller
              'required' => 'The :attribute field is required.',
              'not_in' => 'The Co-Maker and the Client should not be the same!'
         ];
+        $this->validate($request, $rules, $messages);
 
-        $validator = Validator::make($request, $rules, $message);
-
+        //$validator = Validator::make($request->all(), $rules, $messages);
+        */
         //Compute
         //Get all post inputs
-        $loan_application_amount = Request::input('loan_application_amount');
+        $loan_application_amount = Request::input('amount');
         $filing_fee = Request::input('filing_fee');
         $service_fee = Request::input('service_fee');
         $disbursement_date = Request::input('disbursement_date');
         $payment_term_id = Request::input('payment_term_id');
         $payment_schedule_id = Request::input('payment_schedule_id');
-        $interest_id = Request::input('interest_id');
+        $interest_id = Request::input('loan_interest_id');
 
         //And query those data with ids to get the real meat out of it.
         $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
@@ -144,7 +146,7 @@ class LoanApplicationController extends Controller
         $periodicRate = $totalLoan / $paymentPeriod_count;
 
         /*--------------------------------------------------
-            Save the current transaction to the database
+            Save the loan application to the database
         ---------------------------------------------------*/
         $loan_application = new LoanApplication();
         $loan_application->loan_application_is_active = 1;
@@ -172,7 +174,8 @@ class LoanApplicationController extends Controller
         //Loop through each payment period and place it on to the array for the JSON
         foreach ($paymentPeriod as $dt) {
             $payment_collection = new PaymentCollection();
-            $payment_collection->payment_collection_date = $dt->format('M j, Y');
+            $payment_collection->is_paid = 0;
+            $payment_collection->payment_collection_date = $dt->format('Y-m-d');
             $payment_collection->payment_collection_amount = round($periodicRate, 2);
             $payment_collection->loan_application_id = $loan_application_max;
 
@@ -236,19 +239,6 @@ class LoanApplicationController extends Controller
                 ->make();
         }
     }
-*/
-
-    public function borrowers()
-    {
-        $param1 = Request::input('para1');
-            $borrowers = Borrower::select(['id', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name'])
-                ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
-                ->get();
-            return json_encode($borrowers, JSON_PRETTY_PRINT);
-        
-        
-    }
-
     public function comaker1()
     {
         if (Auth::user()->company->id == 1)
@@ -288,6 +278,28 @@ class LoanApplicationController extends Controller
                 ->add_column('Actions', '{{Form::radio(\'comaker2_id\', $id, false)}}')
                 ->remove_column('id')
                 ->make();
+        }
+    }
+*/
+
+    public function borrowers()
+    {
+        if (Auth::user()->company->id == 1)
+        {
+            $param1 = Request::input('para1');
+            $borrowers = Borrower::join('companies', 'borrowers.company_id', '=', 'companies.id')
+                ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
+                ->get(['borrowers.id', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'companies.company_code']);
+            return json_encode($borrowers, JSON_PRETTY_PRINT);
+        }
+        else
+        {
+            $param1 = Request::input('para1');
+            $borrowers = Borrower::join('companies', 'borrowers.company_id', '=', 'companies.id')
+                ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
+                ->where('company_id', '=', Auth::user()->company->id)
+                ->get(['borrowers.id', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'companies.company_code']);
+            return json_encode($borrowers, JSON_PRETTY_PRINT);
         }
     }
 

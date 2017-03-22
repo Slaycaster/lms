@@ -16,7 +16,7 @@
 	<div class="row">
   <form action="{{url('admin/loan_applications/save')}}" method="POST">
     {{ csrf_field() }}
-    <div class="col-md-8">
+    <div class="col-md-12">
       <div class="panel panel-primary">
         <div class="panel-heading">
           Loan Application Form
@@ -31,6 +31,9 @@
                           @endforeach
                       </ul>
                   </div>
+              @endif
+              @if (Session::has('message'))
+                  <div class="alert alert-info">{{ Session::get('message') }}</div>
               @endif
               <!-- Date & Time Form Group -->
               <div class="form-group">
@@ -48,11 +51,66 @@
               <!-- Client Form Group -->
               <div class="form-group">
                   <label for="borrower">
-                    Borrower
+                    Client
                   </label>
                   <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
-                    <input id="borrower" type="text" name="borrower" class="form-control" autocomplete="off">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <input type="text" id="Text2"/>
+                      </div>
+                      <div class="col-md-2">
+                        <p><strong>Client ID: </strong><span id="ta-id"></span></p>
+                        <input type="hidden" name="borrower_id" id="borrower_id">
+                      </div>
+                      <div class="col-md-3">
+                        <p><strong>Selected Client: </strong><span id="ta-txt"></span></p>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              <!-- Co-Maker Form Group -->
+              <div class="form-group">
+                  <label for="borrower">
+                    Co-Maker 1
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
+                    <div class="row">
+                      <div class="col-md-3">
+                        <input type="text" id="comaker1"/>
+                      </div>
+                      <div class="col-md-2">
+                        <p><strong>Co-Maker 1 ID: </strong><span id="comaker1-id"></span></p>
+                        <input type="hidden" name="comaker1_id" id="comaker1_id">
+                      </div>
+                      <div class="col-md-3">
+                        <p><strong>Selected Co-Maker 1: </strong><span id="comaker1-txt"></span></p>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              <!-- Co-Maker Form Group -->
+              <div class="form-group">
+                  <label for="borrower">
+                    Co-Maker 2
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
+                    <div class="row">
+                      <div class="col-md-3">
+                        <input type="text" id="comaker2"/>
+                      </div>
+                      <div class="col-md-2">
+                        <p><strong>Co-Maker 2 ID: </strong><span id="comaker2-id"></span></p>
+                        <input type="hidden" name="comaker2_id" id="comaker2_id">
+                      </div>
+                      <div class="col-md-3">
+                        <p><strong>Selected Co-Maker 2: </strong><span id="comaker2-txt"></span></p>
+                      </div>
+                    </div>
                   </div>
               </div>
 
@@ -140,7 +198,7 @@
                     <label for="disbursement_date" class="control-label">Loan Disbursement Date </label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                      <input id="disbursement_date" class="datepicker" name="service_fee" class="form-control">
+                      <input id="disbursement_date" class="datepicker" name="disbursement_date" class="form-control">
                     </div>
                   </div>
                 </div>
@@ -156,11 +214,11 @@
 
               <hr>
 
-              <button type="submit" class="btn btn-block btn-primary btn-sm">Submit Loan Application</button>
+              <button type="submit" class="btn btn-block btn-success btn-sm">Submit Loan Application</button>
         </div>
       </div>
     </div>
-
+<!--
     <div class="col-md-4">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -170,7 +228,7 @@
         <div class="panel-body">
           
           <hr>
-          <!-- Co-Maker Form Group -->
+
           <div class="form-group">
             <h4>Choose the first Co-Maker</h4>
             <div class="input-group">
@@ -188,7 +246,7 @@
             </div>
           </div>
           <hr>
-          <!-- Co-Maker Form Group -->
+
           <div class="form-group">
             <h4>Choose the second Co-Maker</h4>
             <div class="input-group">
@@ -208,7 +266,7 @@
         </div>
       </div>
     </div>
-
+-->
           </form>
         <!-- Modal (Pop up when detail button clicked) -->
         <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -247,7 +305,8 @@
                     <div class="modal-footer">
                         <button type="button" 
                                 class="btn btn-success btn-sm btn-block" 
-                                id="btn-save" >
+                                id="btn-dismiss"
+                                data-dismiss="modal">
                             Okay, got it!
                         </button>
                     </div>
@@ -258,58 +317,102 @@
     
 	</div>
   @section('after_scripts')
-  <script type="text/javascript">
-   $(document).ready(function() {
+   <script>
+        $(document).ready(function () {
+            var text2 = $("#Text2").tautocomplete({
+                width: "600px",
+                columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
+                placeholder: "Search for Client by Last Name",
+                norecord: "No Records Found",
+                highlight: "",
+                hide: [false],
+                ajax: {
+                    url: '{!! url('/borrowers_data') !!}',
+                    type: "GET",
+                    success: function (data) {
+                        
+                        var filterData = [];
 
-      var clientData = $("#borrower").tautocomplete({
-        width: "500px",
-        columns: ['ID', 'Last Name', 'First Name', 'Middle Name'],
-        placeholder: "Search Client by Last Name",
-        norecord: "No Records Found",
-        ajax: {
-          url: '{!! url('/borrowers_data') !!}',
-          type: 'GET',
-          data: {para1: document.getElementById('borrower').value},
-          success: function (data) {
-            var filterData = [];
-            var searchData = eval("/" + clientData.searchdata() + "/gi");
-            $.each(data, function(i, v) {
-              if(v.borrower_last_name.search(new RegExp(searchData)) != -1)
-              {
-                filterData.push(v);  
-              }
+                        var searchData = eval("/" + text2.searchdata() + "/gi");
+
+                        $.each(data, function (i, v) {
+                            if (v.borrower_last_name.search(new RegExp(searchData)) != -1) {
+                                filterData.push(v);
+                            }
+                        });
+                        return filterData;
+                    }
+                },
+                onchange: function () {
+                    $("#ta-txt").html(text2.text());
+                    $("#ta-id").html(text2.id());
+                    document.getElementById('borrower_id').value = text2.id();
+                }
             });
-            return filterData;
-          }
-        },
-        onchange: function ()
-        {
-          //when the user finally clicks a record
-          alert(clientData.text());
-        }
-        
-        
-      });
-   });
 
-  </script>
+            var comaker1 = $("#comaker1").tautocomplete({
+                width: "600px",
+                columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
+                placeholder: "Search for Co-Maker 1 by Last Name",
+                norecord: "No Records Found",
+                ajax: {
+                    url: 'http://localhost/lms/public/borrowers_data',
+                    type: "GET",
+                    data: function(){var x = { para1: comaker1.searchdata()}; return x;},
+                    success: function (data) {
+                        
+                        var filterData = [];
+
+                        var searchData = eval("/" + comaker1.searchdata() + "/gi");
+
+                        $.each(data, function (i, v) {
+                            if (v.borrower_last_name.search(new RegExp(searchData)) != -1) {
+                                filterData.push(v);
+                            }
+                        });
+                        return filterData;
+                    }
+                },
+                onchange: function () {
+                    $("#comaker1-txt").html(comaker1.text());
+                    $("#comaker1-id").html(comaker1.id());
+                    document.getElementById('comaker1_id').value = comaker1.id();
+                }
+            });
+
+            var comaker2 = $("#comaker2").tautocomplete({
+                width: "600px",
+                columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
+                placeholder: "Search for Co-Maker 2 by Last Name",
+                norecord: "No Records Found",
+                ajax: {
+                    url: 'http://localhost/lms/public/borrowers_data',
+                    type: "GET",
+                    data: function(){var x = { para1: comaker2.searchdata()}; return x;},
+                    success: function (data) {
+                        
+                        var filterData = [];
+
+                        var searchData = eval("/" + comaker2.searchdata() + "/gi");
+
+                        $.each(data, function (i, v) {
+                            if (v.borrower_last_name.search(new RegExp(searchData)) != -1) {
+                                filterData.push(v);
+                            }
+                        });
+                        return filterData;
+                    }
+                },
+                onchange: function () {
+                    $("#comaker2-txt").html(comaker2.text());
+                    $("#comaker2-id").html(comaker2.id());
+                    document.getElementById('comaker2_id').value = comaker2.id();
+                }
+            });
+        });
+      </script>
+
   <script type="text/javascript">
-    $(document).ready(function() {
-      $('#users-table').DataTable({
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        ajax: '{!! url('admin/borrowers_data') !!}',
-        columns: [
-          {data: 0, name: 'borrower_type'},
-          {data: 1, name: 'borrower_last_name'},
-          {data: 2, name: 'borrower_first_name'},
-          {data: 3, name: 'borrower_middle_name'},
-          {data: 6, name: 'Actions', orderable: false, searchable: false}
-        ]
-      });
-    });
-
     $('.datepicker').datepicker({
         format: 'yyyy-mm-dd',
         startDate: '-3d'
