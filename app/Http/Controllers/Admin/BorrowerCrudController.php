@@ -29,7 +29,7 @@ class BorrowerCrudController extends CrudController
             //$this->crud->query = $this->crud->query->where('company_id', Auth::user()->company->id); 
             $this->crud->addClause('where', 'company_id', '=', Auth::user()->company->id);
         }
-        
+        $this->crud->enableAjaxTable(); 
         $this->crud->enableExportButtons();
 
     	$this->crud->setColumns

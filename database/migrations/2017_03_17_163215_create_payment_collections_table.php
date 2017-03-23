@@ -16,7 +16,7 @@ class CreatePaymentCollectionsTable extends Migration
         Schema::create('payment_collections', function (Blueprint $table) {
             $table->increments('id');
             $table->date('payment_collection_date');
-            $table->date('payment_collection_amount');
+            $table->double('payment_collection_amount');
             $table->integer('loan_application_id');
             $table->integer('is_paid');
             $table->timestamps();

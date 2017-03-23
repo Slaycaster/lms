@@ -149,7 +149,7 @@
                       <div class="input-group">
                         {{ Form::select('loan_interest_id', $loan_interests, null, ['class' => 'form-control', 'id' => 'loan_interest_id']) }}
                       </div>
-                    </div>              
+                    </div>
                 </div>
 
                 <div class="col-md-3 col-sm-5">
@@ -159,10 +159,11 @@
                       <div class="input-group">
                         {{ Form::select('payment_schedule_id', $payment_schedules, null, ['class' => 'form-control', 'id' => 'payment_schedule_id']) }}
                       </div>
-                    </div>              
-                </div>  
+                    </div>
+                </div>
               </div>
 
+              <!-- Filing Fees x Service Fee Row Group -->
               <div class="row">
 
                 <!-- Filing Fees Form Group -->
@@ -226,7 +227,7 @@
         </div>
 
         <div class="panel-body">
-          
+
           <hr>
 
           <div class="form-group">
@@ -273,9 +274,9 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" 
-                                class="close" 
-                                data-dismiss="modal" 
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
                                 aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -286,7 +287,7 @@
 
                      <div class="modal-body">
                         <div class="results">
-                          
+
                         </div>
                         <table class="table table-hover table-responsive" id="payment_scheds" data-page-length='5'>
                           <thead>
@@ -295,16 +296,16 @@
                               <th>Amount</th>
                             </tr>
                             <tbody>
-                              
+
                             </tbody>
                           </thead>
                         </table>
                     </div>
 
-                    
+
                     <div class="modal-footer">
-                        <button type="button" 
-                                class="btn btn-success btn-sm btn-block" 
+                        <button type="button"
+                                class="btn btn-success btn-sm btn-block"
                                 id="btn-dismiss"
                                 data-dismiss="modal">
                             Okay, got it!
@@ -314,7 +315,7 @@
             </div>
         </div>
   </div>
-    
+
 	</div>
   @section('after_scripts')
    <script>
@@ -330,7 +331,7 @@
                     url: '{!! url('/borrowers_data') !!}',
                     type: "GET",
                     success: function (data) {
-                        
+
                         var filterData = [];
 
                         var searchData = eval("/" + text2.searchdata() + "/gi");
@@ -362,7 +363,7 @@
                     type: "GET",
                     data: function(){var x = { para1: comaker1.searchdata()}; return x;},
                     success: function (data) {
-                        
+
                         var filterData = [];
 
                         var searchData = eval("/" + comaker1.searchdata() + "/gi");
@@ -394,7 +395,7 @@
                     type: "GET",
                     data: function(){var x = { para1: comaker2.searchdata()}; return x;},
                     success: function (data) {
-                        
+
                         var filterData = [];
 
                         var searchData = eval("/" + comaker2.searchdata() + "/gi");

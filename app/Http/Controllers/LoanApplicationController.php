@@ -62,6 +62,9 @@ class LoanApplicationController extends Controller
 
     public function details($id)
     {
+       $payment_terms = LoanPaymentTerm::pluck('loan_payment_term_name', 'id');
+       $loan_interests = LoanInterest::pluck('loan_interest_name', 'id');
+       $payment_schedules = PaymentSchedule::pluck('payment_schedule_name', 'id');
         $loan_application = LoanApplication::where('id', '=', $id)
             ->with('loan_borrower')
             ->with('loan_borrower.company')
@@ -71,7 +74,10 @@ class LoanApplicationController extends Controller
             ->get();
 
         return view('loan_application_details')
-            ->with('loan_application', compact('loan_application'));
+            ->with('loan_application', $loan_application)
+            ->with('payment_terms', $payment_terms)
+            ->with('payment_schedules', $payment_schedules)
+            ->with('loan_interests', $loan_interests);
     }
 
 
@@ -194,26 +200,104 @@ class LoanApplicationController extends Controller
             Update the current loan application to the database
         ---------------------------------------------------*/
         $loan_application = LoanApplication::find(Request::input('loan_application_id'));
-        
-        if (Request::input('amount'))
+
+        if (Request::input('change_details') === 'yes')
         {
-            $loan_application->loan_application_amount = Request::input('amount');
+          //Loan application core details will be updated...
+
+          //So pre-compute first
+          //Get all post inputs
+          $loan_application_amount = Request::input('amount');
+          $filing_fee = Request::input('filing_fee');
+          $service_fee = Request::input('service_fee');
+          $disbursement_date = Request::input('disbursement_date');
+          $payment_term_id = Request::input('payment_term_id');
+          $payment_schedule_id = Request::input('payment_schedule_id');
+          $interest_id = Request::input('loan_interest_id');
+
+          //And query those data with ids to get the real meat out of it.
+          $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
+          $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
+          $interest = LoanInterest::where('id', '=', $interest_id)->first();
+
+          $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
+
+          $totalLoan = $loan_application_amount +  $filing_fee + $service_fee + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+
+          //Starting Month and Year for your payment since the loan was disbursed
+          $paymentStartDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
+
+          //Ending Month and year for your payment since the loan was disbursed
+          $paymentEndDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_term->loan_payment_term_no_of_months . 'months' .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
+
+          //payment interval based on given payment schedule
+          $paymentInterval = DateInterval::createFromDateString($payment_schedule->payment_schedule_days_interval . ' days');
+
+          //*IMPORTANT* Compute the payment schedules from start to finish
+          $paymentPeriod = new DatePeriod($paymentStartDate, $paymentInterval, $paymentEndDate);
+
+          $paymentPeriod_count = 0;
+
+          //Declare an empty array that'll place the computed payment periods
+          $payment_periods = array();
+
+          //Loop through each payment period to count for the total payment
+          foreach ($paymentPeriod as $dt) {
+              $payment_periods[] = $dt->format('M j, Y');
+              $paymentPeriod_count++;
+          }
+
+          $periodicRate = $totalLoan / $paymentPeriod_count;
+
+          //And then update to the database...
+          $loan_application->loan_application_amount = Request::input('amount');
+          $loan_application->loan_application_total_amount = round($totalLoan, 2);
+          $loan_application->loan_application_interest = round($monthlyInterest, 2);
+          $loan_application->loan_application_periodic_rate = round($periodicRate, 2);
+          $loan_application->loan_application_purpose = Request::input('purpose');
+          $loan_application->loan_application_status = "Pending";
+          $loan_application->loan_application_filing_fee = Request::input('filing_fee');
+          $loan_application->loan_application_service_fee = Request::input('service_fee');
+          $loan_application->loan_application_disbursement_date = Request::input('disbursement_date');
+          //Relationships
+          $loan_application->loan_application_comaker_id1 = Request::input('comaker1_id');
+          $loan_application->loan_application_comaker_id2 = Request::input('comaker2_id');
+          $loan_application->payment_term_id = Request::input('payment_term_id');
+          $loan_application->loan_interest_id = Request::input('loan_interest_id');
+          $loan_application->payment_schedule_id = Request::input('payment_schedule_id');
+
+          //Delete previous payment collection to incorporate with the new one... slow but it gets the job done accurately
+          //Put it in the string first to prevent injection (even if it's already secure, just to make sure :))
+          $sql = 'DELETE FROM payment_collections WHERE loan_application_id='.Request::input('loan_application_id').';';
+          DB::statement($sql);
+
+          //Loop through each payment period and place it on to the array for the JSON
+          foreach ($paymentPeriod as $dt) {
+              $payment_collection = new PaymentCollection();
+              $payment_collection->is_paid = 0;
+              $payment_collection->payment_collection_date = $dt->format('Y-m-d');
+              $payment_collection->payment_collection_amount = round($periodicRate, 2);
+              $payment_collection->loan_application_id = Request::input('loan_application_id');
+
+              $payment_collection->save();
+          }
         }
-        if (Request::input('disbursement_date'))
-        {
-            $loan_application->loan_application_disbursement_date = Request::input('disbursement_date');
-        }
+
+        //Now check condition if the user approved the loan or not, regardless.
         if (isset($_POST['approve']))
         {
             $loan_application->loan_application_status = "Approved";
             Session::flash('message', 'Loan Application Approved!');
-        } 
+        }
         else if (isset($_POST['decline']))
         {
             $loan_application->loan_application_status = "Declined";
             Session::flash('message', 'Loan Application Declined!');
         }
+
         $loan_application->loan_application_remarks = Request::input('remarks');
+
+        //Finally saving the updated loan application
         $loan_application->save();
 
 
@@ -336,7 +420,7 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
-                ->make();   
+                ->make();
         }
     }
 
@@ -355,7 +439,7 @@ class LoanApplicationController extends Controller
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
-                ->make(); 
+                ->make();
         }
         else
         {
@@ -372,8 +456,8 @@ class LoanApplicationController extends Controller
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
-                ->make(); 
-        }  
+                ->make();
+        }
     }
 
     public function precompute()
