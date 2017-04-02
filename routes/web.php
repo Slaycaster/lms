@@ -41,6 +41,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_applications/create', 'LoanApplicationController@create');
     Route::get('loan_applications/active', 'LoanApplicationController@active');
     Route::get('loan_applications/{id}', 'LoanApplicationController@details');
+    Route::get('loan_applications/details/{id}', 'LoanApplicationController@viewdetails');
     Route::post('loan_applications/save', 'LoanApplicationController@save');
 
     /*==============================================

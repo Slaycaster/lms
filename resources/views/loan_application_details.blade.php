@@ -23,39 +23,33 @@
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-md-6">
-							<h3>Application ID:</h3>
-							<p>{{ $key->id }}</p>
+							<p><strong>Application ID:</strong> {{ $key->id }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Created at:</h3>
-							<p>{{ $key->created_at }}</p>
+							<p><strong>Created at:</strong> {{ $key->created_at }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Principal Amount:</h3>
-							<p>PHP {{ $key->loan_application_amount }}</p>
+							<p><strong>Principal Amount:</strong> PHP {{ $key->loan_application_amount }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Interest Name - Rate (Total):</h3>
-							<p>{{ $key->loan_interest->loan_interest_name }} - {{ $key->loan_interest->loan_interest_rate }}% ({{ $key->loan_application_interest }})</p>
+							<p><strong>Interest Name - Rate (Total):</strong> {{ $key->loan_interest->loan_interest_name }} - {{ $key->loan_interest->loan_interest_rate }}% ({{ $key->loan_application_interest }})</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Payment Terms:</h3>
-							<p>{{ $key->loan_payment_term->loan_payment_term_name }}</p>
+							<p><strong>Payment Terms:</strong> {{ $key->loan_payment_term->loan_payment_term_name }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Total Amount:</h3>
-							<p>PHP {{ $key->loan_application_total_amount }}</p>
+							<p><strong>Total Amount:</strong> PHP {{ $key->loan_application_total_amount }}</p>
+							<p></p>
 						</div>
 						<div class="col-md-6">
-							<h3>Periodic Rate:</h3>
-							<p>PHP {{ $key->loan_application_periodic_rate }}</p>
+							<p><strong>Periodic Rate:</strong> PHP {{ $key->loan_application_periodic_rate }}</p>
 						</div>
 						<div class="col-md-12">
-							<h3>Purpose:</h3>
-							<p>{{ $key->loan_application_purpose }}</p>
+							<p><strong>Purpose:</strong> {{ $key->loan_application_purpose }}</p>
 						</div>
+						<hr>
 						<div class="col-md-12">
-							<h3>Payment Schedules:</h3>
+							<p><strong>Payment Schedules:</strong></p>
 							<table class="table table-hover table-responsive" id="payment_scheds" data-page-length='5'>
 	                          <thead>
 	                            <tr>
@@ -75,7 +69,7 @@
 						</div>
 					</div>
 					<hr>
-					<h3>Approve/Decline</h3>
+					<h4>Approve/Decline</h4>
 					<form action="{{url('admin/loan_applications/process_application')}}" method="POST">
 					{{ csrf_field() }}
 					<input type="hidden" name="loan_application_id" value="{!! $key->id !!}">
@@ -90,7 +84,7 @@
 					<button type="submit" class="btn btn-block btn-success btn-sm" name="approve">Approve Loan Application</button>
 					<button type="submit" class="btn btn-block btn-warning btn-sm" name="decline">Decline Loan Application</button>
 					<hr/>
-					<h3>Change Application Form Details</h3>
+					<h4>Change Application Form Details</h4>
 					<!-- CHANGE/EDIT FORM -->
 					<!-- Amount Form Group -->
 					<div class="form-group">
@@ -107,7 +101,6 @@
 								Change Co-Maker 1
 							</label>
 							<div class="input-group">
-								<span class="input-group-addon"><i class="fa fa-address-book"></i></span>
 								<div class="row">
 									<div class="col-md-3">
 										<input type="text" id="comaker1"/>
@@ -130,7 +123,6 @@
 								Change Co-Maker 2
 							</label>
 							<div class="input-group">
-								<span class="input-group-addon"><i class="fa fa-address-book"></i></span>
 								<div class="row">
 									<div class="col-md-3">
 										<input type="text" id="comaker2"/>
@@ -266,8 +258,9 @@
 									<strong>Company:</strong> {{ $key->loan_borrower->company->company_name }} ({{ $key->loan_borrower->company->company_code }})
 								</p>
 							</div>
+							<hr>
 							<div class="col-md-12">
-								<h3>Co-Maker 1:</h3>
+								<h5>Co-Maker 1:</h5>
 								<h4><strong>{{ $key->comaker1->borrower_last_name }}, {{ $key->comaker1->borrower_first_name }} {{ $key->comaker1->borrower_middle_name }}</strong>
 								</h4>
 								<p>
@@ -287,8 +280,9 @@
 									<strong>Company:</strong> {{ $key->comaker1->company->company_name }} ({{ $key->comaker1->company->company_code }})
 								</p>
 							</div>
+							<hr>
 							<div class="col-md-12">
-								<h3>Co-Maker 2:</h3>
+								<h5>Co-Maker 2:</h5>
 								<h4><strong>{{ $key->comaker2->borrower_last_name }}, {{ $key->comaker2->borrower_first_name }} {{ $key->comaker2->borrower_middle_name }}</strong>
 								</h4>
 								<p>

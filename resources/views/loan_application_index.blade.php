@@ -27,10 +27,11 @@
 					<a href="{{ url('admin/loan_applications/create') }}" class="btn btn-primary btn-sm">+ New Loan Application</a>
 					<br><br>
 
-					<table class="table table-bordered" id="users-table" data-page-length='10'>
+					<table class="table table-bordered" width="100%" id="users-table" data-page-length='10'>
 			            <thead>
 			              <tr>
 			              	<th>ID</th>
+			              	<th>View</th>
 			              	<th>Status</th>
 			              	<th>Disbursement Date</th>
 			                <th>Last Name</th>
@@ -54,9 +55,11 @@
 		      $('#users-table').DataTable({
 		        processing: true,
 		        serverSide: true,
+		        responsive: true,
 		        ajax: '{!! url('loan_applications/index/data') !!}',
 		        columns: [
 		          {data: '0', name: 'loan_applications.id'},
+		          {data: '23', name: 'View', orderable: false, searchable: false},
 		          {data: '7', name: 'loan_applications.loan_application_status'},
 		          {data: '11', name: 'loan_applications.loan_application_disbursement_date'},
 		          {data: '20.borrower_last_name', name: 'loan_borrower.borrower_last_name'},

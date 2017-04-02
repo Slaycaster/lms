@@ -80,6 +80,26 @@ class LoanApplicationController extends Controller
             ->with('loan_interests', $loan_interests);
     }
 
+    public function viewdetails($id)
+    {
+       $payment_terms = LoanPaymentTerm::pluck('loan_payment_term_name', 'id');
+       $loan_interests = LoanInterest::pluck('loan_interest_name', 'id');
+       $payment_schedules = PaymentSchedule::pluck('payment_schedule_name', 'id');
+        $loan_application = LoanApplication::where('id', '=', $id)
+            ->with('loan_borrower')
+            ->with('loan_borrower.company')
+            ->with('loan_interest')
+            ->with('loan_payment_term')
+            ->with('payment_collections')
+            ->get();
+
+        return view('loan_application_view_details')
+            ->with('loan_application', $loan_application)
+            ->with('payment_terms', $payment_terms)
+            ->with('payment_schedules', $payment_schedules)
+            ->with('loan_interests', $loan_interests);
+    }
+
 
 /*==============================================================
                     Eloquent Backend Scripts
@@ -406,6 +426,7 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
                 ->make();
         }
         else
@@ -420,6 +441,7 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
                 ->make();
         }
     }
@@ -455,7 +477,7 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
-                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Details </a>')
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
                 ->make();
         }
     }
