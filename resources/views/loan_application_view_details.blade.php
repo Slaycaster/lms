@@ -21,7 +21,7 @@
 					Loan Application Details
 				</div>
 				<div class="panel-body">
-					<a href="{{ url('loan_applications/$id') }}" class="btn btn-sm btn-primary">Approve/Decline Loan Application</a>
+					<a href="{{ url('admin/loan_applications/'.$key->id) }}" class="btn btn-sm btn-primary">Approve/Decline Loan Application</a>
 					<hr>
 					<div class="row">
 						<div class="col-md-6">
