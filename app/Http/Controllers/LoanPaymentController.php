@@ -52,7 +52,17 @@ class LoanPaymentController extends Controller
 
     public function process_payment()
     {
+        $payment_collection_id = Request::input('payment_collection_id');
+        for ($i = 0; $i < sizeof($payment_collection_id); $i++)
+        {
+            $payment_collection = PaymentCollection::find($payment_collection_id[$i]);
+            $payment_collection->is_paid = 1;
+            $payment_collection->save();
+        }
 
+        Session::flash('message', 'Loan Payment Successful!');
+
+        return Redirect::to('admin/loan_payments');
     }
 
     public function process_due_payment()
@@ -112,18 +122,33 @@ class LoanPaymentController extends Controller
 
 	public function approved_data()
     {
-        $loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
-            /*
-            ->with(['loan_borrower' => function($q) {
-                $q->where('company_id', '=', Auth::user()->company->id);
-            }])
-            */
-            ->with('loan_interest')
-            ->with('loan_payment_term')
-            ->with('loan_borrower.company')
-            ->with('payment_collections')
-            ->get();
-
+        if (Auth::user()->company->id == 1)
+        {
+            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->with('payment_collections')
+                ->orderBy('id', 'desc');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
+                ->make();
+        }
+        else
+        {
+            $loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
+                ->with(['loan_borrower' => function($q) {
+                    $q->where('company_id', '=', Auth::user()->company->id);
+                }])
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->with('payment_collections')
+                ->orderBy('id', 'desc');
+                return Datatables::of($loan_applications)
+                    ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
+                    ->make();
+        }
         return json_encode($loan_applications, JSON_PRETTY_PRINT);
     }
 }

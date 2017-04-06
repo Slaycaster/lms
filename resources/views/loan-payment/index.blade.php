@@ -21,14 +21,20 @@
 				</div>
 
 				<div class="panel-body">
+					@if (Session::has('message'))
+                  		<div class="alert alert-info">{{ Session::get('message') }}</div>
+              		@endif
 					<table class="table table-bordered" id="users-table">
 			            <thead>
 			              <tr>
+			                <th>ID</th>
+			              	<th>Status</th>
+			              	<th>Disbursement Date</th>
 			                <th>Last Name</th>
 			                <th>First Name</th>
-			                <th>Company</th>
-			                <th>Loan Amount</th>
-			                <th>Total Cycles Paid</th>
+			                <th>Company Code</th>
+			                <th>Principal Amount</th>
+			                <th>Total Loan Amount</th>
 			                <th>Payment Terms</th>
 			                <th>Actions</th>
 			              </tr>
@@ -47,14 +53,16 @@
 		        serverSide: true,
 		        ajax: '{!! url('loan_payments/applications') !!}',
 		        columns: [
-		          {data: '20.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
-		          {data: '20.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
-		          {data: '20.company.company_name', name: 'loan_borrower.company.company_name'},
+		          {data: '0', name: 'loan_applications.id'},
+		          {data: '7', name: 'loan_applications.loan_application_status'},
+		          {data: '11', name: 'loan_applications.loan_application_disbursement_date'},
+		          {data: '22.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
+		          {data: '22.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
+		          {data: '22.company.company_code', name: 'loan_borrower.company.company_name'},
+		          {data: '2', name: 'loan_applications.loan_application_amount'},
 		          {data: '3', name: 'loan_applications.loan_application_total_amount'},
-		          {data: '16', name: 'loan_payments', searchable: false},
-		          {data: '17.loan_interest_name', name: 'loan_interest.loan_interest_name'},
-		          {data: '18.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
-		          {data: '20', name: 'Actions', orderable: false, searchable: false}
+		          {data: '21.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
+		          {data: '24', name: 'Actions', orderable: false, searchable: false}
 		        ]
 		      });
 		    });

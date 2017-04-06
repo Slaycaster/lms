@@ -17,9 +17,52 @@
 
 	<?php
 
-		$paidForTheMonth = false;
-		$current_date = date('M Y');
+		$cyclesForTheMonth = 0;
+		$previousDate = null;
+		$currentDate = (new DateTime(date('Y-m-d')));
+		$currentMonth = (new DateTime(date('Y-m')));
+		$cyclesPaid = 0;
+		$cyclesDue = 0;
+		$cyclesRemain = 0;
+		$cyclesDueDates = array();
+		$index = 0;
 
+		foreach ($key[0]->payment_collections as $payment_collection)
+		{
+			$convertedDate = (new DateTime(date('Y-m-d', strtotime($payment_collection->payment_collection_date))));
+			if ($previousDate == null)
+			{
+				$previousDate = $convertedDate;
+			}
+			$convertedMonth = (new DateTime(date('Y-m', strtotime($payment_collection->payment_collection_date))));
+
+			$index++;
+
+			if ($payment_collection->is_paid == 1)
+			{
+				$cyclesPaid ++;
+			}
+			//check also if the previous cycle that is in the same month isn't paid yet, if that's the case, do not include the next cycle of the same month to the due cycle (confusing af but it works)
+			else if ( ($convertedDate <= $currentDate) || ( ($convertedMonth == $currentMonth) && !($previousDate < $convertedDate) ) )
+			{
+				$cyclesDueDates[$index]["id"] = $payment_collection->id;
+				$cyclesDueDates[$index]["date"] = $payment_collection->payment_collection_date;
+				$cyclesDueDates[$index]["collection_amount"] = $payment_collection->payment_collection_amount;
+				$cyclesDueDates[$index]["is_paid"] = $payment_collection->is_paid;
+				$cyclesDue ++;
+			}
+			else if (($convertedDate > $currentDate) && ($convertedMonth != $currentMonth || $previousDate < $convertedDate))
+			{
+				$cyclesRemain ++;
+			}
+
+			//In order to check previous cycle which isn't paid yet.
+			$previousDate = $convertedDate;
+		}
+		//dd($cyclesDueDates);
+		//dd($cyclesPaid. " " . $cyclesDue . " " . $cyclesRemain);
+
+		/*
 		$monthsPaid = 0;
 		$monthsUnpaid = 0;
 		$monthsToBePaid = 0;
@@ -54,122 +97,77 @@
 		//Getting how many months having late payments (due)
 		$monthsUnpaid = $paymentPeriodToCurrentDate_count - $monthsPaid;
 		$monthsToBePaid = $key[0]->loan_payment_term->loan_payment_term_no_of_months - $paymentPeriodToCurrentDate_count;
-		
+		*/
 	?>
 
 	<div class="row">
 		<div class="col-md-6">
 			<div class="panel panel-warning">
 				<div class="panel-heading">
-					Loan Application Details
+					Loan Payment
 				</div>
 				<div class="panel-body">
+					<h4>Loan Application Details</h4>
 					<div class="row">
 						<div class="col-md-12">
-							<h3>Application ID:</h3> 
-							<p>{{ $key[0]->id }}</p>
+							<p><strong>Application ID:</strong> {{ $key[0]->id }}</p> 
 						</div>
 						<div class="col-md-6">
-							<h3>Created at:</h3>
-							<p>{{ $key[0]->created_at }}</p>
+							<p><strong>Created at:</strong> {{ $key[0]->created_at }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Approved at:</h3>
-							<p>{{ $key[0]->updated_at }}</p>
+							<p><strong>Approved at:</strong> {{ $key[0]->updated_at }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Principal Amount:</h3>
-							<p>PHP {{ $key[0]->loan_application_amount }}.00</p>
+							<p><strong>Principal Amount:</strong> PHP {{ $key[0]->loan_application_amount }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Total Loan Amount:</h3>
-							<p>PHP {{ $totalLoan }}.00</p>
+							<p><strong>Total Loan Amount:</strong> PHP {{ $key[0]->loan_application_total_amount }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Payment Terms:</h3>
-							<p>{{ $key[0]->loan_payment_term->loan_payment_term_name }}</p>
+							<p><strong>Payment Terms:</strong> {{ $key[0]->loan_payment_term->loan_payment_term_name }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Interest:</h3>
-							<p>{{ $key[0]->loan_interest->loan_interest_name }}</p>
+							<p><strong>Interest:</strong> {{ $key[0]->loan_interest->loan_interest_name }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Filing Fee:</h3>
-							<p>{{ $key[0]->loan_application_filing_fee }}</p>
+							<p><strong>Filing Fee:</strong> {{ $key[0]->loan_application_filing_fee }}</p>
 						</div>
 						<div class="col-md-6">
-							<h3>Service Fee:</h3>
-							<p>{{ $key[0]->loan_application_service_fee }}</p>
+							<p><strong>Service Fee:</strong> {{ $key[0]->loan_application_service_fee }}</p>
 						</div>
 						<div class="col-md-12">
-							<h3>Purpose:</h3>
-							<p>{{ $key[0]->loan_application_purpose }}</p>
+							<p><strong>Purpose:</strong> {{ $key[0]->loan_application_purpose }}</p>
 						</div>
 					</div>
 					<hr>
-					<h3>Actions</h3>
-					<!--=========================================================================
-													DUE PAYMENTS
-					===========================================================================-->
-		              @if($monthsUnpaid > 0)
-						<form action="{{url('admin/loan_payments/process_due_payment')}}" method="POST">
-
-						{{ csrf_field() }}
-						<input type="hidden" name="loan_application_id" value="{!! $key[0]->id !!}">
-						<input type="hidden" name="months_unpaid" value="{!! $monthsUnpaid !!}">
-
-			              <div class="form-group">
-			                <label for="due_amount" class="control-label">Pay Due Payments (This Months + {{$monthsUnpaid}} month/s)</label>
-			                <div class="input-group">
-			                  <span class="input-group-addon">₱</span>
-			                  <input type="text" name="due_amount" class="form-control" value="{!! round((($totalLoan / $key[0]->loan_payment_term->loan_payment_term_no_of_months) + (($totalLoan / $key[0]->loan_payment_term->loan_payment_term_no_of_months)*$monthsUnpaid) ), 2) !!}">
-			                </div>
-			              </div>
-
-			              <!-- Remarks Form Group -->
-			              <div class="form-group">
-			                <label for="due_remarks" class="control-label">Remarks</label>
-			                <textarea name="due_remarks" class="form-control"></textarea>
-			              </div>
-
-			              <button type="submit" class="btn btn-block btn-success btn-sm" name="approve">Process Due Loan Payment</button>
-						</form>
-			          @else
-			              @if($paidForTheMonth)
-			              		<p class="text-success">Payment already made this payment schedule.</p>
-			              @else
-				              <form action="{{ url('admin/loan_payments/process_payment') }}" method="POST">
-				              		
-				              	{{ csrf_field() }}
-				              	<input type="hidden" name="loan_application_id" value="{!! $key[0]->id !!}">
-								  <!-- Amount Form Group -->
-					              <div class="form-group">
-					                <label for="amount" class="control-label">Monthly Payment</label>
-					                <div class="input-group">
-					                  <span class="input-group-addon">₱</span>
-					                  <input type="text" name="amount" class="form-control" value="{!! round(($totalLoan / $key[0]->loan_payment_term->loan_payment_term_no_of_months) * $key[0]->payment_schedule->payment_schedule_days_interval / 30, 2) !!}">
-					                </div>
-					              </div>
-
-					              <!-- Remarks Form Group -->
-					              <div class="form-group">
-					                <label for="remarks" class="control-label">Remarks</label>
-					                <textarea name="remarks" class="form-control"></textarea>
-					              </div>
-
-					              <button type="submit" class="btn btn-block btn-success btn-sm" name="approve">Process Loan Payment</button>
-					              
-				              </form>
-			              @endif
-		              @endif
-
-		            <!--=========================================================================
-												MONTHLY PAYMENT
-					===========================================================================-->
+					<form action="{{ url('admin/loan_payments/process_payment') }}" method="POST">
+				    {{ csrf_field() }}
+					<h4>Process Payment</h4>
+					<table class="table table-hover table-responsive">
+						<thead>
+							<tr>
+								<td><strong>Cycle Date</strong></td>
+								<td><strong>Amount</strong></td>
+								<td><strong>Pay?</strong></td>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach($cyclesDueDates as $cyclesDueDate)
+								<tr>
+									<td>{{$cyclesDueDate["date"]}}</td>
+									<td>{{ $cyclesDueDate["collection_amount"] }}</td>
+									<td>{{ Form::checkbox('payment_collection_id[]', $cyclesDueDate["id"]) }}</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+					<button type="submit" class="btn btn-block btn-success btn-sm" name="approve">Process Loan Payment</button>
+					</form>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-3">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					Borrower Details
@@ -179,8 +177,8 @@
 						<div class="row">
 							
 							<div class="col-md-12">
-								<h4><strong>{{ $key[0]->loan_borrower->borrower_last_name }}, {{ $key[0]->loan_borrower->borrower_first_name }} {{ $key[0]->loan_borrower->borrower_middle_name }}</strong>
-								</h4>
+								<p><strong>{{ $key[0]->loan_borrower->borrower_last_name }}, {{ $key[0]->loan_borrower->borrower_first_name }} {{ $key[0]->loan_borrower->borrower_middle_name }}</strong>
+								</p>
 								<p>
 									
 									<strong>Borrower's Address:</strong> {{ $key[0]->loan_borrower->borrower_home_address }}
@@ -199,12 +197,11 @@
 								</p>
 							</div>
 							<div class="col-md-12">
-								<h3>Co-Maker 1:</h3>
-								<h4><strong>{{ $key[0]->comaker1->borrower_last_name }}, {{ $key[0]->comaker1->borrower_first_name }} {{ $key[0]->comaker1->borrower_middle_name }}</strong>
-								</h4>
+							<hr>
+								<p><strong>Co-Maker 1:</strong> {{ $key[0]->comaker1->borrower_last_name }}, {{ $key[0]->comaker1->borrower_first_name }} {{ $key[0]->comaker1->borrower_middle_name }}</p>
 								<p>
 									
-									<strong>Borrower's Address:</strong> {{ $key[0]->comaker1->borrower_home_address }}
+									<strong>Address:</strong> {{ $key[0]->comaker1->borrower_home_address }}
 									<br>
 									<strong>E-mail:</strong> {{ $key[0]->comaker1->borrower_email }}
 									<br>
@@ -220,12 +217,11 @@
 								</p>
 							</div>
 							<div class="col-md-12">
-								<h3>Co-Maker 2:</h3>
-								<h4><strong>{{ $key[0]->comaker2->borrower_last_name }}, {{ $key[0]->comaker2->borrower_first_name }} {{ $key[0]->comaker2->borrower_middle_name }}</strong>
-								</h4>
+							<hr>
+								<p><strong>Co-Maker 2:</strong> {{ $key[0]->comaker2->borrower_last_name }}, {{ $key[0]->comaker2->borrower_first_name }} {{ $key[0]->comaker2->borrower_middle_name }}</p>
 								<p>
 									
-									<strong>Borrower's Address:</strong> {{ $key[0]->comaker2->borrower_home_address }}
+									<strong>Address:</strong> {{ $key[0]->comaker2->borrower_home_address }}
 									<br>
 									<strong>E-mail:</strong> {{ $key[0]->comaker2->borrower_email }}
 									<br>
@@ -244,72 +240,39 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-3">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					Payment Schedules
 				</div>
 
 				<div class="panel-body">
+
+					<p><strong>Cycles Paid:</strong> {{ $cyclesPaid }}</p> 
+					<p><strong>Due + To be paid:</strong> {{ $cyclesDue }}</p>
+					<p><strong>Remaining:</strong> {{ $cyclesRemain }}</p>
+
 					<table class="table table-bordered">
 						<thead>
 							<tr>
 								<td><strong>Date</strong></td>
-								
+								<td><strong>Is Paid?</strong></td>
 							</tr>
 						</thead>
-
 						<tbody>
-							@foreach($paymentPeriod as $dt)
+							@foreach($key[0]->payment_collections as $collection)
 								<tr>
-									<td>{{ $dt->format('M j, Y') }}</td>
-									
+									<td>{{ $collection->payment_collection_date }}</td>
+									@if($collection->is_paid == 1)
+										<td>Yes</td>
+									@elseif($collection->is_paid == 0)
+										<td>Not yet</td>
+									@endif
 								</tr>
 							@endforeach
 						</tbody>
 					</table>
-				</div>
-			</div>
 
-			<div class="panel panel-success">
-				<div class="panel-heading">
-					Payment History
-				</div>
-
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-md-4">
-							<h3>Months Paid:</h3> 
-							<p>{{ $monthsPaid }}</p>
-						</div>
-						<div class="col-md-4">
-							<h3>Due from previous months:</h3>
-							<p>{{ $monthsUnpaid }}</p>
-						</div>
-						<div class="col-md-4">
-							<h3>Remaining months:</h3>
-							<p>{{ $monthsToBePaid }}</p>
-						</div>
-					</div>
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<td><strong>Date</strong></td>
-								<td><strong>Amount</strong></td>
-							</tr>
-						</thead>
-
-						<tbody>
-							@foreach($key[0]->loan_payments as $payments)
-								<tr>
-									<td>{{ date('M j, Y - H:i:s', strtotime($payments->created_at)) }}</td>
-									<td>{{$payments->loan_payment_amount}}</td>
-									<!-- Monthly Loan * Days Inteval / 30 -->
-									<td>{{ round(($totalLoan / $key[0]->loan_payment_term->loan_payment_term_no_of_months) * $key[0]->payment_schedule->payment_schedule_days_interval / 30, 2) }}</td>
-								</tr>
-							@endforeach
-						</tbody>
-					</table>
 				</div>
 			</div>
 		</div>
