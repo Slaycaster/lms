@@ -35,17 +35,8 @@
             </ul>
           </li>
           <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
-          <!--
-          <li class="treeview">
-            <a href="#"><i class="fa fa-certificate"></i> <span>Application Status</span> <i class="fa fa-angle-left pull-right"></i></a>
-            <ul class="treeview-menu">
-              <li><a href="{{ url('admin/loan_applications/pending')}}"> <i class="fa fa-circle-o"></i> <span>Pending</span> </a></li>
-              <li><a href="{{ url('admin/loan_applications/declined')}}"> <i class="fa fa-window-close-o"></i> <span>Declined</span></a></li>
-            </ul>
-          </li>
-          -->
 
-          @role('Super_Administrator')
+          @role('Admin')
           <li class="header">{{ trans('backpack::base.administration') }}</li>
             <!-- Users, Roles Permissions -->
             <li class="treeview">

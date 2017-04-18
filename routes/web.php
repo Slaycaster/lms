@@ -18,7 +18,7 @@ Route::get('/', function () {
 // Admin Interface Routes
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 {
-    Route::group(['middleware' => ['role:Super_Administrator']], function () {
+    Route::group(['middleware' => ['role:Admin']], function () {
         CRUD::resource('companies', 'Admin\CompanyCrudController');
         CRUD::resource('loan_interests', 'Admin\LoanInterestCrudController');
         CRUD::resource('loan_payment_terms', 'Admin\LoanPaymentTermCrudController');
