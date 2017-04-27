@@ -24,9 +24,9 @@
         <div class="panel-body">
           <h4><span class = "fa fa-clock-o"></span> Select Company</h4>
           <hr>
-          <form method="post" action="{{url('admin/reports/loan_applications/pdf')}}" target="_blank">
+          <form method="get" action="{{url('admin/reports/loan_collections/pdf')}}" target="_blank">
             {{ csrf_field() }}
-            <!--
+            
             <div class="form-group">
                       <label>Date:</label>
 
@@ -34,11 +34,11 @@
                         <div class="input-group-addon">
                           <i class="fa fa-calendar"></i>
                         </div>
-                        <input type="text" class="form-control pull-right" data-date-format="yyyy/mm/dd" id="datepicker" name="date">
+                        <input type="text" class="form-control pull-right" data-date-format="yyyy-mm-dd" id="datepicker" name="date">
                       </div>
                       
                   </div>
-                  -->
+                  
 
             {{ Form::select('company_id', $companies, null, array('class' => 'form-control'))}}
             <br>
@@ -53,9 +53,7 @@
     <script type="text/javascript">
       $(document).ready(function () {
         $('#datepicker').datepicker({
-              format: "mm/yyyy",
-              viewMode: "months",
-              minViewMode: "months"
+              format: "yyyy-mm-dd"
           });
       });
     </script>

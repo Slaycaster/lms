@@ -24,7 +24,7 @@
         <div class="panel-body">
           <h4><span class = "fa fa-clock-o"></span> Select Company</h4>
           <hr>
-          <form method="post" action="{{url('admin/reports/loan_applications/pdf')}}" target="_blank">
+          <form method="get" action="{{url('admin/reports/loan_applications/pdf')}}" target="_blank">
             {{ csrf_field() }}
             <!--
             <div class="form-group">

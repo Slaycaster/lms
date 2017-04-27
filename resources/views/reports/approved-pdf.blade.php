@@ -8,8 +8,9 @@ use App\LoanApplication;
 	$company_id = Session::get('company_id', 1);
 
 	$loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
-			->where('company_id', '=', $company_id)
-            ->with('loan_borrower')
+            ->with(['loan_borrower' => function($q) {
+            	$q->where('company_id', '=', $company_id);
+            }])
             ->with('loan_borrower.company')
             ->with('loan_interest')
             ->with('loan_payment_term')
@@ -17,8 +18,9 @@ use App\LoanApplication;
             ->get();
 
     $loan_application_count = LoanApplication::where('loan_application_status', '=', 'Approved')
-    		->where('company_id', '=', $company_id)
-            ->with('loan_borrower')
+            ->with(['loan_borrower' => function($q) {
+            	$q->where('company_id', '=', $company_id);
+            }])
             ->with('loan_borrower.company')
             ->with('loan_interest')
             ->with('loan_payment_term')
@@ -35,7 +37,7 @@ use App\LoanApplication;
 		<style type="text/css">
 		    table
 		    {
-		    	font-size: 10;
+		    	font-size: 18;
 		    	border-collapse: collapse;
 		    	page-break-inside: auto;
 		    }
@@ -93,15 +95,15 @@ use App\LoanApplication;
 		    }
 	    </style>
 	</head>
-
+<center>
 	<body>
 		<p style="text-align: center;">
 	        <normal style="font-size: 18px">Moo Loans Inc.</normal>
 	        <br>
-	        <strong>APPROVED LOAN APPLICATION REPORT<br><!--as of {{$date}} --></strong>
+	        <strong>APPROVED LOAN APPLICATION REPORT<br>as of {{$today}}</strong>
 	    </p>
-
-	    <table border="1" width="520">
+	    <h5>Active Loan Applications: {{$loan_application_count}}</h5>
+	    <table border="1">
 	    	<thead>
 	    		<tr>
 		    		<td>#</td>
@@ -110,13 +112,13 @@ use App\LoanApplication;
 		    		<td>Date of Application</td>
 		    		<td>Interest Rate</td>
 		    		<td>Terms of Payment</td>
-		    		<td>Disbursement/Date Approved</td>
+		    		<td>Disbursement Date</td>
 		    		<td>Principal</td>
 		    		<td>Filing Fee</td>
 		    		<td>Service Fee</td>
 		    		<td>Interest</td>
 		    		<td>Total Loan</td>
-		    		<td>Monthly Payment</td>
+		    		<td>Periodic Payment</td>
 	    		</tr>
 	    	</thead>
 	    	<tbody>
@@ -130,16 +132,16 @@ use App\LoanApplication;
 		    		<td>{{ $loan_application->id }}</td>
 		    		<td>{{ $loan_application->loan_borrower->borrower_last_name}}, {{ $loan_application->loan_borrower->borrower_first_name }}</td>
 		    		<td>{{ $loan_application->loan_borrower->company->company_code }}</td>
-		    		<td>{{ $loan_application->created_at }}</td>
+		    		<td>{{ date('F j, Y', strtotime($loan_application->created_at)) }}</td>
 		    		<td>{{ $loan_application->loan_interest->loan_interest_rate }}%</td>
 		    		<td>{{ $loan_application->loan_payment_term->loan_payment_term_no_of_months }} mos. </td>
-		    		<td>{{ $loan_application->updated_at }}</td>
-		    		<td>{{ $loan_application->loan_application_amount }}</td>
-		    		<td>{{ $loan_application->loan_application_filing_fee }}</td>
-		    		<td>{{ $loan_application->loan_application_service_fee }}</td>
-		    		<td>{{ round($totalInterest, 2) }}</td>
-		    		<td>{{ round($totalLoan, 2) }}</td>
-		    		<td>{{ round(($totalLoan / $loan_application->loan_payment_term->loan_payment_term_no_of_months), 2) }}</td>
+		    		<td>{{ date('F j, Y', strtotime($loan_application->loan_application_disbursement_date)) }}</td>
+		    		<td>PHP {{ $loan_application->loan_application_amount }}</td>
+		    		<td>PHP {{ $loan_application->loan_application_filing_fee }}</td>
+		    		<td>PHP {{ $loan_application->loan_application_service_fee }}</td>
+		    		<td>PHP {{ $loan_application->loan_application_interest }}</td>
+		    		<td>PHP {{ $loan_application->loan_application_total_amount }}</td>
+		    		<td>PHP {{ $loan_application->loan_application_periodic_rate }}</td>
 		    	</tr>
 		    	@endforeach
 	    	</tbody>
@@ -147,4 +149,5 @@ use App\LoanApplication;
 	    <br>
 	    <h5>Active Loan Applications: {{$loan_application_count}}</h5>
 	</body>
+</center>
 </html>

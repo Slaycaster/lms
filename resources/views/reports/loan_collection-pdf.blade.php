@@ -2,27 +2,23 @@
 
 use App\LoanApplication;
 use App\LoanPayment;
+use App\PaymentCollection;
 
 	$timestamp = time()+date("Z");
 	$today = gmdate("Y/m/d",$timestamp);
 	$company_id = Session::get('company_id', 1);
+    $date = Session::get('date', $today);
 
-	$loan_applications = LoanApplication::where('loan_application_status', '=', 'Approved')
-            ->where('company_id', '=', $company_id)
-            ->with('loan_borrower')
-            ->with('loan_borrower.company')
-            ->with('loan_interest')
-            ->with('loan_payment_term')
-            ->with('loan_payments')
+    $payment_collections = PaymentCollection::where('payment_collection_date', '=', $date)
+            ->with('loan_application')
+            ->with('loan_application.loan_borrower')
+            ->with('loan_application.loan_borrower.company')
+            ->with('loan_application.loan_interest')
+            ->with('loan_application.loan_payment_term')
+            ->with('loan_application.loan_payments')
             ->get();
 
-    $loan_application_count = LoanApplication::where('loan_application_status', '=', 'Approved')
-            ->where('company_id', '=', $company_id)
-            ->with('loan_borrower')
-            ->with('loan_borrower.company')
-            ->with('loan_interest')
-            ->with('loan_payment_term')
-            ->with('loan_payments')
+    $payment_collections_count = PaymentCollection::where('payment_collection_date', '=', $date)
             ->count();
 
 ?>
@@ -36,7 +32,7 @@ use App\LoanPayment;
         <style type="text/css">
             table
             {
-                font-size: 10;
+                font-size: 14;
                 border-collapse: collapse;
                 page-break-inside: auto;
             }
@@ -99,96 +95,74 @@ use App\LoanPayment;
         <p style="text-align: center;">
             <normal style="font-size: 18px">Moo Loans Inc.</normal>
             <br>
-            <strong>LOAN COLLECTION REPORT <br>as of {{$date}}</strong>
+            <strong>LOAN COLLECTION REPORT <br>as of this cycle, {{$date}}</strong>
         </p>
 
         <?php
-            $totalAmountCollected = 0;
-            $totalPrincipalCollected = 0;
-            $totalIncomeCollected = 0;
+            $totalAmountCollectedThisCycle = 0;
+            $totalPrincipalCollectedThisCycle = 0;
+            $totalIncomeCollectedThisCycle = 0;
 
-            $totalAmountOutstanding = 0;
-            $totalPrincipalOutstanding = 0;
-            $totalIncomeOutstanding = 0;
-        ?>
+            $totalAmountOutstandingThisCycle = 0;
+            $totalPrincipalOutstandingThisCycle = 0;
+            $totalIncomeOutstandingThisCycle = 0;
 
-        @foreach($loan_applications as $loan_application)
-        <?php
-            $monthlyInterest = $loan_application->loan_application_amount * ($loan_application->loan_interest->loan_interest_rate * .01);
-            $totalInterest = $monthlyInterest * $loan_application->loan_payment_term->loan_payment_term_no_of_months;
-            $totalLoan = $loan_application->loan_application_amount +  $loan_application->loan_application_filing_fee + $loan_application->loan_application_service_fee + ($monthlyInterest * $loan_application->loan_payment_term->loan_payment_term_no_of_months);
-            $totalAmount = 0;
-            $totalPaymentCount = 0;
-            $totalPrincipal = 0;
-            $totalIncome = 0;
-
-            $outstandingAmount = 0;
-            $outstandingPrincipal = 0;
-            $outstandingIncome = 0;
-
-
-            //Getting how many months already paid
-            foreach($key[0]->loan_payments as $loan_payment)
+            foreach($payment_collections as $payment_collection)
             {
-                $totalAmount += (double)$loan_payment->loan_payment_amount;
-                $totalPaymentCount += (int)$loan_payment->loan_payment_count;
+                $payment_collection_count_loan_application = PaymentCollection::where('loan_application_id', '=', $payment_collection->loan_application_id)->count();
+                if($payment_collection->is_paid == 1)
+                {
+                    $totalAmountCollectedThisCycle += $payment_collection->payment_collection_amount;
+                    $totalPrincipalCollectedThisCycle += ($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application);
+                    $totalIncomeCollectedThisCycle += ( ($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application );
+                }
+                else if($payment_collection->is_paid == 0)
+                {
+                    $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_amount;
+                    $totalPrincipalOutstandingThisCycle += ($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application);
+                    $totalIncomeOutstandingThisCycle += ( ($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application );
+                }
             }
-
-            $totalPrincipal = ($loan_application->loan_application_amount / $loan_application->loan_payment_term->loan_payment_term_no_of_months) * $totalPaymentCount;
-            $totalIncome = $monthlyInterest * $totalPaymentCount;
-
-            $outstandingAmount = $totalLoan - $totalAmount;
-            $outstandingPrincipal = ($loan_application->loan_application_amount * $loan_application->loan_payment_term->loan_payment_term_no_of_months) - $totalPrincipal;
-            $outstandingIncome = $totalInterest - $totalIncome;
-
-            //Add altogether to the overall
-            $totalAmountCollected += $totalAmount;
-            $totalPrincipalCollected += $totalPrincipal;
-            $totalIncomeCollected += $totalIncome;
-            $totalAmountOutstanding += $outstandingAmount;
-            $totalPrincipalOutstanding += $outstandingPrincipal;
-            $totalIncomeCollected += $outstandingIncome;
-
         ?>
-        @endforeach
-        <h2>COLLECTED</h2>
+
+        <h3>COLLECTED</h3>
         <table border="1" width="520">
             <thead>
                 <tr>
-                    <td>Total Amount Collected</td>
-                    <td>Total Principal Collected</td>
-                    <td>Total Income Collected</td>
+                    <td>Total Amount Collected this Cycle</td>
+                    <td>Total Principal Collected this Cycle</td>
+                    <td>Total Income Collected this Cycle</td>
                 </tr>
             </thead>
             <tbody>
 
                 <tr>
-                    <td>{{ $totalAmountCollected }}</td>
-                    <td>{{ $totalPrincipalCollected }}</td>
-                    <td>{{ $totalIncomeCollected }}</td>
+                    <td>PHP {{ $totalAmountCollectedThisCycle }}</td>
+                    <td>PHP {{ $totalPrincipalCollectedThisCycle }}</td>
+                    <td>PHP {{ $totalIncomeCollectedThisCycle }}</td>
                 </tr>
             </tbody>
         </table>
         <br>
-        <h2>OUTSTANDING</h2>
+        <h3>OUTSTANDING</h3>
         <table border="1" width="520">
             <thead>
                 <tr>
-                    <td>Outstanding Balance</td>
-                    <td>Outstanding Principal</td>
-                    <td>Outstanding Income Share</td>
+                    <td>Outstanding Balance this Cycle</td>
+                    <td>Outstanding Principal this Cycle</td>
+                    <td>Outstanding Income this Cycle</td>
                 </tr>
             </thead>
             <tbody>
 
                 <tr>
-                    <td>{{ $totalAmountCollected }}</td>
-                    <td>{{ $totalPrincipalCollected }}</td>
-                    <td>{{ $totalIncomeCollected }}</td>
+                    <td>PHP {{ $totalAmountOutstandingThisCycle }}</td>
+                    <td>PHP {{ $totalPrincipalOutstandingThisCycle }}</td>
+                    <td>PHP {{ $totalIncomeOutstandingThisCycle }}</td>
                 </tr>
             </tbody>
         </table>
         <br>
-        <h3>Active Loan Applications: {{$loan_application_count}}</h3>
+        <h3>Active Loan Applications in this Cycle: {{ $payment_collections_count }}</h3>
     </body>
 </html>
