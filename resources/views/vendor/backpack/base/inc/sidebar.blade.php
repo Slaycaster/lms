@@ -28,9 +28,6 @@
             <a href="#"><i class="fa fa-certificate"></i> <span>Loan Applications</span> <i class="fa fa-angle-left pull-right"></i></a> 
             <ul class="treeview-menu">
               <li><a href="{{ url('admin/loan_applications') }}"><i class="fa fa-file-text-o"></i> <span>* Loan Applications</span></a></li>
-              <!--
-              <li><a href="{{ url('admin/loan_applications/create') }}"><i class="fa fa-file-text-o"></i> <span>+ New</span></a></li>
-              -->
               <li><a href="{{ url('admin/loan_applications/active') }}"><i class="fa fa-circle-o"></i> <span>* Approve/Decline</span></a></li>
             </ul>
           </li>
@@ -63,7 +60,6 @@
           <li><a href="{{ url('admin/reports/loan_applications') }}"><i class="fa fa-file-o"></i> <span>Approved Loan Applications</span></a></li>
           <li><a href="{{ url('admin/reports/loan_collections') }}"><i class="fa fa-file-o"></i> <span>Loan Collection & Outstanding</span></a></li>
           <li><a href="{{ url('#') }}"><i class="fa fa-file-o"></i> <span>Income Share</span></a></li>
-
           <!-- ======================================= -->
           <li class="header">{{ trans('backpack::base.user') }}</li>
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/logout') }}"><i class="fa fa-sign-out"></i> <span>{{ trans('backpack::base.logout') }}</span></a></li>

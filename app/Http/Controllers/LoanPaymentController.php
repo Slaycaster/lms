@@ -60,6 +60,23 @@ class LoanPaymentController extends Controller
             $payment_collection->save();
         }
 
+        $unpaid_count = PaymentCollection::where('loan_application_id', '=', Request::input('application_id'))->where('is_paid', '=', 0)->count();
+
+        if ($unpaid_count != 0)
+        {
+            Session::flash('payment_status', 'There are '. $unpaid_count .' payment collections remaining.');            
+        }
+        else
+        {
+            Session::flash('payment_status', 'It seems all payment collections have been paid, loan cleared!');
+
+            //Update the loan application to cleared (Archive it)
+            $loan_application = LoanApplication::find(Request::input('application_id'));
+            $loan_application->loan_application_is_active = 1;
+            $loan_application->loan_application_status = 'Cleared';
+            $loan_application->save();
+        }
+
         Session::flash('message', 'Loan Payment Successful!');
 
         return Redirect::to('admin/loan_payments');

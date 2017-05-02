@@ -22,7 +22,12 @@
 
 				<div class="panel-body">
 					@if (Session::has('message'))
-                  		<div class="alert alert-info">{{ Session::get('message') }}</div>
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  		<div class="alert alert-success alert-dismissable">{{ Session::get('message') }}</div>
+              		@endif
+              		@if (Session::has('payment_status'))
+              			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  		<div class="alert alert-info alert-dismissable">{{ Session::get('payment_status') }}</div>
               		@endif
 					<table class="table table-bordered" id="users-table">
 			            <thead>
