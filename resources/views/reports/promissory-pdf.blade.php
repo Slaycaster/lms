@@ -94,11 +94,6 @@ use App\LoanApplication;
 	    </p>
 	    <br>
 	    @foreach($loan_applications as $loan_application)
-	    	<?php
-	    		$monthlyInterest = $loan_application->loan_application_amount * ($loan_application->loan_interest->loan_interest_rate * .01);
-	    		$totalInterest = $monthlyInterest * $loan_application->loan_payment_term->loan_payment_term_no_of_months;
-				$totalLoan = $loan_application->loan_application_amount +  $loan_application->loan_application_filing_fee + $loan_application->loan_application_service_fee + ($monthlyInterest * $loan_application->loan_payment_term->loan_payment_term_no_of_months);
-	    	?>
 
 	    	<p><strong>Date:</strong> {{ date('F j, Y', strtotime($today)) }} <br> <strong>Application ID:</strong> {{ $loan_application->id }}</p>
 	    	<p><strong>Borrower's Name:</strong> {{ $loan_application->loan_borrower->borrower_first_name }} {{ $loan_application->loan_borrower->borrower_middle_name }} {{ $loan_application->loan_borrower->borrower_last_name }}
@@ -113,7 +108,7 @@ use App\LoanApplication;
 	    		<br>
 	    		<strong>Address:</strong> {{ $loan_application->comaker2->borrower_home_address }}
 	    	</p>
-	    	<p>I agree to pay to the order of <strong>Moo Loans, Inc.</strong> ('Lender'), with office address at 5th Floor, Richville Corporate Tower, 1107 Alabang-Zapote Rd., Muntinlupa City the total amount of <strong>PHP {{ $loan_application->loan_application_amount }}</strong>, plus interest thereon at the rate of <strong>{{ $loan_application->loan_interest->loan_interest_rate }} %</strong> per month, together with filing and service fees amounting to <strong>PHP {{ $totalLoan }}</strong> for each installment, to be paid every 15th and 30th of the month, starting on <strong>{{ date('F j, Y', strtotime($loan_application->loan_application_disbursement_date)) }}</strong>. Payments shall be first applied to the interest and then the balance to the principal.</p>
+	    	<p>I agree to pay to the order of <strong>Moo Loans, Inc.</strong> ('Lender'), with office address at 5th Floor, Richville Corporate Tower, 1107 Alabang-Zapote Rd., Muntinlupa City the total amount of <strong>PHP {{ $loan_application->loan_application_amount }}</strong>, plus interest thereon at the rate of <strong>{{ $loan_application->loan_interest->loan_interest_rate }} %</strong> per month, together with filing and service fees amounting to <strong>PHP {{ $loan_application->loan_application_total_amount }}</strong> for each installment, to be paid every 15th and 30th of the month, starting on <strong>{{ date('F j, Y', strtotime($loan_application->loan_application_disbursement_date)) }}</strong>. Payments shall be first applied to the interest and then the balance to the principal.</p>
 
 	    	<p>It is further agreed that in case my salary cannot meet my outstanding loan obligation, I hereby authorize <strong>{{ $loan_application->loan_borrower->company->company_name }}</strong> to collect from my savings deposit, 13th month pay, sick leave or vacation leave, bonus, termination or separate pay, or any other renumeration or monetary benefit due me. It is furthermore agreed that in case none of the above can meet my outstanding loan obligation my co-maker(s) shall assume said loan obligation.</p>
 

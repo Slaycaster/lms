@@ -43,6 +43,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_applications/{id}', 'LoanApplicationController@details');
     Route::get('loan_applications/details/{id}', 'LoanApplicationController@viewdetails');
     Route::post('loan_applications/save', 'LoanApplicationController@save');
+    Route::get('loan_applications/promissory_note/{id}', 'LoanApplicationController@promissory_note');
+    Route::get('loan_applications/payment_schedule/{id}', 'LoanApplicationController@payment_schedule');
 
     /*==============================================
                       Loan Payment
@@ -51,7 +53,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_payments/{id}', 'LoanPaymentController@payment_view');
     Route::post('loan_payments/process_payment', 'LoanPaymentController@process_payment');
     Route::post('loan_payments/process_due_payment', 'LoanPaymentController@process_due_payment');
-    Route::get('loan_payments/promissory_note/{id}', 'LoanPaymentController@promissory_note');
 
     /*==============================================
                         Reports

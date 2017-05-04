@@ -7,16 +7,20 @@ use Session, DB, Validator, Input, Redirect;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+//Models
 use App\LoanApplication;
 use App\LoanPaymentTerm;
 use App\PaymentSchedule;
 use App\PaymentCollection;
 use App\LoanInterest;
 use App\Borrower;
-use Yajra\Datatables\Datatables;
-
 use App\User;
-use Illuminate\Support\Facades\Auth;
+
+//Third-party
+use Yajra\Datatables\Datatables;
+use Barryvdh\DomPDF\Facade as PDF;
 
 //PHP
 use DateTime, DateInterval, DatePeriod;
@@ -98,6 +102,33 @@ class LoanApplicationController extends Controller
             ->with('payment_terms', $payment_terms)
             ->with('payment_schedules', $payment_schedules)
             ->with('loan_interests', $loan_interests);
+    }
+
+    /*==============================================================
+                            DOMPDF Views
+    ==============================================================*/
+
+    public function promissory_note($id)
+    {
+        Session::put('application_id', $id);
+        //Session::put('date', Request::input('date'));
+        $pdf = PDF::loadView('reports.promissory-pdf')->setPaper('Folio');
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return $pdf->stream();
+    }
+
+    public function payment_schedule($id)
+    {
+        Session::put('application_id', $id);
+        $pdf = PDF::loadView('reports.payment_schedule-pdf')->setPaper('Letter');
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return $pdf->stream();
     }
 
 
@@ -515,7 +546,16 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
-                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Details </a>')
+                ->add_column('Actions', 
+                    '<div class="dropdown">
+                    <button class="btn btn-info btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Report
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' target=\'_blank\'>Statement of Account</a></li>
+                            <li><a href=\'{{ url(\'admin/loan_applications/promissory_note/\' . $id )}}\' target=\'_blank\'>Promissory Note</a></li>
+                            <li><a href=\'{{ url(\'admin/loan_applications/payment_schedule/\' . $id )}}\' target=\'_blank\'>Payment Schedule</a></li>
+                        </ul>
+                    </div>')
                 ->make();
         }
         else
@@ -530,7 +570,16 @@ class LoanApplicationController extends Controller
                 ->select('loan_applications.*')
                 ->orderBy('id', 'desc');
             return Datatables::of($loan_applications)
-                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Details </a>')
+                ->add_column('Actions', 
+                    '<div class="dropdown">
+                    <button class="btn btn-info btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Report
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' target=\'_blank\'>Statement of Account</a></li>
+                            <li><a href=\'{{ url(\'admin/loan_applications/promissory_note/\' . $id )}}\' target=\'_blank\'>Promissory Note</a></li>
+                            <li><a href=\'{{ url(\'admin/loan_applications/payment_schedule/\' . $id )}}\' target=\'_blank\'>Payment Schedule</a></li>
+                        </ul>
+                    </div>')
                 ->make();
         }
     }

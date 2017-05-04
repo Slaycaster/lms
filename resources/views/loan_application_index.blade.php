@@ -27,7 +27,7 @@
 					<a href="{{ url('admin/loan_applications/create') }}" class="btn btn-primary btn-sm">+ New Loan Application</a>
 					<br><br>
 
-					<table class="table table-bordered" width="100%" id="users-table" data-page-length='10'>
+					<table class="table table-bordered table-hover" width="100%" id="users-table" data-page-length='10'>
 			            <thead>
 			              <tr>
 			              	<th>ID</th>
