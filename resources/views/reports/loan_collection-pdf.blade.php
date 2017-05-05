@@ -3,24 +3,32 @@
 use App\LoanApplication;
 use App\LoanPayment;
 use App\PaymentCollection;
+use App\Http\Requests;
+use App\Company;
 
 	$timestamp = time()+date("Z");
 	$today = gmdate("Y/m/d",$timestamp);
 	$company_id = Session::get('company_id', 1);
-    $date = Session::get('date', $today);
+    $date = Session::get('date');
 
     $payment_collections = PaymentCollection::where('payment_collection_date', '=', $date)
             ->with('loan_application')
-            ->with('loan_application.loan_borrower')
-            ->with('loan_application.loan_borrower.company')
+            ->whereHas('loan_application.loan_borrower', function($q) {
+                $company_id = Session::get('company_id', 1);
+                $q->where('company_id', '=', $company_id);
+            })
             ->with('loan_application.loan_interest')
             ->with('loan_application.loan_payment_term')
             ->with('loan_application.loan_payments')
             ->get();
 
     $payment_collections_count = PaymentCollection::where('payment_collection_date', '=', $date)
+            ->whereHas('loan_application.loan_borrower', function($q) {
+                $company_id = Session::get('company_id', 1);
+                $q->where('company_id', '=', $company_id);
+            })
             ->count();
-
+    $company = Company::where('id', '=', $company_id)->first();
 ?>
 
 
@@ -41,9 +49,13 @@ use App\PaymentCollection;
                 page-break-inside: avoid;
                 page-break-after: auto; 
             }
+            td
+            {
+                font-family: "Arial", helvetica, sans-serif;
+            }
             p, strong, h3
             {
-                font-family: helvetica;
+                font-family: "Arial", helvetica, sans-serif;
             }
             img 
             {
@@ -62,7 +74,7 @@ use App\PaymentCollection;
                 display: inline;
                 padding: .2em .6em .3em;
                 font-size: 60%;
-                font-family: helvetica;
+                font-family: "Arial", helvetica, sans-serif;
                 font-weight: bold;
                 line-height: 1;
                 color: #fff;
@@ -96,6 +108,9 @@ use App\PaymentCollection;
             <normal style="font-size: 18px">Moo Loans Inc.</normal>
             <br>
             <strong>LOAN COLLECTION REPORT <br>as of this cycle, {{$date}}</strong>
+            <hr>
+            <br>
+            <strong>{{ $company->company_name }} ({{ $company->company_code }})</strong>
         </p>
 
         <?php
@@ -137,9 +152,9 @@ use App\PaymentCollection;
             <tbody>
 
                 <tr>
-                    <td>PHP {{ $totalAmountCollectedThisCycle }}</td>
-                    <td>PHP {{ $totalPrincipalCollectedThisCycle }}</td>
-                    <td>PHP {{ $totalIncomeCollectedThisCycle }}</td>
+                    <td>PHP {{ round($totalAmountCollectedThisCycle, 2) }}</td>
+                    <td>PHP {{ round($totalPrincipalCollectedThisCycle, 2) }}</td>
+                    <td>PHP {{ round($totalIncomeCollectedThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -156,9 +171,9 @@ use App\PaymentCollection;
             <tbody>
 
                 <tr>
-                    <td>PHP {{ $totalAmountOutstandingThisCycle }}</td>
-                    <td>PHP {{ $totalPrincipalOutstandingThisCycle }}</td>
-                    <td>PHP {{ $totalIncomeOutstandingThisCycle }}</td>
+                    <td>PHP {{ round($totalAmountOutstandingThisCycle, 2) }}</td>
+                    <td>PHP {{ round($totalPrincipalOutstandingThisCycle, 2) }}</td>
+                    <td>PHP {{ round($totalIncomeOutstandingThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>

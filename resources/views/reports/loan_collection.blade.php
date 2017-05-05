@@ -22,26 +22,29 @@
         </div>
 
         <div class="panel-body">
-          <h4><span class = "fa fa-clock-o"></span> Select Company</h4>
-          <hr>
           <form method="get" action="{{url('admin/reports/loan_collections/pdf')}}" target="_blank">
             {{ csrf_field() }}
+          <h4><span class = "fa fa-clock-o"></span> Select Company</h4>
+          {{ Form::select('company_id', $companies, null, array('class' => 'form-control'))}}
+          <hr>
             
             <div class="form-group">
-                      <label>Date:</label>
+                <h4><span class = "fa fa-calendar-o"></span> Choose Collection Cycle Date</h4>
 
-                      <div class="input-group date">
-                        <div class="input-group-addon">
-                          <i class="fa fa-calendar"></i>
-                        </div>
-                        <input type="text" class="form-control pull-right" data-date-format="yyyy-mm-dd" id="datepicker" name="date">
-                      </div>
-                      
-                  </div>
+                <div class="input-group date">
+                  <table class="table table-bordered table-hover" id="date-table">
+                      <thead>
+                        <tr>
+                          <th>Collection Date</th>
+                          <th>Select</th>
+                        </tr>
+                    </thead>
+                  </table>
+                </div>
+                
+            </div>
                   
 
-            {{ Form::select('company_id', $companies, null, array('class' => 'form-control'))}}
-            <br>
             <button type="submit" class="btn btn-primary btn-block">View</a>
           </form>
         </div>
@@ -56,6 +59,20 @@
               format: "yyyy-mm-dd"
           });
       });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+          $('#date-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{!! url('payment_collections/dates') !!}',
+            columns: [
+              {data: '0', name: 'payment_collections.payment_collection_date'},
+              {data: '1', name: 'Select', orderable: false, searchable: false}
+            ]
+          });
+        });
     </script>
   @endsection
 @endsection

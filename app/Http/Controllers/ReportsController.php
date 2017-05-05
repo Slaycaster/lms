@@ -41,7 +41,7 @@ class ReportsController extends Controller
     public function approved_loan_application()
     {
         Session::put('company_id', Request::input('company_id'));
-        //Session::put('date', Request::input('date'));
+        Session::put('date', Request::input('date'));
         return view('reports.approved-pdf');
         /*
         $pdf = PDF::loadView('reports.approved-pdf')->setPaper('Letter');
@@ -56,7 +56,7 @@ class ReportsController extends Controller
     public function loan_collection()
     {
         Session::put('company_id', Request::input('company_id'));
-        Session::put('date', Request::input('date'));
+        Session::put('date', Request::input('payment_collection_date'));
         //return view('reports.loan_collection-pdf');
         
         $pdf = PDF::loadView('reports.loan_collection-pdf')->setPaper('Letter');

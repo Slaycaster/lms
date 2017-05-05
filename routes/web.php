@@ -77,3 +77,4 @@ Route::post('loan_applications/precompute', 'LoanApplicationController@precomput
 Route::get('loan_applications/index/data', 'LoanApplicationController@index_data');
 Route::get('loan_applications/active/data', 'LoanApplicationController@active_data');
 Route::get('loan_payments/applications', 'LoanPaymentController@approved_data');
+Route::get('payment_collections/dates', 'PaymentCollectionController@collection_dates');
