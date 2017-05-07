@@ -34,6 +34,7 @@ class CreateLoanApplicationsTable extends Migration
             $table->integer('payment_term_id');
             $table->integer('loan_interest_id');
             $table->integer('payment_schedule_id');
+            $table->integer('company_id')
             $table->timestamps();
         });
     }

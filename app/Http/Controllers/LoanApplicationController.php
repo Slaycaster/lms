@@ -160,6 +160,7 @@ class LoanApplicationController extends Controller
         */
         //Compute
         //Get all post inputs
+        $company = Borrower::where('id', '=', Request::input('borrower_id'))->first();
         $loan_application_amount = Request::input('amount');
         $filing_fee = Request::input('filing_fee');
         $service_fee = Request::input('service_fee');
@@ -223,6 +224,7 @@ class LoanApplicationController extends Controller
         $loan_application->payment_term_id = Request::input('payment_term_id');
         $loan_application->loan_interest_id = Request::input('loan_interest_id');
         $loan_application->payment_schedule_id = Request::input('payment_schedule_id');
+        $loan_application->company_id = $company->company_id;
         $loan_application->save();
 
         //Query the id of the recently saved Loan Application
@@ -235,6 +237,7 @@ class LoanApplicationController extends Controller
             $payment_collection->payment_collection_date = $dt->format('Y-m-d');
             $payment_collection->payment_collection_amount = round($periodicRate, 2);
             $payment_collection->loan_application_id = $loan_application_max;
+            $payment_collection->company_id = $company->company_id;
 
             $payment_collection->save();
         }
@@ -347,6 +350,7 @@ class LoanApplicationController extends Controller
 
           //So pre-compute first
           //Get all post inputs
+          $company = Borrower::where('id', '=', Request::input('borrower_id'))->first();
           $loan_application_amount = Request::input('amount');
           $filing_fee = Request::input('filing_fee');
           $service_fee = Request::input('service_fee');
@@ -405,6 +409,7 @@ class LoanApplicationController extends Controller
           $loan_application->payment_term_id = Request::input('payment_term_id');
           $loan_application->loan_interest_id = Request::input('loan_interest_id');
           $loan_application->payment_schedule_id = Request::input('payment_schedule_id');
+          $loan_application->company_id = $company->company_id;
 
           //Delete previous payment collection to incorporate with the new one... slow but it gets the job done accurately
           //Put it in the string first to prevent injection (even if it's already secure, just to make sure :))
@@ -418,10 +423,11 @@ class LoanApplicationController extends Controller
               $payment_collection->payment_collection_date = $dt->format('Y-m-d');
               $payment_collection->payment_collection_amount = round($periodicRate, 2);
               $payment_collection->loan_application_id = Request::input('loan_application_id');
+              $payment_collection->company_id = $company->company_id;
 
               $payment_collection->save();
           }
-        }
+        }//if(change_details) === yes
 
         //Now check condition if the user approved the loan or not, regardless.
         if (isset($_POST['approve']))

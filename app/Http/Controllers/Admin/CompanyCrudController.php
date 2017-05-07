@@ -41,7 +41,7 @@ class CompanyCrudController extends CrudController
 
                     [
                         'name' => 'company_income_share',
-                        'label' => 'Income Share (%)'
+                        'label' => 'Income Share'
                     ],
     			
 

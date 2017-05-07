@@ -30,7 +30,8 @@ class ReportsController extends Controller
 
     public function income_share_view()
     {
-    	$companies = Company::pluck('company_name', 'id');
+    	$companies = Company::select(DB::raw("concat(company_name, ' | ', company_income_share, ' %') AS company"), 'id')
+            ->pluck('company', 'id');
     	return view('reports.income_share')
             ->with('companies', $companies);
     }
@@ -71,7 +72,7 @@ class ReportsController extends Controller
     public function income_share()
     {
     	Session::put('company_id', Request::input('company_id'));
-        Session::put('date', Request::input('date'));
+        Session::put('date', Request::input('payment_collection_date'));
         $pdf = PDF::loadView('reports.income_share-pdf')->setPaper('Letter');
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();

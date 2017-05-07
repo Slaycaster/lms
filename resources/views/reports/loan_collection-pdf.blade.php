@@ -152,9 +152,9 @@ use App\Company;
             <tbody>
 
                 <tr>
-                    <td>PHP {{ round($totalAmountCollectedThisCycle, 2) }}</td>
-                    <td>PHP {{ round($totalPrincipalCollectedThisCycle, 2) }}</td>
-                    <td>PHP {{ round($totalIncomeCollectedThisCycle, 2) }}</td>
+                    <td>PHP {{ number_format($totalAmountCollectedThisCycle, 2) }}</td>
+                    <td>PHP {{ number_format($totalPrincipalCollectedThisCycle, 2) }}</td>
+                    <td>PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -171,9 +171,9 @@ use App\Company;
             <tbody>
 
                 <tr>
-                    <td>PHP {{ round($totalAmountOutstandingThisCycle, 2) }}</td>
-                    <td>PHP {{ round($totalPrincipalOutstandingThisCycle, 2) }}</td>
-                    <td>PHP {{ round($totalIncomeOutstandingThisCycle, 2) }}</td>
+                    <td>PHP {{ number_format($totalAmountOutstandingThisCycle, 2) }}</td>
+                    <td>PHP {{ number_format($totalPrincipalOutstandingThisCycle, 2) }}</td>
+                    <td>PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>

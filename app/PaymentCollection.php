@@ -16,7 +16,7 @@ class PaymentCollection extends Model
 	protected $primaryKey = 'id';
 	// protected $guarded = [];
 	protected $hidden = ['created_at', 'updated_at'];
-	protected $fillable = ['payment_collection_date',  'payment_collection_amount', 'loan_application_id', 'is_paid'];
+	protected $fillable = ['payment_collection_date',  'payment_collection_amount', 'loan_application_id', 'company_id', 'is_paid'];
 	public $timestamps = true;
 
 	/*

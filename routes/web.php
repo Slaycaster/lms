@@ -59,9 +59,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     ================================================*/
     Route::get('reports/loan_applications', 'ReportsController@approved_loan_application_view');
     Route::get('reports/loan_collections', 'ReportsController@loan_collection_view');
-    Route::get('reports/income_share_view', 'ReportsController@income_share_view');
+    Route::get('reports/income_shares', 'ReportsController@income_share_view');
     Route::get('reports/loan_applications/pdf', 'ReportsController@approved_loan_application');
     Route::get('reports/loan_collections/pdf', 'ReportsController@loan_collection');
+    Route::get('reports/income_shares/pdf', 'ReportsController@income_share');
 
     /*==============================================
                     AJAX-loaded Data
@@ -77,4 +78,4 @@ Route::post('loan_applications/precompute', 'LoanApplicationController@precomput
 Route::get('loan_applications/index/data', 'LoanApplicationController@index_data');
 Route::get('loan_applications/active/data', 'LoanApplicationController@active_data');
 Route::get('loan_payments/applications', 'LoanPaymentController@approved_data');
-Route::get('payment_collections/dates', 'PaymentCollectionController@collection_dates');
+Route::get('payment_collections/dates/{id}', 'PaymentCollectionController@collection_dates');

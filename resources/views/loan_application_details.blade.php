@@ -93,6 +93,7 @@
 						</label>
 						{{ Form::checkbox('change_details', 'yes') }}
 						<p class="text-muted">Note: Tick the box to ensure that changed details below will be updated, otherwise it will be ignored.</p>
+						{{ Form::hidden('borrower_id', $key->loan_borrower->id) }}
 					</div>
 					<hr>
 					<!-- Co-Maker Form Group -->

@@ -136,12 +136,12 @@ use App\LoanApplication;
 		    		<td>{{ $loan_application->loan_interest->loan_interest_rate }}%</td>
 		    		<td>{{ $loan_application->loan_payment_term->loan_payment_term_no_of_months }} mos. </td>
 		    		<td>{{ date('F j, Y', strtotime($loan_application->loan_application_disbursement_date)) }}</td>
-		    		<td>PHP {{ $loan_application->loan_application_amount }}</td>
-		    		<td>PHP {{ $loan_application->loan_application_filing_fee }}</td>
-		    		<td>PHP {{ $loan_application->loan_application_service_fee }}</td>
-		    		<td>PHP {{ $loan_application->loan_application_interest }}</td>
-		    		<td>PHP {{ $loan_application->loan_application_total_amount }}</td>
-		    		<td>PHP {{ $loan_application->loan_application_periodic_rate }}</td>
+		    		<td>PHP {{ number_format($loan_application->loan_application_amount, 2) }}</td>
+		    		<td>PHP {{ number_format($loan_application->loan_application_filing_fee, 2) }}</td>
+		    		<td>PHP {{ number_format($loan_application->loan_application_service_fee, 2) }}</td>
+		    		<td>PHP {{ number_format($loan_application->loan_application_interest, 2) }}</td>
+		    		<td>PHP {{ number_format($loan_application->loan_application_total_amount, 2) }}</td>
+		    		<td>PHP {{ number_format($loan_application->loan_application_periodic_rate, 2) }}</td>
 		    	</tr>
 		    	@endforeach
 	    	</tbody>
