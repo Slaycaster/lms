@@ -29,6 +29,10 @@ class LoanApplication extends Model
 	| RELATIONS
 	|--------------------------------------------------------------------------
 	*/
+	public function company()
+	{
+		return $this->belongsTo('App\Company', 'company_id', 'id');
+	}
 
 	public function loan_borrower()
 	{

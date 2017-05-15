@@ -17,7 +17,7 @@ use App\PaymentCollection;
 use App\LoanInterest;
 use App\Borrower;
 use App\User;
-
+    
 //Third-party
 use Yajra\Datatables\Datatables;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -129,6 +129,17 @@ class LoanApplicationController extends Controller
         $canvas = $dom_pdf ->get_canvas();
         $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->stream();
+    }
+
+    public function generate_form($id)
+    {
+        Session::put('application_id', $id);
+        $pdf = PDF::loadView('reports.loan_application-pdf')->setPaper('Folio');
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf ->get_canvas();
+        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return $pdf->stream();   
     }
 
 
@@ -557,6 +568,7 @@ class LoanApplicationController extends Controller
                     <button class="btn btn-info btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Report
                         <span class="caret"></span></button>
                         <ul class="dropdown-menu">
+                            <li><a href=\'{{ url(\'admin/loan_applications/generate/\' . $id )}}\' target=\'_blank\'>Generate Loan Application</a></li>
                             <li><a href=\'{{ url(\'admin/loan_applications/details/\' . $id )}}\' target=\'_blank\'>Statement of Account</a></li>
                             <li><a href=\'{{ url(\'admin/loan_applications/promissory_note/\' . $id )}}\' target=\'_blank\'>Promissory Note</a></li>
                             <li><a href=\'{{ url(\'admin/loan_applications/payment_schedule/\' . $id )}}\' target=\'_blank\'>Payment Schedule</a></li>
