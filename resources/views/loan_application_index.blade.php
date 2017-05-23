@@ -59,17 +59,17 @@
 		        ajax: '{!! url('loan_applications/index/data') !!}',
 		        columns: [
 		          {data: '0', name: 'loan_applications.id'},
-		          {data: '24', name: 'View', orderable: false, searchable: false},
+		          {data: '25', name: 'View', orderable: false, searchable: false},
 		          {data: '7', name: 'loan_applications.loan_application_status'},
-		          {data: '11', name: 'loan_applications.loan_application_disbursement_date'},
-		          {data: '21.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
-		          {data: '21.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
-		          {data: '21.company.company_code', name: 'loan_borrower.company.company_name'},
-		          {data: '22.loan_interest_name', name: 'loan_interest.loan_interest_name'},
+		          {data: '12', name: 'loan_applications.loan_application_disbursement_date'},
+		          {data: '22.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
+		          {data: '22.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
+		          {data: '22.company.company_code', name: 'loan_borrower.company.company_name'},
+		          {data: '23.loan_interest_name', name: 'loan_interest.loan_interest_name'},
 		          {data: '2', name: 'loan_applications.loan_application_amount'},
 		          {data: '4', name: 'loan_applications.loan_application_interest'},
 		          {data: '3', name: 'loan_applications.loan_application_total_amount'},
-		          {data: '23.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'}
+		          {data: '24.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'}
 		        ]
 		      });
 		    });

@@ -163,29 +163,37 @@
                 </div>
               </div>
 
-              <!-- Filing Fees x Service Fee Row Group -->
+              <!-- Filing Fees x Service Fee x Payment Type Form Group-->
               <div class="row">
 
                 <!-- Filing Fees Form Group -->
-                <div class="col-md-6 col-sm-10">
+                <div class="col-md-3 col-sm-8">
                   <div class="form-group">
                     <label for="filing_fee" class="control-label">Filing Fee</label>
                     <div class="input-group">
                       <span class="input-group-addon">₱</span>
                       <input type="text" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off">
-                      <span class="input-group-addon">.00</span>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-md-6 col-sm-10">
+                <div class="col-md-3 col-sm-8">
                   <!-- Service Fee Form Group -->
                   <div class="form-group">
                     <label for="service_fee" class="control-label">Service Fee</label>
                     <div class="input-group">
                       <span class="input-group-addon">₱</span>
                       <input type="text" id="service_fee" name="service_fee" class="form-control" autocomplete="off">
-                      <span class="input-group-addon">.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-sm-8">
+                  <!-- Service Fee Form Group -->
+                  <div class="form-group">
+                    <label for="service_fee" class="control-label">Filing Fee & Service Fee Payment Type</label>
+                    <div class="input-group">
+                      {{ Form::select('filing_service_payment_type', array('0' => 'One-time Payment', '1' => 'Amortized without Interest', '2' => 'Amortized with Interest'), null, array('class' => 'form-control')) }}
                     </div>
                   </div>
                 </div>
@@ -423,43 +431,7 @@
         startDate: '-3d'
     });
   </script>
-<!--
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#comaker1-table').DataTable({
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        ajax: '{!! url('admin/comaker1_data') !!}',
-        columns: [
-          {data: 0, name: 'borrower_type'},
-          {data: 1, name: 'borrower_last_name'},
-          {data: 2, name: 'borrower_first_name'},
-          {data: 3, name: 'borrower_middle_name'},
-          {data: 6, name: 'Actions', orderable: false, searchable: false}
-        ]
-      });
-    });
-  </script>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#comaker2-table').DataTable({
-        responsive: true,
-        processing: true,
-        serverSide: true,
-        ajax: '{!! url('admin/comaker2_data') !!}',
-        columns: [
-          {data: 0, name: 'borrower_type'},
-          {data: 1, name: 'borrower_last_name'},
-          {data: 2, name: 'borrower_first_name'},
-          {data: 3, name: 'borrower_middle_name'},
-          {data: 6, name: 'Actions', orderable: false, searchable: false}
-        ]
-      });
-    });
-  </script>
--->
   <script type="text/javascript">
     $("#computeBtn").click(function(){
         $.ajax({
@@ -480,7 +452,7 @@
               var trHTML = '';
               for (i = 0; i < response.payment_periods.length; i++)
               {
-                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rate).toFixed(2) + '</td></tr>';
+                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) + '</td></tr>';
               }
               $('#payment_scheds').append(trHTML);
 

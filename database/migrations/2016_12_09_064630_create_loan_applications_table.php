@@ -25,6 +25,7 @@ class CreateLoanApplicationsTable extends Migration
             $table->string('loan_application_status');
             $table->double('loan_application_filing_fee');
             $table->double('loan_application_service_fee');
+            $table->string('loan_applciation_filing_service_payment');
             $table->text('loan_application_remarks');
             $table->date('loan_application_disbursement_date');
             //RELATIONSHIPS

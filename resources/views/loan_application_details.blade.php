@@ -47,6 +47,12 @@
 						<div class="col-md-12">
 							<p><strong>Purpose:</strong> {{ $key->loan_application_purpose }}</p>
 						</div>
+						<div class="col-md-6">
+							<p><strong>Disbursement Date:</strong> {{ date('F j, Y', strtotime($key->loan_application_disbursement_date)) }}</p>
+						</div>
+						<div class="col-md-6">
+							<p><strong>Maturity Date:</strong> {{ date('F j, Y', strtotime($maturity_date->payment_collection_date)) }}</p>
+						</div>
 						<hr>
 						<div class="col-md-12">
 							<p><strong>Payment Schedules:</strong></p>
@@ -59,8 +65,8 @@
 	                            <tbody>
 	                              @foreach($key->payment_collections as $payment_collection)
 	                              	<tr>
-	                              		<td>{{ $payment_collection->payment_collection_date }}</td>
-	                              		<td>{{ $payment_collection->payment_collection_amount }}</td>
+	                              		<td>{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
+	                              		<td>{{ date('F j, Y', strtotime($payment_collection->payment_collection_amount)) }}</td>
 	                              	</tr>
 	                              @endforeach
 	                            </tbody>

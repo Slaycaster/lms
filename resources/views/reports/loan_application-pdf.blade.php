@@ -2,6 +2,7 @@
 
 use App\LoanApplication;
 use App\PaymentSchedule;
+use App\PaymentCollection;
 
 	$timestamp = time()+date("Z");
 	$today = gmdate("F j, Y",$timestamp);
@@ -18,6 +19,10 @@ use App\PaymentSchedule;
             ->with('loan_payments')
             ->with('payment_collections')
             ->get();
+
+  $maturity_date = PaymentCollection::where('loan_application_id', '=', $application_id)
+              ->orderBy('payment_collection_date', 'desc')
+              ->first();
 
   $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
@@ -119,7 +124,7 @@ use App\PaymentSchedule;
                       <?php
                         $timestamp = strtotime($loan_application->created_at);
                       ?>
-                      <td><strong>{{ date('m/d/Y', $timestamp) }}</strong></td>
+                      <td><strong>{{ date('F j, Y', $timestamp) }}</strong></td>
                       <td><sup>Application ID:</sup></td>
                       <td><strong>{{ $loan_application->id }}</strong></td>
                     </tr>
@@ -146,14 +151,47 @@ use App\PaymentSchedule;
                     </tr>
                     <tr>
                       <td width="70%">
+                        <sup>Filing Fee</sup>
+                        <br>
+                        <strong>{{ number_format($loan_application->loan_application_filing_fee, 2) }}</strong>
+                      </td>
+                      <td width="30%">
+                        <sup>Service Fee</sup>
+                        <br>
+                        <strong>{{ number_format($loan_application->loan_application_service_fee, 2) }}</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="70%">
+                        <sup>Filing Fee & Service Fee Payment Type</sup>
+                        <br>
+                        <strong>{{ $loan_application->loan_application_filing_service_payment }}</strong>
+                      </td>
+                      <td width="30%">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="60%">
                         <sup>Loan Purpose</sup>
                         <br>
                         <strong>{{ $loan_application->loan_application_purpose }}</strong>
                       </td>
-                      <td width="30%">
+                      <td width="20%">
                         <sup>Term</sup>
                         <br>
                         <strong>{{ $loan_application->loan_payment_term->loan_payment_term_name }}</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="70%">
+                        <sup>Disbursement Date: </sup>
+                        <br>
+                        <strong>{{ date('F j, Y', strtotime($loan_application->loan_application_disbursement_date)) }}</strong>
+                      </td>
+                      <td width="30%">
+                        <sup>Maturity Date: </sup>
+                        <br>
+                        <strong>{{ date('F j, Y', strtotime($maturity_date->payment_collection_date)) }}</strong>
                       </td>
                     </tr>
                   </table>

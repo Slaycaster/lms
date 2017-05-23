@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Session, DB, Validator, Input, Redirect;
+use Session, DB, Validator, Input, Redirect, Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 //Models
@@ -96,12 +94,16 @@ class LoanApplicationController extends Controller
             ->with('loan_payment_term')
             ->with('payment_collections')
             ->get();
+        $maturity_date = PaymentCollection::where('loan_application_id', '=', $id)
+            ->orderBy('payment_collection_date', 'desc')
+            ->first();
 
         return view('loan_application_view_details')
             ->with('loan_application', $loan_application)
             ->with('payment_terms', $payment_terms)
             ->with('payment_schedules', $payment_schedules)
-            ->with('loan_interests', $loan_interests);
+            ->with('loan_interests', $loan_interests)
+            ->with('maturity_date', $maturity_date);
     }
 
     /*==============================================================
@@ -185,31 +187,47 @@ class LoanApplicationController extends Controller
         $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
         $interest = LoanInterest::where('id', '=', $interest_id)->first();
 
+        $periodicRate = 0; //loan monthly/kinsenas/whatever rate
+        $miscellaneousRate = 0; //if so happens that filing fee and service fee wouldn't be amortized
+        $totalLoan = 0; //total loan (principal + interest)
+
         $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
 
-        $totalLoan = $loan_application_amount +  $filing_fee + $service_fee + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+        
+        $last_day_from_disbursement_date = date('Y-m-t', strtotime($disbursement_date));
+        if (date('d', strtotime($disbursement_date)) < 15) //if the disbursement date was less than or equal to the 15th
+        {
+            $paymentStartDate = date('Y-m-15', strtotime($disbursement_date)); //Get the 15th day of the current month as start date
+            $paymentEndDate = date('Y-m-15', strtotime($disbursement_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
+        }
+        else if (date('d', strtotime($disbursement_date)) < date('t', strtotime($disbursement_date)) )
+        {
+            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date)))); //Get the last date of this month as start date
+            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));
+        }
+        else if (date('d', strtotime($disbursement_date)) == date('t', strtotime($disbursement_date)))
+        {
+            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($disbursement_date . '+ 1 week')))); //Get the last date of this month as start date
+            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
+        }
 
-        //Starting Month and Year for your payment since the loan was disbursed
-        $paymentStartDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
+        $payment_periods = $this->get_months($paymentStartDate, $paymentEndDate);
+        $paymentPeriod_count = count($payment_periods);
 
-        //Ending Month and year for your payment since the loan was disbursed
-        $paymentEndDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_term->loan_payment_term_no_of_months . 'months' .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
-
-        //payment interval based on given payment schedule
-        $paymentInterval = DateInterval::createFromDateString($payment_schedule->payment_schedule_days_interval . ' days');
-
-        //*IMPORTANT* Compute the payment schedules from start to finish
-        $paymentPeriod = new DatePeriod($paymentStartDate, $paymentInterval, $paymentEndDate);
-
-        $paymentPeriod_count = 0;
-
-        //Declare an empty array that'll place the computed payment periods
-        $payment_periods = array();
-
-        //Loop through each payment period to count for the total payment
-        foreach ($paymentPeriod as $dt) {
-            $payment_periods[] = $dt->format('M j, Y');
-            $paymentPeriod_count++;
+        if (Request::input('filing_service_payment_type') == 0)
+        {
+            $totalLoan = $loan_application_amount + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+            $miscellaneousRate = $filing_fee + $service_fee;
+        }
+        else if (Request::input('filing_service_payment_type') == 1)
+        {
+            $totalLoan = $loan_application_amount +  $filing_fee + $service_fee + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+            $miscellaneousRate = 0;
+        }
+        else if (Request::input('filing_service_payment_type') == 2)
+        {
+            $totalLoan = $loan_application_amount + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months) + ($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) + ($service_fee + ($service_fee * ($interest->loan_interest_rate * .01)));
+            $miscellaneousRate = 0;
         }
 
         $periodicRate = $totalLoan / $paymentPeriod_count;
@@ -227,6 +245,7 @@ class LoanApplicationController extends Controller
         $loan_application->loan_application_status = "Pending";
         $loan_application->loan_application_filing_fee = Request::input('filing_fee');
         $loan_application->loan_application_service_fee = Request::input('service_fee');
+        $loan_application->loan_application_filing_service_payment = Request::input('filing_service_payment_type');
         $loan_application->loan_application_disbursement_date = Request::input('disbursement_date');
         //Relationships
         $loan_application->loan_application_comaker_id1 = Request::input('comaker1_id');
@@ -242,11 +261,18 @@ class LoanApplicationController extends Controller
         $loan_application_max = LoanApplication::max('id');
 
         //Loop through each payment period and place it on to the array for the JSON
-        foreach ($paymentPeriod as $dt) {
+        for ($i=0; $i<count($payment_periods); $i++) {
             $payment_collection = new PaymentCollection();
             $payment_collection->is_paid = 0;
             $payment_collection->payment_collection_date = $dt->format('Y-m-d');
-            $payment_collection->payment_collection_amount = round($periodicRate, 2);
+            if ($i==0) //Add the Filing Fee and Service Fee upfront (if so)
+            {
+                $payment_collection->payment_collection_amount = round($periodicRate + $miscellaneousRate, 2);    
+            }
+            else
+            {
+                $payment_collection->payment_collection_amount = round($periodicRate, 2);
+            }
             $payment_collection->loan_application_id = $loan_application_max;
             $payment_collection->company_id = $company->company_id;
 
@@ -257,6 +283,48 @@ class LoanApplicationController extends Controller
         Session::flash('message', 'Loan Application successfully saved! It is now currently pending for approval.');
 
         return Redirect::to('admin/loan_applications');
+    }
+
+    private function get_months($date1, $date2) {
+
+        $time1 = strtotime($date1);
+        $time2 = strtotime($date2);
+
+        $my = date('mY', $time2);
+        $months = array(date('Y-m-d', $time1));
+        $f = '';
+
+        while($time1 < $time2) {
+
+            if (date('d', $time1) == date('t', $time1))
+            {
+                //Get the 15th date of the next month
+                $time1 = strtotime(date('Y-m-15', strtotime(date('Y-m-d', $time1).' + 1 week')));
+            }
+            else if (date('d', $time1) >= 15 && date('d', $time1) < date('t', $time1))
+            {
+                //Get the last date of the current month
+                $time1 = strtotime(date('Y-m-t', strtotime(date('Y-m-d', $time1))));
+            }
+            else if (date('d', $time1) < 15)
+            {
+                //Get the 15th date of the current month
+                $time1 = strtotime(date('Y-m-15', $time1));
+            }
+
+            array_push($months, date('Y-m-d', $time1));
+            /*$time1 = strtotime((date('Y-m-d', $time1).' +15days'));
+
+            if(date('F', $time1) != $f) {
+                $f = date('F', $time1);
+
+                if(date('mY', $time1) != $my && ($time1 < $time2))
+                    $months[] = date('Y-m-t', $time1);
+            }
+            */
+
+        }
+        return $months;
     }
 /*
     =====================================================================
@@ -371,73 +439,104 @@ class LoanApplicationController extends Controller
           $interest_id = Request::input('loan_interest_id');
 
           //And query those data with ids to get the real meat out of it.
-          $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
-          $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
-          $interest = LoanInterest::where('id', '=', $interest_id)->first();
+            $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
+            $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
+            $interest = LoanInterest::where('id', '=', $interest_id)->first();
 
-          $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
+            $periodicRate = 0; //loan monthly/kinsenas/whatever rate
+            $miscellaneousRate = 0; //if so happens that filing fee and service fee wouldn't be amortized
+            $totalLoan = 0; //total loan (principal + interest)
 
-          $totalLoan = $loan_application_amount +  $filing_fee + $service_fee + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+            $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
 
-          //Starting Month and Year for your payment since the loan was disbursed
-          $paymentStartDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
+            
+            $last_day_from_disbursement_date = date('Y-m-t', strtotime($disbursement_date));
+            if (date('d', strtotime($disbursement_date)) < 15) //if the disbursement date was less than or equal to the 15th
+            {
+                $paymentStartDate = date('Y-m-15', strtotime($disbursement_date)); //Get the 15th day of the current month as start date
+                $paymentEndDate = date('Y-m-15', strtotime($disbursement_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
+            }
+            else if (date('d', strtotime($disbursement_date)) < date('t', strtotime($disbursement_date)) )
+            {
+                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date)))); //Get the last date of this month as start date
+                $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));
+            }
+            else if (date('d', strtotime($disbursement_date)) == date('t', strtotime($disbursement_date)))
+            {
+                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($disbursement_date . '+ 1 week')))); //Get the last date of this month as start date
+                $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
+            }
 
-          //Ending Month and year for your payment since the loan was disbursed
-          $paymentEndDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_term->loan_payment_term_no_of_months . 'months' .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
+            $payment_periods = $this->get_months($paymentStartDate, $paymentEndDate);
+            $paymentPeriod_count = count($payment_periods);
 
-          //payment interval based on given payment schedule
-          $paymentInterval = DateInterval::createFromDateString($payment_schedule->payment_schedule_days_interval . ' days');
+            if (Request::input('filing_service_payment_type') == 0)
+            {
+                $totalLoan = $loan_application_amount + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+                $miscellaneousRate = $filing_fee + $service_fee;
+            }
+            else if (Request::input('filing_service_payment_type') == 0)
+            {
+                $totalLoan = $loan_application_amount +  $filing_fee + $service_fee + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+                $miscellaneousRate = 0;
+            }
+            else if (Request::input('filing_service_payment_type') == 0)
+            {
+                $totalLoan = $loan_application_amount + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months) + ($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) + ($service_fee + ($service_fee * ($interest->loan_interest_rate * .01)));
+                $miscellaneousRate = 0;
+            }
 
-          //*IMPORTANT* Compute the payment schedules from start to finish
-          $paymentPeriod = new DatePeriod($paymentStartDate, $paymentInterval, $paymentEndDate);
+            $periodicRate = $totalLoan / $paymentPeriod_count;
 
-          $paymentPeriod_count = 0;
+            /*--------------------------------------------------
+                Save the loan application to the database
+            ---------------------------------------------------*/
+            $loan_application = new LoanApplication();
+            $loan_application->loan_application_is_active = 1;
+            $loan_application->loan_application_amount = Request::input('amount');
+            $loan_application->loan_application_total_amount = round($totalLoan, 2);
+            $loan_application->loan_application_interest = round($monthlyInterest, 2);
+            $loan_application->loan_application_periodic_rate = round($periodicRate, 2);
+            $loan_application->loan_application_purpose = Request::input('purpose');
+            $loan_application->loan_application_status = "Pending";
+            $loan_application->loan_application_filing_fee = Request::input('filing_fee');
+            $loan_application->loan_application_service_fee = Request::input('service_fee');
+            $loan_application->loan_application_filing_service_payment = Request::input('filing_service_payment_type');
+            $loan_application->loan_application_disbursement_date = Request::input('disbursement_date');
+            //Relationships
+            $loan_application->loan_application_comaker_id1 = Request::input('comaker1_id');
+            $loan_application->loan_application_comaker_id2 = Request::input('comaker2_id');
+            $loan_application->loan_borrower_id = Request::input('borrower_id');
+            $loan_application->payment_term_id = Request::input('payment_term_id');
+            $loan_application->loan_interest_id = Request::input('loan_interest_id');
+            $loan_application->payment_schedule_id = Request::input('payment_schedule_id');
+            $loan_application->company_id = $company->company_id;
+            $loan_application->save();
 
-          //Declare an empty array that'll place the computed payment periods
-          $payment_periods = array();
-
-          //Loop through each payment period to count for the total payment
-          foreach ($paymentPeriod as $dt) {
-              $payment_periods[] = $dt->format('M j, Y');
-              $paymentPeriod_count++;
-          }
-
-          $periodicRate = $totalLoan / $paymentPeriod_count;
-
-          //And then update to the database...
-          $loan_application->loan_application_amount = Request::input('amount');
-          $loan_application->loan_application_total_amount = round($totalLoan, 2);
-          $loan_application->loan_application_interest = round($monthlyInterest, 2);
-          $loan_application->loan_application_periodic_rate = round($periodicRate, 2);
-          $loan_application->loan_application_purpose = Request::input('purpose');
-          $loan_application->loan_application_status = "Pending";
-          $loan_application->loan_application_filing_fee = Request::input('filing_fee');
-          $loan_application->loan_application_service_fee = Request::input('service_fee');
-          $loan_application->loan_application_disbursement_date = Request::input('disbursement_date');
-          //Relationships
-          $loan_application->loan_application_comaker_id1 = Request::input('comaker1_id');
-          $loan_application->loan_application_comaker_id2 = Request::input('comaker2_id');
-          $loan_application->payment_term_id = Request::input('payment_term_id');
-          $loan_application->loan_interest_id = Request::input('loan_interest_id');
-          $loan_application->payment_schedule_id = Request::input('payment_schedule_id');
-          $loan_application->company_id = $company->company_id;
-
-          //Delete previous payment collection to incorporate with the new one... slow but it gets the job done accurately
+        //Delete previous payment collection to incorporate with the new one... slow but it gets the job done accurately
           //Put it in the string first to prevent injection (even if it's already secure, just to make sure :))
           $sql = 'DELETE FROM payment_collections WHERE loan_application_id='.Request::input('loan_application_id').';';
           DB::statement($sql);
 
-          //Loop through each payment period and place it on to the array for the JSON
-          foreach ($paymentPeriod as $dt) {
-              $payment_collection = new PaymentCollection();
-              $payment_collection->is_paid = 0;
-              $payment_collection->payment_collection_date = $dt->format('Y-m-d');
-              $payment_collection->payment_collection_amount = round($periodicRate, 2);
-              $payment_collection->loan_application_id = Request::input('loan_application_id');
-              $payment_collection->company_id = $company->company_id;
+        //Loop through each payment period and place it on to the array for the JSON
+        for ($i=0; $i<count($payment_periods); $i++) {
+            $payment_collection = new PaymentCollection();
+            $payment_collection->is_paid = 0;
+            $payment_collection->payment_collection_date = $dt->format('Y-m-d');
+            if ($i==0) //Add the Filing Fee and Service Fee upfront (if so)
+            {
+                $payment_collection->payment_collection_amount = round($periodicRate + $miscellaneousRate, 2);    
+            }
+            else
+            {
+                $payment_collection->payment_collection_amount = round($periodicRate, 2);
+            }
+            $payment_collection->loan_application_id = Request::input('loan_application_id');
+            $payment_collection->company_id = $company->company_id;
 
-              $payment_collection->save();
-          }
+            $payment_collection->save();
+        }
+
         }//if(change_details) === yes
 
         //Now check condition if the user approved the loan or not, regardless.
@@ -465,70 +564,6 @@ class LoanApplicationController extends Controller
 /*==============================================================
                         AJAX-loaded data
 ==============================================================*/
-
-/*
-    public function borrowers()
-    {
-        if (Auth::user()->company->id == 1)
-        {
-        	$borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
-        	return Datatables::of($borrowers)
-        		->add_column('Actions', '{{Form::radio(\'borrower_id\', $id, false)}}')
-        		->remove_column('id')
-        		->make();
-        }
-        else
-        {
-            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date'])
-                ->where('company_id', '=', Auth::user()->company->id);
-            return Datatables::of($borrowers)
-                ->add_column('Actions', '{{Form::radio(\'borrower_id\', $id, false)}}')
-                ->remove_column('id')
-                ->make();
-        }
-    }
-    public function comaker1()
-    {
-        if (Auth::user()->company->id == 1)
-        {
-            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
-            return Datatables::of($borrowers)
-                ->add_column('Actions', '{{Form::radio(\'comaker1_id\', $id, false)}}')
-                ->remove_column('id')
-                ->make();
-        }
-        else
-        {
-            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date'])
-                ->where('company_id', '=', Auth::user()->company->id);
-            return Datatables::of($borrowers)
-                ->add_column('Actions', '{{Form::radio(\'comaker1_id\', $id, false)}}')
-                ->remove_column('id')
-                ->make();
-        }
-    }
-
-    public function comaker2()
-    {
-        if (Auth::user()->company->id == 1)
-        {
-            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date']);
-            return Datatables::of($borrowers)
-                ->add_column('Actions', '{{Form::radio(\'comaker2_id\', $id, false)}}')
-                ->remove_column('id')
-                ->make();
-        }
-        else
-        {
-            $borrowers = Borrower::select(['id', 'borrower_type', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'borrower_employment_date', 'borrower_assignment_date'])
-                ->where('company_id', '=', Auth::user()->company->id);
-            return Datatables::of($borrowers)
-                ->add_column('Actions', '{{Form::radio(\'comaker2_id\', $id, false)}}')
-                ->remove_column('id')
-                ->make();
-        }
-    }
-*/
 
     public function borrowers()
     {
@@ -650,45 +685,78 @@ class LoanApplicationController extends Controller
         $interest_id = Request::input('interest_id');
 
         //And query those data with ids to get the real meat out of it.
-        $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
-        $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
-        $interest = LoanInterest::where('id', '=', $interest_id)->first();
+            $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
+            $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
+            $interest = LoanInterest::where('id', '=', $interest_id)->first();
+
+        $periodicRate = 0; //loan monthly/kinsenas/whatever rate
+        $miscellaneousRate = 0; //if so happens that filing fee and service fee wouldn't be amortized
+        $totalLoan = 0; //total loan (principal + interest)
 
         $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
 
-        $totalLoan = $loan_application_amount +  $filing_fee + $service_fee + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+        
+        $last_day_from_disbursement_date = date('Y-m-t', strtotime($disbursement_date));
+        if (date('d', strtotime($disbursement_date)) < 15) //if the disbursement date was less than or equal to the 15th
+        {
+            $paymentStartDate = date('Y-m-15', strtotime($disbursement_date)); //Get the 15th day of the current month as start date
+            $paymentEndDate = date('Y-m-15', strtotime($disbursement_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
+        }
+        else if (date('d', strtotime($disbursement_date)) < date('t', strtotime($disbursement_date)) )
+        {
+            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date)))); //Get the last date of this month as start date
+            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));
+        }
+        else if (date('d', strtotime($disbursement_date)) == date('t', strtotime($disbursement_date)))
+        {
+            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($disbursement_date . '+ 1 week')))); //Get the last date of this month as start date
+            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($disbursement_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
+        }
 
-        //Starting Month and Year for your payment since the loan was disbursed
-        $paymentStartDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
+        $payment_periods = $this->get_months($paymentStartDate, $paymentEndDate);
+        $paymentPeriod_count = count($payment_periods);
 
-        //Ending Month and year for your payment since the loan was disbursed
-        $paymentEndDate = (new DateTime(date('Y-m-d', strtotime($disbursement_date .'+'. $payment_term->loan_payment_term_no_of_months . 'months' .'+'. $payment_schedule->payment_schedule_days_interval . ' days'))));
-
-        //payment interval based on given payment schedule
-        $paymentInterval = DateInterval::createFromDateString($payment_schedule->payment_schedule_days_interval . ' days');
-
-        //*IMPORTANT* Compute the payment schedules from start to finish
-        $paymentPeriod = new DatePeriod($paymentStartDate, $paymentInterval, $paymentEndDate);
-
-        $paymentPeriod_count = 0;
-
-        //Declare an empty array that'll place the computed payment periods
-        $payment_periods = array();
-
-        //Loop through each payment period and place it on to the array for the JSON
-        foreach ($paymentPeriod as $dt) {
-            $payment_periods[] = $dt->format('M j, Y');
-            $paymentPeriod_count++;
+        if (Request::input('filing_service_payment_type') == 0)
+        {
+            $totalLoan = $loan_application_amount + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+            $miscellaneousRate = $filing_fee + $service_fee;
+        }
+        else if (Request::input('filing_service_payment_type') == 1)
+        {
+            $totalLoan = $loan_application_amount +  $filing_fee + $service_fee + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months);
+            $miscellaneousRate = 0;
+        }
+        else if (Request::input('filing_service_payment_type') == 2)
+        {
+            $totalLoan = $loan_application_amount + ($monthlyInterest * $payment_term->loan_payment_term_no_of_months) + ($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) + ($service_fee + ($service_fee * ($interest->loan_interest_rate * .01)));
+            $miscellaneousRate = 0;
         }
 
         $periodicRate = $totalLoan / $paymentPeriod_count;
 
+        //Query the id of the recently saved Loan Application
+        $loan_application_max = LoanApplication::max('id');
+
+        $periodic_rates = array();
+            //Loop through each payment period and place it on to the array for the JSON
+        for ($i=0; $i<count($payment_periods); $i++)
+        {
+            if ($i==0) //Add the Filing Fee and Service Fee upfront (if so)
+            {
+                array_push($periodic_rates, round($periodicRate + $miscellaneousRate, 2));    
+            }
+            else
+            {
+                array_push($periodic_rates, round($periodicRate, 2));  
+            }
+        }
+
         $data = array(
             "payment_periods" => $payment_periods,
-            "total_loan" => round($totalLoan, 2),
+            "total_loan" => round($totalLoan + $miscellaneousRate, 2),
             "monthly_interest" => round($monthlyInterest, 2),
             "payment_count" => $paymentPeriod_count,
-            "periodic_rate" => round($periodicRate, 2)
+            "periodic_rates" => $periodic_rates
             );
 
         return json_encode($data);
