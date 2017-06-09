@@ -47,6 +47,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_applications/promissory_note/{id}', 'LoanApplicationController@promissory_note');
     Route::get('loan_applications/payment_schedule/{id}', 'LoanApplicationController@payment_schedule');
     Route::get('loan_applications/generate/{id}', 'LoanApplicationController@generate_form');
+    Route::get('loan_applications/statement_of_account/{id}', 'LoanApplicationController@statement_of_account');
 
     /*==============================================
                       Loan Payment

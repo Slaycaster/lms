@@ -99,7 +99,7 @@ class CompanyCrudController extends CrudController
                 //Text
                 'name' => 'company_income_share',
                 'label' => 'Income Share',
-                'type' => 'number'
+                'type' => 'text'
             ]
         );
 

@@ -145,8 +145,7 @@ class LoanPaymentController extends Controller
                 ->with('loan_interest')
                 ->with('loan_payment_term')
                 ->with('loan_borrower.company')
-                ->with('payment_collections')
-                ->orderBy('id', 'desc');
+                ->with('payment_collections');
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
                 ->make();
@@ -160,8 +159,7 @@ class LoanPaymentController extends Controller
                 ->with('loan_interest')
                 ->with('loan_payment_term')
                 ->with('loan_borrower.company')
-                ->with('payment_collections')
-                ->orderBy('id', 'desc');
+                ->with('payment_collections');
                 return Datatables::of($loan_applications)
                     ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
                     ->make();

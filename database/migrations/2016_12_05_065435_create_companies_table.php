@@ -17,6 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->increments('id');
             $table->string('company_name');
             $table->string('company_code');
+            $table->double('company_income_share');
             $table->text('company_address');
             $table->string('company_contact_no')->nullable();
             $table->string('company_email')->nullable();

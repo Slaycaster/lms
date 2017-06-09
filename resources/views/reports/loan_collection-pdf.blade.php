@@ -20,6 +20,7 @@ use App\Company;
             ->with('loan_application.loan_interest')
             ->with('loan_application.loan_payment_term')
             ->with('loan_application.loan_payments')
+            ->with('loan_application.loan_borrower')
             ->get();
 
     $payment_collections_count = PaymentCollection::where('payment_collection_date', '=', $date)
@@ -144,17 +145,17 @@ use App\Company;
         <table border="1" width="520">
             <thead>
                 <tr>
-                    <td>Total Amount Collected this Cycle</td>
-                    <td>Total Principal Collected this Cycle</td>
-                    <td>Total Income Collected this Cycle</td>
+                    <td><strong>Total Amount Collected this Cycle</strong></td>
+                    <td><strong>Total Principal Collected this Cycle</strong></td>
+                    <td><strong>Total Income Collected this Cycle</strong></td>
                 </tr>
             </thead>
             <tbody>
 
                 <tr>
-                    <td>PHP {{ number_format($totalAmountCollectedThisCycle, 2) }}</td>
-                    <td>PHP {{ number_format($totalPrincipalCollectedThisCycle, 2) }}</td>
-                    <td>PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
+                    <td align="right">PHP {{ number_format($totalAmountCollectedThisCycle, 2) }}</td>
+                    <td align="right">PHP {{ number_format($totalPrincipalCollectedThisCycle, 2) }}</td>
+                    <td align="right">PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -171,13 +172,33 @@ use App\Company;
             <tbody>
 
                 <tr>
-                    <td>PHP {{ number_format($totalAmountOutstandingThisCycle, 2) }}</td>
-                    <td>PHP {{ number_format($totalPrincipalOutstandingThisCycle, 2) }}</td>
-                    <td>PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
+                    <td align="right">PHP {{ number_format($totalAmountOutstandingThisCycle, 2) }}</td>
+                    <td align="right">PHP {{ number_format($totalPrincipalOutstandingThisCycle, 2) }}</td>
+                    <td align="right">PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>
         <br>
         <h3>Active Loan Applications in this Cycle: {{ $payment_collections_count }}</h3>
+        <table border="1" width="520">
+            <thead>
+                <tr>
+                    <td><strong>Loan ID</strong></td>
+                    <td><strong>Client Name</strong></td>
+                    <td><strong>Principal Collected</strong></td>
+                    <td><strong>Income Collected</strong></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($payment_collections as $payment_collection)
+                    <tr>
+                        <td>{{ $payment_collection->loan_application->id }}</td>
+                        <td>{{ $payment_collection->loan_application->loan_borrower->borrower_last_name }}, {{ $payment_collection->loan_application->loan_borrower->borrower_first_name }} {{ $payment_collection->loan_application->loan_borrower->borrower_middle_name }}</td>
+                        <td>PHP {{ number_format($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application,2) }}</td>
+                        <td>PHP {{ number_format(($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application ,2) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </body>
 </html>
