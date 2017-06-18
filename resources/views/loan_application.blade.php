@@ -227,65 +227,14 @@
         </div>
       </div>
     </div>
-<!--
-    <div class="col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Select
-        </div>
 
-        <div class="panel-body">
-
-          <hr>
-
-          <div class="form-group">
-            <h4>Choose the first Co-Maker</h4>
-            <div class="input-group">
-              <table class="table table-bordered" id="comaker1-table" data-page-length='5'>
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Middle Name</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-          </div>
-          <hr>
-
-          <div class="form-group">
-            <h4>Choose the second Co-Maker</h4>
-            <div class="input-group">
-              <table class="table table-bordered" id="comaker2-table" data-page-length='5'>
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Middle Name</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
--->
           </form>
         <!-- Modal (Pop up when detail button clicked) -->
         <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                         <i class="fa fa-circle-o-notch fa-4x"></i>

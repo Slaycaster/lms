@@ -56,18 +56,19 @@
 		      $('#users-table').DataTable({
 		        processing: true,
 		        serverSide: true,
+		        responsive: true,
 		        ajax: '{!! url('loan_payments/applications') !!}',
 		        columns: [
-		          {data: '0', name: 'loan_applications.id'},
-		          {data: '7', name: 'loan_applications.loan_application_status'},
-		          {data: '12', name: 'loan_applications.loan_application_disbursement_date'},
-		          {data: '24.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
-		          {data: '24.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
-		          {data: '24.company.company_code', name: 'loan_borrower.company.company_name'},
-		          {data: '2', name: 'loan_applications.loan_application_amount'},
-		          {data: '3', name: 'loan_applications.loan_application_total_amount'},
-		          {data: '23.loan_payment_term_name', name: 'loan_payment_term.payment_term_name'},
-		          {data: '26', name: 'Actions', orderable: false, searchable: false}
+		          {data: 'id', name: 'loan_applications.id'},
+		          {data: 'loan_application_status', name: 'loan_applications.loan_application_status'},
+		          {data: 'loan_application_disbursement_date', name: 'loan_applications.loan_application_disbursement_date'},
+		          {data: 'loan_borrower.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
+		          {data: 'loan_borrower.borrower_first_name', name: 'loan_borrower.borrower_first_name'},
+		          {data: 'loan_borrower.company.company_code', name: 'loan_borrower.company.company_name'},
+		          {data: 'loan_application_amount', name: 'loan_applications.loan_application_amount'},
+		          {data: 'loan_application_total_amount', name: 'loan_applications.loan_application_total_amount'},
+		          {data: 'loan_payment_term.loan_payment_term_name', name: 'loan_payment_term.loan_payment_term_name'},
+		          {data: 'Actions', name: 'Actions', orderable: false, searchable: false}
 		        ]
 		      });
 		    });

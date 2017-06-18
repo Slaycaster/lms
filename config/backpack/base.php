@@ -22,7 +22,7 @@ return [
     'developer_name' => 'Denimar Fernandez',
 
     // Developer website. Link in footer.
-    'developer_link' => 'http://linkedin.com/in/fdenimar',
+    'developer_link' => 'http://fdenimar.com',
 
     // Show powered by Laravel Backpack in the footer?
     'show_powered_by' => false,

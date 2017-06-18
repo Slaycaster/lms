@@ -39,6 +39,11 @@ class LoanApplicationController extends Controller
         return view('loan_application_active');
     }
 
+    public function archives()
+    {
+        return view('loan_application_archives');
+    }
+
     public function create()
     {
         $payment_terms = LoanPaymentTerm::pluck('loan_payment_term_name', 'id');
@@ -650,7 +655,7 @@ class LoanApplicationController extends Controller
                             <li><a href=\'{{ url(\'admin/loan_applications/payment_schedule/\' . $id )}}\' target=\'_blank\'>Payment Schedule</a></li>
                         </ul>
                     </div>')
-                ->make();
+                ->make(true);
         }
         else
         {
@@ -674,7 +679,7 @@ class LoanApplicationController extends Controller
                             <li><a href=\'{{ url(\'admin/loan_applications/payment_schedule/\' . $id )}}\' target=\'_blank\'>Payment Schedule</a></li>
                         </ul>
                     </div>')
-                ->make();
+                ->make(true);
         }
     }
 
@@ -709,6 +714,52 @@ class LoanApplicationController extends Controller
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_applications/\' . $id )}}\' class=\'btn btn-primary btn-xs\'> Approve/Decline </a>')
                 ->make();
+        }
+    }
+
+    public function archives_data()
+    {
+        if (Auth::user()->company->id == 1)
+        {
+            $loan_applications = LoanApplication::where('loan_application_is_active', '=', '0')
+                ->with('loan_borrower')
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', 
+                    '<div class="dropdown">
+                    <button class="btn btn-info btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Report
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href=\'{{ url(\'admin/loan_applications/statement_of_account/\' . $id )}}\' target=\'_blank\'>Statement of Account</a></li>
+                            <li><a href=\'{{ url(\'admin/loan_applications/promissory_note/\' . $id )}}\' target=\'_blank\'>Promissory Note</a></li>
+                        </ul>
+                    </div>')
+                ->make(true);
+        }
+        else
+        {
+            $loan_applications = LoanApplication::where('loan_application_is_active', '=', '0')
+                ->with(['loan_borrower' => function($q) {
+                    $q->where('company_id', '=', Auth::user()->company->id);
+                }])
+                ->with('loan_interest')
+                ->with('loan_payment_term')
+                ->with('loan_borrower.company')
+                ->select('loan_applications.*');
+            return Datatables::of($loan_applications)
+                ->add_column('Actions', 
+                    '<div class="dropdown">
+                    <button class="btn btn-info btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Report
+                        <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href=\'{{ url(\'admin/loan_applications/statement_of_account/\' . $id )}}\' target=\'_blank\'>Statement of Account</a></li>
+                            <li><a href=\'{{ url(\'admin/loan_applications/promissory_note/\' . $id )}}\' target=\'_blank\'>Promissory Note</a></li>
+                        </ul>
+                    </div>')
+                ->make(true);
         }
     }
 

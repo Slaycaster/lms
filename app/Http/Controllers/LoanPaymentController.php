@@ -72,7 +72,7 @@ class LoanPaymentController extends Controller
 
             //Update the loan application to cleared (Archive it)
             $loan_application = LoanApplication::find(Request::input('application_id'));
-            $loan_application->loan_application_is_active = 1;
+            $loan_application->loan_application_is_active = 0;
             $loan_application->loan_application_status = 'Cleared';
             $loan_application->save();
         }
@@ -82,9 +82,33 @@ class LoanPaymentController extends Controller
         return Redirect::to('admin/loan_payments');
     }
 
-    public function process_due_payment()
+    public function process_termination()
     {
+        $loan_application_id = Request::input('application_id');
+        $next_due_date = Request::input('next_due_date');
+        $termination_fee = Request::input('termination_fee');
 
+        //Update the loan application to terminated (Archive it)
+        $loan_application = LoanApplication::find(Request::input('application_id'));
+        $loan_application->loan_application_is_active = 0;
+        $loan_application->loan_application_status = 'Terminated';
+        $loan_application->save();
+
+        //Update the next due date's amount to be in full, terminated amount
+        DB::table('payment_collections')
+            ->where('payment_collection_date', '=', $next_due_date)
+            ->where('loan_application_id', '=', $loan_application_id)
+            ->update(array('payment_collection_amount' => $termination_fee, 'is_paid' => 1));
+
+        //Updates the rest of the payment collection's amount to 0.
+        DB::table('payment_collections')
+            ->where('loan_application_id', '=', $loan_application_id)
+            ->where('is_paid', '=', 0)
+            ->update(array('payment_collection_amount' => 0, 'is_paid' => 1));
+
+        Session::flash('message', 'Loan Termination Successful!');
+
+        return Redirect::to('admin/loan_payments');
     }
 /*
     public function process_payment()
@@ -145,10 +169,11 @@ class LoanPaymentController extends Controller
                 ->with('loan_interest')
                 ->with('loan_payment_term')
                 ->with('loan_borrower.company')
-                ->with('payment_collections');
+                ->with('payment_collections')
+                ->select('loan_applications.*');
             return Datatables::of($loan_applications)
                 ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
-                ->make();
+                ->make(true);
         }
         else
         {
@@ -159,10 +184,11 @@ class LoanPaymentController extends Controller
                 ->with('loan_interest')
                 ->with('loan_payment_term')
                 ->with('loan_borrower.company')
-                ->with('payment_collections');
+                ->with('payment_collections')
+                ->select('loan_applications.*');
                 return Datatables::of($loan_applications)
                     ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
-                    ->make();
+                    ->make(true);
         }
         return json_encode($loan_applications, JSON_PRETTY_PRINT);
     }

@@ -26,6 +26,7 @@
 		$cyclesRemain = 0;
 		$cyclesDueDates = array();
 		$index = 0;
+		$terminationFee = $key[0]->loan_application_total_amount;
 
 		foreach ($key[0]->payment_collections as $payment_collection)
 		{
@@ -36,20 +37,20 @@
 			}
 			$convertedMonth = (new DateTime(date('Y-m', strtotime($payment_collection->payment_collection_date))));
 
-			$index++;
-
 			if ($payment_collection->is_paid == 1)
 			{
+				$terminationFee -= $payment_collection->payment_collection_amount;
 				$cyclesPaid ++;
 			}
 			//check also if the previous cycle that is in the same month isn't paid yet, if that's the case, do not include the next cycle of the same month to the due cycle (confusing af but it works)
-			else if ( ($convertedDate <= $currentDate) || ( ($convertedMonth == $currentMonth) && !($previousDate < $convertedDate) ) )
+			else if ( ($convertedDate <= $currentDate) || ( ($convertedMonth == $currentMonth) && !($previousDate < $convertedDate) ) || ($convertedDate > $currentDate) && ($convertedMonth == $currentMonth) )
 			{
 				$cyclesDueDates[$index]["id"] = $payment_collection->id;
 				$cyclesDueDates[$index]["date"] = $payment_collection->payment_collection_date;
 				$cyclesDueDates[$index]["collection_amount"] = $payment_collection->payment_collection_amount;
 				$cyclesDueDates[$index]["is_paid"] = $payment_collection->is_paid;
 				$cyclesDue ++;
+				$index++;
 			}
 			else if (($convertedDate > $currentDate) && ($convertedMonth != $currentMonth || $previousDate < $convertedDate))
 			{
@@ -62,6 +63,7 @@
 	?>
 
 	<div class="row">
+		<!-- Loan Payment -->
 		<div class="col-md-6">
 			<div class="panel panel-warning">
 				<div class="panel-heading">
@@ -80,10 +82,10 @@
 							<p><strong>Approved at:</strong> {{ $key[0]->updated_at }}</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Principal Amount:</strong> PHP {{ $key[0]->loan_application_amount }}</p>
+							<p><strong>Principal Amount:</strong> PHP {{ number_format($key[0]->loan_application_amount,2) }}</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Total Loan Amount:</strong> PHP {{ $key[0]->loan_application_total_amount }}</p>
+							<p><strong>Total Loan Amount:</strong> PHP {{ number_format($key[0]->loan_application_total_amount,2) }}</p>
 						</div>
 						<div class="col-md-6">
 							<p><strong>Payment Terms:</strong> {{ $key[0]->loan_payment_term->loan_payment_term_name }}</p>
@@ -92,43 +94,51 @@
 							<p><strong>Interest:</strong> {{ $key[0]->loan_interest->loan_interest_name }}</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Filing Fee:</strong> {{ $key[0]->loan_application_filing_fee }}</p>
+							<p><strong>Filing Fee:</strong> PHP {{ number_format($key[0]->loan_application_filing_fee,2) }}</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Service Fee:</strong> {{ $key[0]->loan_application_service_fee }}</p>
+							<p><strong>Service Fee:</strong> PHP {{ number_format($key[0]->loan_application_service_fee,2) }}</p>
 						</div>
 						<div class="col-md-12">
 							<p><strong>Purpose:</strong> {{ $key[0]->loan_application_purpose }}</p>
 						</div>
 					</div>
 					<hr>
-					<form action="{{ url('admin/loan_payments/process_payment') }}" method="POST">
-				    {{ csrf_field() }}
-					<h4>Process Payment</h4>
-					<table class="table table-hover table-responsive">
-						<thead>
-							<tr>
-								<td><strong>Cycle Date</strong></td>
-								<td><strong>Amount</strong></td>
-								<td><strong>Pay?</strong></td>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach($cyclesDueDates as $cyclesDueDate)
+						<form action="{{ url('admin/loan_payments/process_payment') }}" method="POST">
+					    {{ csrf_field() }}
+						<h4>Process Payment</h4>
+						<table class="table table-hover table-responsive">
+							<thead>
 								<tr>
-									<td>{{$cyclesDueDate["date"]}}</td>
-									<td>{{ $cyclesDueDate["collection_amount"] }}</td>
-									<td>{{ Form::checkbox('payment_collection_id[]', $cyclesDueDate["id"]) }}</td>
+									<td><strong>Cycle Date</strong></td>
+									<td><strong>Amount</strong></td>
+									<td><strong>Pay?</strong></td>
 								</tr>
-							@endforeach
-							{{ Form::hidden('application_id', $key[0]->id) }}
-						</tbody>
-					</table>
-					<button type="submit" class="btn btn-block btn-success btn-sm" name="approve">Process Loan Payment</button>
-					</form>
+							</thead>
+							<tbody>
+								@foreach($cyclesDueDates as $cyclesDueDate)
+									<tr>
+										<td>{{$cyclesDueDate["date"]}}</td>
+										<td>PHP {{ number_format($cyclesDueDate["collection_amount"], 2) }}</td>
+										<td>{{ Form::checkbox('payment_collection_id[]', $cyclesDueDate["id"]) }}</td>
+									</tr>
+								@endforeach
+								{{ Form::hidden('application_id', $key[0]->id) }}
+							</tbody>
+						</table>
+						<button type="submit" class="btn btn-block btn-success btn-sm" name="approve">Process Loan Payment</button>
+						</form>
+					<hr>
+						<h4>Process Termination</h4>
+						<p><strong>Clicking the button below will terminate the current loan application. Please be careful.</strong></p>
+						<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee,2)}}</strong></p>
+						<p>It will be reflected on the next cycle on: <strong>{{ $cyclesDueDates[$index-1]["date"] }}</strong></p>
+						<button type="submit" data-toggle="modal" data-target="#terminationModal" class="btn btn-block btn-danger btn-sm" name="approve">Process Termination</button>
 				</div>
 			</div>
-		</div>
+		</div> <!-- Loan Payment -->
+
+
 		<div class="col-md-3">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
@@ -238,6 +248,52 @@
 				</div>
 			</div>
 		</div>
+	</div><!-- row -->
+
+	<!-- Modal (Pop up when detail button clicked) -->
+        <div class="modal fade" id="terminationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" 
+                                class="close" 
+                                data-dismiss="modal" 
+                                aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title"><b>Wait, are you sure?</b></h4>
+                    </div>
+
+
+                     <div class="modal-body">
+                        <form action="{{ url('admin/loan_payments/process_termination') }}" method="POST">
+					    	{{ csrf_field() }}
+					    	{{ Form::hidden('next_due_date', $cyclesDueDates[$index-1]["date"]) }}
+							{{ Form::hidden('application_id', $key[0]->id) }}
+							{{ Form::hidden('termination_fee', $terminationFee) }}
+							<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee,2)}}</strong></p>
+							<p>It will be reflected on the next cycle on: <strong>{{ $cyclesDueDates[$index-1]["date"] }}</strong></p>
+							<p>Are you really sure on terminating this loan application?</p>
+					    
+                    </div>
+
+                    
+                    <div class="modal-footer">
+                    	<button type="button"
+                                class="btn btn-default btn-sm btn-block"
+                                id="btn-dismiss"
+                                data-dismiss="modal">
+                            Hold it right there!
+                        </button>
+                        <button type="submit"
+                                class="btn btn-danger btn-sm btn-block">
+                            Terminate Loan Application
+                        </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</div>
 	@endforeach
 @endsection

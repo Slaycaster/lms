@@ -40,6 +40,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_applications', 'LoanApplicationController@index');
     Route::get('loan_applications/create', 'LoanApplicationController@create');
     Route::get('loan_applications/active', 'LoanApplicationController@active');
+    Route::get('loan_applications/archives', 'LoanApplicationController@archives');
     Route::get('loan_applications/{id}', 'LoanApplicationController@details');
     Route::get('loan_applications/details/{id}', 'LoanApplicationController@viewdetails');
     Route::post('loan_applications/save', 'LoanApplicationController@save');
@@ -55,7 +56,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
     Route::get('loan_payments', 'LoanPaymentController@index');
     Route::get('loan_payments/{id}', 'LoanPaymentController@payment_view');
     Route::post('loan_payments/process_payment', 'LoanPaymentController@process_payment');
-    Route::post('loan_payments/process_due_payment', 'LoanPaymentController@process_due_payment');
+    Route::post('loan_payments/process_termination', 'LoanPaymentController@process_termination');
 
     /*==============================================
                         Reports
@@ -80,5 +81,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function()
 Route::post('loan_applications/precompute', 'LoanApplicationController@precompute');
 Route::get('loan_applications/index/data', 'LoanApplicationController@index_data');
 Route::get('loan_applications/active/data', 'LoanApplicationController@active_data');
+Route::get('loan_applications/archives/data', 'LoanApplicationController@archives_data');
 Route::get('loan_payments/applications', 'LoanPaymentController@approved_data');
 Route::get('payment_collections/dates/{id}', 'PaymentCollectionController@collection_dates');
