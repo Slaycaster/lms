@@ -23,25 +23,27 @@
 				</div>
 
 				<div class="panel-body">
-					<table class="table table-bordered table-hover" id="users-table">
-			            <thead>
-			              <tr>
-			              	<th>ID</th>
-			              	<th>Status</th>
-			              	<th>Date Cleared
-			              	/Terminated</th>
-			              	<th>Disbursement Date</th>
-			              	<th>Actions</th>
-			                <th>Last Name</th>
-			                <th>First Name</th>
-			                <th>Company Code</th>
-			                <th>Principal Amount</th>
-			                <th>Interest</th>
-			                <th>Total Loan Amount</th>
-			                <th>Payment Terms</th>
-			              </tr>
-			        	</thead>
-			        </table>
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover" id="users-table">
+				            <thead>
+				              <tr>
+				              	<th>ID</th>
+				              	<th>Status</th>
+				              	<th>Date Cleared
+				              	/Terminated</th>
+				              	<th>Disbursement Date</th>
+				              	<th>Actions</th>
+				                <th>Last Name</th>
+				                <th>First Name</th>
+				                <th>Company Code</th>
+				                <th>Principal Amount</th>
+				                <th>Interest</th>
+				                <th>Total Loan Amount</th>
+				                <th>Payment Terms</th>
+				              </tr>
+				        	</thead>
+				        </table>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -29,22 +29,24 @@
               			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                   		<div class="alert alert-info alert-dismissable">{{ Session::get('payment_status') }}</div>
               		@endif
-					<table class="table table-bordered" id="users-table">
-			            <thead>
-			              <tr>
-			                <th>ID</th>
-			              	<th>Status</th>
-			              	<th>Disbursement Date</th>
-			                <th>Last Name</th>
-			                <th>First Name</th>
-			                <th>Company Code</th>
-			                <th>Principal Amount</th>
-			                <th>Total Loan Amount</th>
-			                <th>Payment Terms</th>
-			                <th>Actions</th>
-			              </tr>
-			        	</thead>
-			        </table>
+              		<div class="table-responsive">
+              			<table class="table table-bordered" id="users-table">
+				            <thead>
+				              <tr>
+				                <th>ID</th>
+				              	<th>Status</th>
+				              	<th>Disbursement Date</th>
+				                <th>Last Name</th>
+				                <th>First Name</th>
+				                <th>Company Code</th>
+				                <th>Principal Amount</th>
+				                <th>Total Loan Amount</th>
+				                <th>Payment Terms</th>
+				                <th>Actions</th>
+				              </tr>
+				        	</thead>
+			        	</table>	
+              		</div>
 				</div>
 			</div>
 		</div>

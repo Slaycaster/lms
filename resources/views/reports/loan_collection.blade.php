@@ -36,14 +36,16 @@
                 <h4><span class = "fa fa-calendar-o"></span> Choose Collection Cycle Date</h4>
 
                 <div class="input-group date">
-                  <table class="table table-bordered table-hover" id="date-table">
-                      <thead>
-                        <tr>
-                          <th>Collection Date</th>
-                          <th>Select</th>
-                        </tr>
-                    </thead>
-                  </table>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="date-table">
+                        <thead>
+                          <tr>
+                            <th>Collection Date</th>
+                            <th>Select</th>
+                          </tr>
+                      </thead>
+                    </table>
+                  </div>
                 </div>
                 
             </div>

@@ -52,22 +52,24 @@
 						<hr>
 						<div class="col-md-12">
 							<p><strong>Payment Schedules:</strong></p>
-							<table class="table table-hover table-responsive" id="payment_scheds" data-page-length='5'>
-	                          <thead>
-	                            <tr>
-	                              <th>Date</th>
-	                              <th>Amount</th>
-	                            </tr>
-	                            <tbody>
-	                              @foreach($key->payment_collections as $payment_collection)
-	                              	<tr>
-	                              		<td>{{ $payment_collection->payment_collection_date }}</td>
-	                              		<td>{{ $payment_collection->payment_collection_amount }}</td>
-	                              	</tr>
-	                              @endforeach
-	                            </tbody>
-	                          </thead>
-	                        </table>
+							<div class="table-responsive">
+								<table class="table table-hover" id="payment_scheds" data-page-length='5'>
+		                          <thead>
+		                            <tr>
+		                              <th>Date</th>
+		                              <th>Amount</th>
+		                            </tr>
+		                            <tbody>
+		                              @foreach($key->payment_collections as $payment_collection)
+		                              	<tr>
+		                              		<td>{{ $payment_collection->payment_collection_date }}</td>
+		                              		<td>{{ $payment_collection->payment_collection_amount }}</td>
+		                              	</tr>
+		                              @endforeach
+		                            </tbody>
+		                          </thead>
+		                        </table>
+							</div>
 						</div>
 					</div>
 					<hr>

@@ -246,17 +246,19 @@
                         <div class="results">
 
                         </div>
-                        <table class="table table-hover table-responsive" id="payment_scheds" data-page-length='5'>
-                          <thead>
-                            <tr>
-                              <th>Date</th>
-                              <th>Amount</th>
-                            </tr>
-                            <tbody>
+                        <div class="table-responsive">
+                          <table class="table table-hover table-responsive" id="payment_scheds" data-page-length='5'>
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                              </tr>
+                              <tbody>
 
-                            </tbody>
-                          </thead>
-                        </table>
+                              </tbody>
+                            </thead>
+                          </table>
+                        </div>
                     </div>
 
 

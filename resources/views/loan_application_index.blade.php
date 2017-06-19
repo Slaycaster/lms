@@ -26,25 +26,26 @@
               		@endif
 					<a href="{{ url('admin/loan_applications/create') }}" class="btn btn-primary btn-sm">+ New Loan Application</a>
 					<br><br>
-
-					<table class="table table-bordered table-hover" width="100%" id="users-table" data-page-length='10'>
-			            <thead>
-			              <tr>
-			              	<th>ID</th>
-			              	<th>View</th>
-			              	<th>Status</th>
-			              	<th>Disbursement Date</th>
-			                <th>Last Name</th>
-			                <th>First Name</th>
-			                <th>Company Code</th>
-			                <th>Interest Rate</th>
-			                <th>Principal Amount</th>
-			                <th>Interest</th>
-			                <th>Total Loan Amount</th>
-			                <th>Payment Terms</th>
-			              </tr>
-			        	</thead>
-			        </table>
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover" id="users-table" data-page-length='10'>
+				            <thead>
+				              <tr>
+				              	<th>ID</th>
+				              	<th>View</th>
+				              	<th>Status</th>
+				              	<th>Disbursement Date</th>
+				                <th>Last Name</th>
+				                <th>First Name</th>
+				                <th>Company Code</th>
+				                <th>Interest Rate</th>
+				                <th>Principal Amount</th>
+				                <th>Interest</th>
+				                <th>Total Loan Amount</th>
+				                <th>Payment Terms</th>
+				              </tr>
+				        	</thead>
+				        </table>	
+					</div>
 				</div>
 			</div>
 		</div>
