@@ -17,4 +17,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-//Route::post('loan_applications_json', 'LoanApplicationController@saveViaJson');
+Route::post('loan_applications_json', 'LoanApplicationController@saveViaJson');
