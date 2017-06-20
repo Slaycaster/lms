@@ -104,7 +104,7 @@ use App\Company;
         </style>
     </head>
 
-    <body>
+    <body onload="window.print();">
         <p style="text-align: center;">
             <normal style="font-size: 18px">Moo Loans Inc.</normal>
             <br>

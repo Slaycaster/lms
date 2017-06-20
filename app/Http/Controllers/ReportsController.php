@@ -58,14 +58,14 @@ class ReportsController extends Controller
     {
         Session::put('company_id', Request::input('company_id'));
         Session::put('date', Request::input('payment_collection_date'));
-        //return view('reports.loan_collection-pdf');
-        
+        return view('reports.loan_collection-pdf');
+        /*
         $pdf = PDF::loadView('reports.loan_collection-pdf')->setPaper('Letter');
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf ->get_canvas();
         $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();
+        return $pdf->stream();*/
         
     }
 
