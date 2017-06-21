@@ -28,13 +28,7 @@ class BorrowerStoreRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
         return [
             'borrower_type' => 'required',
             'borrower_last_name' => 'required',
-            'borrower_first_name' => 'required',
-            'borrower_home_address' => 'required',
-            'borrower_email' => 'required',
-            'borrower_civil_status' => 'required',
-            'borrower_birth_date' => 'required',
-            'borrower_employment_date' => 'required',
-            'borrower_assignment_date' => 'required'
+            'borrower_first_name' => 'required'
         ];
     }
 }
