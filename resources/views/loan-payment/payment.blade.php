@@ -27,6 +27,7 @@
 		$cyclesDueDates = array();
 		$index = 0;
 		$terminationFee = $key[0]->loan_application_total_amount;
+		$nextCollectionDate = '';
 
 		foreach ($key[0]->payment_collections as $payment_collection)
 		{
@@ -51,6 +52,7 @@
 				$cyclesDueDates[$index]["is_paid"] = $payment_collection->is_paid;
 				$cyclesDue ++;
 				$index++;
+				$nextCollectionDate = $payment_collection->payment_collection_date;
 			}
 			else if (($convertedDate > $currentDate) && ($convertedMonth != $currentMonth || $previousDate < $convertedDate))
 			{
@@ -107,6 +109,10 @@
 						<form action="{{ url('admin/loan_payments/process_payment') }}" method="POST">
 					    {{ csrf_field() }}
 						<h4>Process Payment</h4>
+						@if (Session::has('payment-error'))
+	              			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+	                  		<div class="alert alert-danger alert-dismissable">{{ Session::get('payment-error') }}</div>
+	              		@endif
 						<table class="table table-hover table-responsive">
 							<thead>
 								<tr>
@@ -132,7 +138,7 @@
 						<h4>Process Termination</h4>
 						<p><strong>Clicking the button below will terminate the current loan application. Please be careful.</strong></p>
 						<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee,2)}}</strong></p>
-						<p>It will be reflected on the next cycle on: <strong>{{ $cyclesDueDates[$index-1]["date"] }}</strong></p>
+						<p>It will be reflected on the next cycle on: <strong>{{ $nextCollectionDate }}</strong></p>
 						<button type="submit" data-toggle="modal" data-target="#terminationModal" class="btn btn-block btn-danger btn-sm" name="approve">Process Termination</button>
 				</div>
 			</div>
@@ -268,11 +274,11 @@
                      <div class="modal-body">
                         <form action="{{ url('admin/loan_payments/process_termination') }}" method="POST">
 					    	{{ csrf_field() }}
-					    	{{ Form::hidden('next_due_date', $cyclesDueDates[$index-1]["date"]) }}
+					    	{{ Form::hidden('next_due_date', $nextCollectionDate) }}
 							{{ Form::hidden('application_id', $key[0]->id) }}
 							{{ Form::hidden('termination_fee', $terminationFee) }}
 							<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee,2)}}</strong></p>
-							<p>It will be reflected on the next cycle on: <strong>{{ $cyclesDueDates[$index-1]["date"] }}</strong></p>
+							<p>It will be reflected on the next cycle on: <strong>{{ $nextCollectionDate }}</strong></p>
 							<p>Are you really sure on terminating this loan application?</p>
 					    
                     </div>

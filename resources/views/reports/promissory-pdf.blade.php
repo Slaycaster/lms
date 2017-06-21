@@ -14,7 +14,6 @@ use App\LoanApplication;
             ->with('loan_borrower.company')
             ->with('loan_interest')
             ->with('loan_payment_term')
-            ->with('loan_payments')
             ->get();
 ?>
 

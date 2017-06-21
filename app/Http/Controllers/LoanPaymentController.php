@@ -53,33 +53,42 @@ class LoanPaymentController extends Controller
     public function process_payment()
     {
         $payment_collection_id = Request::input('payment_collection_id');
-        for ($i = 0; $i < sizeof($payment_collection_id); $i++)
+        if (Request::input('payment_collection_id') == null)
         {
-            $payment_collection = PaymentCollection::find($payment_collection_id[$i]);
-            $payment_collection->is_paid = 1;
-            $payment_collection->save();
-        }
+            Session::flash('payment-error', 'Error! Kindly check the collection date specified!');
 
-        $unpaid_count = PaymentCollection::where('loan_application_id', '=', Request::input('application_id'))->where('is_paid', '=', 0)->count();
-
-        if ($unpaid_count != 0)
-        {
-            Session::flash('payment_status', 'There are '. $unpaid_count .' payment collections remaining.');            
+            return Redirect::to('admin/loan_payments/'.Request::input('application_id'));
         }
         else
         {
-            Session::flash('payment_status', 'It seems all payment collections have been paid, loan cleared!');
+            for ($i = 0; $i < sizeof($payment_collection_id); $i++)
+            {
+                $payment_collection = PaymentCollection::find($payment_collection_id[$i]);
+                $payment_collection->is_paid = 1;
+                $payment_collection->save();
+            }
 
-            //Update the loan application to cleared (Archive it)
-            $loan_application = LoanApplication::find(Request::input('application_id'));
-            $loan_application->loan_application_is_active = 0;
-            $loan_application->loan_application_status = 'Cleared';
-            $loan_application->save();
+            $unpaid_count = PaymentCollection::where('loan_application_id', '=', Request::input('application_id'))->where('is_paid', '=', 0)->count();
+
+            if ($unpaid_count != 0)
+            {
+                Session::flash('payment_status', 'There are '. $unpaid_count .' payment collections remaining.');            
+            }
+            else
+            {
+                Session::flash('payment_status', 'It seems all payment collections have been paid, loan cleared!');
+
+                //Update the loan application to cleared (Archive it)
+                $loan_application = LoanApplication::find(Request::input('application_id'));
+                $loan_application->loan_application_is_active = 0;
+                $loan_application->loan_application_status = 'Cleared';
+                $loan_application->save();
+            }
+
+            Session::flash('message', 'Loan Payment Successful!');
+
+            return Redirect::to('admin/loan_payments');
         }
-
-        Session::flash('message', 'Loan Payment Successful!');
-
-        return Redirect::to('admin/loan_payments');
     }
 
     public function process_termination()
@@ -110,37 +119,7 @@ class LoanPaymentController extends Controller
 
         return Redirect::to('admin/loan_payments');
     }
-/*
-    public function process_payment()
-    {
-        $loan_payment = new LoanPayment();
-        $loan_payment->loan_application_id = Request::input('loan_application_id');
-        $loan_payment->loan_payment_amount = Request::input('amount');
-        $loan_payment->loan_payment_count = 1;
-        $loan_payment->remarks = Request::input('remarks');
-        $loan_payment->save();
 
-        Session::flash('message', 'Loan Payment Successful!');
-
-        return Redirect::to('admin/loan_payments');
-    }
-
-    public function process_due_payment()
-    {
-        $monthsUnpaid = Request::input('months_unpaid');
-
-        $loan_payment = new LoanPayment();
-        $loan_payment->loan_application_id = Request::input('loan_application_id');
-        $loan_payment->loan_payment_amount = Request::input('due_amount');
-        $loan_payment->loan_payment_count = 1 + $monthsUnpaid;
-        $loan_payment->remarks = Request::input('due_remarks') . ' (Delayed payment for about ' . $monthsUnpaid . ' months. ';
-        $loan_payment->save();
-
-        Session::flash('message', 'Loan Payment Successful!');
-
-        return Redirect::to('admin/loan_payments');
-    }
-*/
     /*==============================================================
                             DOMPDF Views
     ==============================================================*/
@@ -172,7 +151,7 @@ class LoanPaymentController extends Controller
                 ->with('payment_collections')
                 ->select('loan_applications.*');
             return Datatables::of($loan_applications)
-                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
+                ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' > Payment </a>')
                 ->make(true);
         }
         else
@@ -187,7 +166,7 @@ class LoanPaymentController extends Controller
                 ->with('payment_collections')
                 ->select('loan_applications.*');
                 return Datatables::of($loan_applications)
-                    ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' target=\'_blank\'> Payment </a>')
+                    ->add_column('Actions', '<a href=\'{{ url(\'admin/loan_payments/\' . $id )}}\' class=\'btn btn-primary btn-xs\' > Payment </a>')
                     ->make(true);
         }
         return json_encode($loan_applications, JSON_PRETTY_PRINT);

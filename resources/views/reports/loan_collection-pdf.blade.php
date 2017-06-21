@@ -19,7 +19,6 @@ use App\Company;
             })
             ->with('loan_application.loan_interest')
             ->with('loan_application.loan_payment_term')
-            ->with('loan_application.loan_payments')
             ->with('loan_application.loan_borrower')
             ->get();
 
@@ -191,12 +190,14 @@ use App\Company;
             </thead>
             <tbody>
                 @foreach($payment_collections as $payment_collection)
-                    <tr>
-                        <td>{{ $payment_collection->loan_application->id }}</td>
-                        <td>{{ $payment_collection->loan_application->loan_borrower->borrower_last_name }}, {{ $payment_collection->loan_application->loan_borrower->borrower_first_name }} {{ $payment_collection->loan_application->loan_borrower->borrower_middle_name }}</td>
-                        <td>PHP {{ number_format($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application,2) }}</td>
-                        <td>PHP {{ number_format(($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application ,2) }}</td>
-                    </tr>
+                    @if($payment_collection->is_paid == 1 && $payment_collection->payment_collection_amount != 0)
+                        <tr>
+                            <td>{{ $payment_collection->loan_application->id }}</td>
+                            <td>{{ $payment_collection->loan_application->loan_borrower->borrower_last_name }}, {{ $payment_collection->loan_application->loan_borrower->borrower_first_name }} {{ $payment_collection->loan_application->loan_borrower->borrower_middle_name }}</td>
+                            <td>PHP {{ number_format($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application,2) }}</td>
+                            <td>PHP {{ number_format(($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application ,2) }}</td>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>

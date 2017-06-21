@@ -19,7 +19,6 @@ use App\Company;
             })
             ->with('loan_application.loan_interest')
             ->with('loan_application.loan_payment_term')
-            ->with('loan_application.loan_payments')
             ->get();
 
     $payment_collections_count = PaymentCollection::where('payment_collection_date', '=', $date)

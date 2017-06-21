@@ -15,7 +15,6 @@ use App\PaymentSchedule;
             ->with('loan_borrower.company')
             ->with('loan_interest')
             ->with('loan_payment_term')
-            ->with('loan_payments')
             ->with('payment_collections')
             ->get();
 ?>
