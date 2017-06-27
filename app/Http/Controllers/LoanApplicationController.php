@@ -438,13 +438,13 @@ class LoanApplicationController extends Controller
                 $payment_collection->payment_collection_date = $payment_periods[$j];
                 if ($j==0) //Add the Filing Fee and Service Fee upfront (if so)
                 {
-                    $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate + $miscellaneousRate, 2);    
+                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate + $miscellaneousRate, 2);    
                 }
                 else
                 {
-                    $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
+                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
                 }
-                $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
+                $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
                 $payment_collection->loan_application_id = $loan_application_max;
                 $payment_collection->company_id = $jsonData[$j]['company_id'];
 
@@ -570,15 +570,15 @@ class LoanApplicationController extends Controller
                 $payment_collection = new PaymentCollection();
                 $payment_collection->is_paid = 0;
                 $payment_collection->payment_collection_date = $payment_periods[$i];
-                if ($i==0) //Add the Filing Fee and Service Fee upfront (if so)
+                if ($j==0) //Add the Filing Fee and Service Fee upfront (if so)
                 {
-                    $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate + $miscellaneousRate, 2);    
+                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate + $miscellaneousRate, 2);    
                 }
                 else
                 {
-                    $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
+                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
                 }
-                $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
+                $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
                 $payment_collection->loan_application_id = $request->input('loan_application_id');
                 $payment_collection->company_id = $company->company_id;
 
@@ -843,14 +843,14 @@ class LoanApplicationController extends Controller
             if ($i==0) //Add the Filing Fee and Service Fee upfront (if so)
             {
                 array_push($periodic_rates, round($periodicRate + $miscellaneousRate, 2));    
-                array_push($periodic_principal_rates, round($periodicPrincipalRate + $miscellaneousRate, 2));
+                array_push($periodic_interest_rates, round($periodicInterestRate + $miscellaneousRate, 2));
             }
             else
             {
                 array_push($periodic_rates, round($periodicRate, 2));  
-                array_push($periodic_principal_rates, round($periodicPrincipalRate, 2));
+                array_push($periodic_interest_rates, round($periodicInterestRate, 2));
             }
-            array_push($periodic_interest_rates, round($periodicInterestRate, 2));
+            array_push($periodic_principal_rates, round($periodicPrincipalRate, 2));
         }
 
         $data = array(
