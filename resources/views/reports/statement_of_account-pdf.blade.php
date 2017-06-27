@@ -229,10 +229,27 @@ use App\PaymentCollection;
                         <br>
                         <strong>PHP {{ number_format($loan_application->loan_application_filing_fee,2) }}</strong>
                       </td>
-                      <td width="20%">
+                      <td width="50%">
                         <sup>Service Fee</sup>
                         <br>
                         <strong>PHP {{ number_format($loan_application->loan_application_service_fee,2) }}</strong>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width="50%">
+                        <sup>Filing Fee & Service Fee Payment Type</sup>
+                        <br>
+                        <strong>
+                          @if($loan_application->loan_application_filing_service_payment == 0)
+                            One-time Payment
+                          @elseif($loan_application->loan_application_filing_service_payment == 1)
+                            Amortized without Interest
+                          @elseif($loan_application->loan_application_filing_service_payment == 2)
+                            Amortized with Interest
+                          @endif
+                        </strong>
+                      </td>
+                      <td width="50%">
                       </td>
                     </tr>
                   </table>

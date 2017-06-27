@@ -164,7 +164,15 @@ use App\PaymentCollection;
                       <td width="70%">
                         <sup>Filing Fee & Service Fee Payment Type</sup>
                         <br>
-                        <strong>{{ $loan_application->loan_application_filing_service_payment }}</strong>
+                        <strong>
+                          @if($loan_application->loan_application_filing_service_payment == 0)
+                            One-time Payment
+                          @elseif($loan_application->loan_application_filing_service_payment == 1)
+                            Amortized without Interest
+                          @elseif($loan_application->loan_application_filing_service_payment == 2)
+                            Amortized with Interest
+                          @endif
+                        </strong>
                       </td>
                       <td width="30%">
                       </td>
