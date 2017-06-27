@@ -193,7 +193,7 @@
                   <div class="form-group">
                     <label for="service_fee" class="control-label">Filing Fee & Service Fee Payment Type</label>
                     <div class="input-group">
-                      {{ Form::select('filing_service_payment_type', array('0' => 'One-time Payment', '1' => 'Amortized without Interest', '2' => 'Amortized with Interest'), null, array('class' => 'form-control')) }}
+                      {{ Form::select('filing_service_payment_type', array('0' => 'One-time Payment', '1' => 'Amortized without Interest', '2' => 'Amortized with Interest'), null, array('class' => 'form-control', 'id' => 'filing_service_payment_type')) }}
                     </div>
                   </div>
                 </div>
@@ -265,6 +265,8 @@
                                 <th>Amount</th>
                                 <th>Principal</th>
                                 <th>Interest</th>
+                                <th>Filing Fee</th>
+                                <th>Service Fee</th>
                               </tr>
                               <tbody>
 
@@ -407,6 +409,7 @@
               loan_application_amount: document.getElementById('amount').value,
               filing_fee: document.getElementById('filing_fee').value,
               service_fee: document.getElementById('service_fee').value,
+              filing_service_payment_type: document.getElementById('filing_service_payment_type').value,
               disbursement_date: document.getElementById('disbursement_date').value,
               collection_date: document.getElementById('collection_date').value,
               payment_term_id: document.getElementById('payment_term_id').value,
@@ -417,7 +420,7 @@
               var trHTML = '';
               for (i = 0; i < response.payment_periods.length; i++)
               {
-                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) +'</td></tr>';
+                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_filing_fee[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_service_fee[i]).toFixed(2) + '</td></tr>';
               }
               $('#payment_scheds').append(trHTML);
 

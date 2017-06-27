@@ -126,15 +126,15 @@ use App\Company;
                 $payment_collection_count_loan_application = PaymentCollection::where('loan_application_id', '=', $payment_collection->loan_application_id)->count();
                 if($payment_collection->is_paid == 1)
                 {
-                    $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection_interest_amount;
+                    $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalCollectedThisCycle += $payment_collection->payment_collection_principal_amount;
-                    $totalIncomeCollectedThisCycle += $payment_collection->payment_collection_interest_amount;
+                    $totalIncomeCollectedThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                 }
                 else if($payment_collection->is_paid == 0)
                 {
-                    $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection_interest_amount;
+                    $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalOutstandingThisCycle += $payment_collection->payment_collection_principal_amount;
-                    $totalIncomeOutstandingThisCycle += $payment_collection->payment_collection_interest_amount;
+                    $totalIncomeOutstandingThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                 }
             }
 

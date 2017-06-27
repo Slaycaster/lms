@@ -183,6 +183,7 @@ class LoanApplicationController extends Controller
         $payment_term_id = $request->input('payment_term_id');
         $payment_schedule_id = $request->input('payment_schedule_id');
         $interest_id = $request->input('loan_interest_id');
+        $filing_service_payment_type = $request->input('filing_service_payment_type');
 
         //And query those data with ids to get the real meat out of it.
         $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
@@ -275,13 +276,44 @@ class LoanApplicationController extends Controller
             $payment_collection->payment_collection_date = $payment_periods[$i];
             if ($i==0) //Add the Filing Fee and Service Fee upfront (if so)
             {
-                $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate + $miscellaneousRate, 2);   
+                
+                if ($filing_service_payment_type == 0)
+                {
+                    $payment_collection->payment_collection_filing_fee = round($filing_fee,2);
+                    $payment_collection->payment_collection_service_fee = round($service_fee,2);
+                }  
+                else if ($filing_service_payment_type == 1)
+                {
+                    $payment_collection->payment_collection_filing_fee = round($filing_fee / $paymentPeriod_count ,2);
+                   $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
+                }
+                else if ($filing_service_payment_type == 2)
+                {
+                   $payment_collection->payment_collection_filing_fee = round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2);
+                   $payment_collection->payment_collection_service_fee = round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2); 
+                }
             }
             else
             {
-                $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
+                if ($filing_service_payment_type == 0)
+                {
+                    $payment_collection->payment_collection_filing_fee = 0;
+                    $payment_collection->payment_collection_service_fee = 0;
+                }
+                else if ($filing_service_payment_type == 1)
+                {
+                    $payment_collection->payment_collection_filing_fee = round($filing_fee / $paymentPeriod_count ,2);
+                   $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
+                }
+                else if ($filing_service_payment_type == 2)
+                {
+                   $payment_collection->payment_collection_filing_fee = round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2);
+                   $payment_collection->payment_collection_service_fee = round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2); 
+                }   
             }
+
             $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
+            $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
             $payment_collection->loan_application_id = $loan_application_max;
             $payment_collection->company_id = $company->company_id;
 
@@ -407,7 +439,7 @@ class LoanApplicationController extends Controller
             $loan_application = new LoanApplication();
             $loan_application->loan_application_is_active = 1;
             $loan_application->loan_application_amount = $jsonData[$i]['amount'];
-            $loan_application->loan_application_total_amount = round($totalLoan, 2);
+            $loan_application->loan_application_total_amount = round($totalLoan + $miscellaneousRate, 2);
             $loan_application->loan_application_interest = round($monthlyInterest, 2);
             $loan_application->loan_application_periodic_rate = round($periodicRate, 2);
             $loan_application->loan_application_purpose = ' ';
@@ -436,14 +468,46 @@ class LoanApplicationController extends Controller
                 $payment_collection = new PaymentCollection();
                 $payment_collection->is_paid = 0;
                 $payment_collection->payment_collection_date = $payment_periods[$j];
+
                 if ($j==0) //Add the Filing Fee and Service Fee upfront (if so)
                 {
-                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate + $miscellaneousRate, 2);    
+                    
+                    if ($filing_service_payment_type == 0)
+                    {
+                        $payment_collection->payment_collection_filing_fee = round($filing_fee,2);
+                        $payment_collection->payment_collection_service_fee = round($service_fee,2);
+                    }  
+                    else if ($filing_service_payment_type == 1)
+                    {
+                        $payment_collection->payment_collection_filing_fee = round($filing_fee / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
+                    }
+                    else if ($filing_service_payment_type == 2)
+                    {
+                       $payment_collection->payment_collection_filing_fee = round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2); 
+                    }
                 }
                 else
                 {
-                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
+                    if ($filing_service_payment_type == 0)
+                    {
+                        $payment_collection->payment_collection_filing_fee = 0;
+                        $payment_collection->payment_collection_service_fee = 0;
+                    }
+                    else if ($filing_service_payment_type == 1)
+                    {
+                        $payment_collection->payment_collection_filing_fee = round($filing_fee / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
+                    }
+                    else if ($filing_service_payment_type == 2)
+                    {
+                       $payment_collection->payment_collection_filing_fee = round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2); 
+                    }   
                 }
+
+                $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
                 $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
                 $payment_collection->loan_application_id = $loan_application_max;
                 $payment_collection->company_id = $jsonData[$j]['company_id'];
@@ -539,7 +603,7 @@ class LoanApplicationController extends Controller
             $loan_application = new LoanApplication();
             $loan_application->loan_application_is_active = 1;
             $loan_application->loan_application_amount = $request->input('amount');
-            $loan_application->loan_application_total_amount = round($totalLoan, 2);
+            $loan_application->loan_application_total_amount = round($totalLoan + $miscellaneousRate, 2);
             $loan_application->loan_application_interest = round($monthlyInterest, 2);
             $loan_application->loan_application_periodic_rate = round($periodicRate, 2);
             $loan_application->loan_application_purpose = $request->input('purpose');
@@ -572,12 +636,43 @@ class LoanApplicationController extends Controller
                 $payment_collection->payment_collection_date = $payment_periods[$i];
                 if ($j==0) //Add the Filing Fee and Service Fee upfront (if so)
                 {
-                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate + $miscellaneousRate, 2);    
+                    
+                    if ($filing_service_payment_type == 0)
+                    {
+                        $payment_collection->payment_collection_filing_fee = round($filing_fee,2);
+                        $payment_collection->payment_collection_service_fee = round($service_fee,2);
+                    }  
+                    else if ($filing_service_payment_type == 1)
+                    {
+                        $payment_collection->payment_collection_filing_fee = round($filing_fee / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
+                    }
+                    else if ($filing_service_payment_type == 2)
+                    {
+                       $payment_collection->payment_collection_filing_fee = round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2); 
+                    }
                 }
                 else
                 {
-                    $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
+                    if ($filing_service_payment_type == 0)
+                    {
+                        $payment_collection->payment_collection_filing_fee = 0;
+                        $payment_collection->payment_collection_service_fee = 0;
+                    }
+                    else if ($filing_service_payment_type == 1)
+                    {
+                        $payment_collection->payment_collection_filing_fee = round($filing_fee / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
+                    }
+                    else if ($filing_service_payment_type == 2)
+                    {
+                       $payment_collection->payment_collection_filing_fee = round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2);
+                       $payment_collection->payment_collection_service_fee = round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2); 
+                    }   
                 }
+
+                $payment_collection->payment_collection_interest_amount = round($periodicInterestRate, 2);
                 $payment_collection->payment_collection_principal_amount = round($periodicPrincipalRate, 2);
                 $payment_collection->loan_application_id = $request->input('loan_application_id');
                 $payment_collection->company_id = $company->company_id;
@@ -776,6 +871,7 @@ class LoanApplicationController extends Controller
         $payment_term_id = $request->input('payment_term_id');
         $payment_schedule_id = $request->input('payment_schedule_id');
         $interest_id = $request->input('interest_id');
+        $filing_service_payment_type = $request->input('filing_service_payment_type');
 
         //And query those data with ids to get the real meat out of it.
         $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
@@ -837,19 +933,53 @@ class LoanApplicationController extends Controller
         $periodic_rates = array();
         $periodic_principal_rates = array();
         $periodic_interest_rates = array();
+        $periodic_filing_fee = array();
+        $periodic_service_fee = array();
             //Loop through each payment period and place it on to the array for the JSON
         for ($i=0; $i<count($payment_periods); $i++)
         {
             if ($i==0) //Add the Filing Fee and Service Fee upfront (if so)
             {
                 array_push($periodic_rates, round($periodicRate + $miscellaneousRate, 2));    
-                array_push($periodic_interest_rates, round($periodicInterestRate + $miscellaneousRate, 2));
+                
+                if ($filing_service_payment_type == 0)
+                {
+                    array_push($periodic_filing_fee, round($filing_fee,2));
+                    array_push($periodic_service_fee, round($service_fee,2));
+                }  
+                else if ($filing_service_payment_type == 1)
+                {
+                    array_push($periodic_filing_fee, round($filing_fee / $paymentPeriod_count,2));
+                    array_push($periodic_service_fee, round($service_fee / $paymentPeriod_count,2));
+                }
+                else if ($filing_service_payment_type == 2)
+                {
+                   array_push($periodic_filing_fee, round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2));
+                   array_push($periodic_service_fee, round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2)); 
+                }
             }
             else
             {
                 array_push($periodic_rates, round($periodicRate, 2));  
-                array_push($periodic_interest_rates, round($periodicInterestRate, 2));
+                
+                if ($filing_service_payment_type == 0)
+                {
+                    array_push($periodic_filing_fee, 0);
+                    array_push($periodic_service_fee, 0);
+                }  
+                else if ($filing_service_payment_type == 1)
+                {
+                    array_push($periodic_filing_fee, round($filing_fee / $paymentPeriod_count,2));
+                    array_push($periodic_service_fee, round($service_fee / $paymentPeriod_count,2));
+                }
+                else if ($filing_service_payment_type == 2)
+                {
+                   array_push($periodic_filing_fee, round(($filing_fee + ($filing_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count ,2));
+                   array_push($periodic_service_fee, round(($service_fee + ($service_fee * ($interest->loan_interest_rate * .01))) / $paymentPeriod_count,2)); 
+                }
             }
+
+            array_push($periodic_interest_rates, round($periodicInterestRate, 2));
             array_push($periodic_principal_rates, round($periodicPrincipalRate, 2));
         }
 
@@ -860,7 +990,9 @@ class LoanApplicationController extends Controller
             "payment_count" => $paymentPeriod_count,
             "periodic_rates" => $periodic_rates,
             "periodic_principal_rates" => $periodic_principal_rates,
-            "periodic_interest_rates" => $periodic_interest_rates
+            "periodic_interest_rates" => $periodic_interest_rates,
+            "periodic_filing_fee" => $periodic_filing_fee,
+            "periodic_service_fee" => $periodic_service_fee
             );
 
         return json_encode($data);

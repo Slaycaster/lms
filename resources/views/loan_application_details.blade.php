@@ -215,29 +215,40 @@
 					<div class="row">
 
 						<!-- Filing Fees Form Group -->
-						<div class="col-md-6 col-sm-10">
+						<div class="col-md-3 col-sm-8">
 							<div class="form-group">
 								<label for="filing_fee" class="control-label">Change Filing Fee</label>
 								<div class="input-group">
 									<span class="input-group-addon">₱</span>
 									<input type="text" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off" value="{!! $key->loan_application_filing_fee !!}">
-									<span class="input-group-addon">.00</span>
 								</div>
 							</div>
 						</div>
 
-						<div class="col-md-6 col-sm-10">
+						<div class="col-md-3 col-sm-8">
 							<!-- Service Fee Form Group -->
 							<div class="form-group">
 								<label for="service_fee" class="control-label">Change Service Fee</label>
 								<div class="input-group">
 									<span class="input-group-addon">₱</span>
 									<input type="text" id="service_fee" name="service_fee" class="form-control" autocomplete="off" value="{!! $key->loan_application_service_fee !!}">
-									<span class="input-group-addon">.00</span>
 								</div>
 							</div>
 						</div>
 
+						<div class="col-md-3 col-sm-8">
+		                  <!-- Service Fee Form Group -->
+		                  <div class="form-group">
+		                    <label for="service_fee" class="control-label">Change Filing Fee & Service Fee Payment Type</label>
+		                    <div class="input-group">
+		                      {{ Form::select('filing_service_payment_type', array('0' => 'One-time Payment', '1' => 'Amortized without Interest', '2' => 'Amortized with Interest'), null, array('class' => 'form-control', 'id' => 'filing_service_payment_type')) }}
+		                    </div>
+		                  </div>
+		                </div>
+
+					</div>
+
+					<div class="row">
 						<div class="col-md-3 col-sm-7">
 							<!-- Computation Form Group -->
 							<div class="form-group">
@@ -245,7 +256,6 @@
 								<a href="#" id="computeBtn" data-toggle="modal" data-target="#scheduleModal" class="btn btn-info btn-sm form-control">Pre-compute</a>
 							</div>
 						</div>
-
 					</div>
 
 					</form>
@@ -357,6 +367,8 @@
 													<th>Amount</th>
 													<th>Principal</th>
                                 					<th>Interest</th>
+                                					<th>Filing Fee</th>
+                                					<th>Service Fee</th>
 												</tr>
 												<tbody>
 
@@ -478,6 +490,7 @@
 				              loan_application_amount: document.getElementById('amount').value,
 				              filing_fee: document.getElementById('filing_fee').value,
 				              service_fee: document.getElementById('service_fee').value,
+				              filing_service_payment_type: document.getElementById('filing_service_payment_type').value,
 				              disbursement_date: document.getElementById('disbursement_date').value,
 				              payment_term_id: document.getElementById('payment_term_id').value,
 				              payment_schedule_id: document.getElementById('payment_schedule_id').value,
@@ -487,7 +500,7 @@
 				              var trHTML = '';
 				              for (i = 0; i < response.payment_periods.length; i++)
 				              {
-				                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) +'</td></tr>';
+				                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_filing_fee[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_service_fee[i]).toFixed(2) + '</td></tr>';
 				              }
 				              $('#payment_scheds').append(trHTML);
 
