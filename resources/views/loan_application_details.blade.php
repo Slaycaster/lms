@@ -29,20 +29,20 @@
 							<p><strong>Created at:</strong> {{ $key->created_at }}</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Principal Amount:</strong> PHP {{ $key->loan_application_amount }}</p>
+							<p><strong>Principal Amount:</strong> PHP {{ number_format($key->loan_application_amount,2) }}</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Interest Name - Rate (Total):</strong> {{ $key->loan_interest->loan_interest_name }} - {{ $key->loan_interest->loan_interest_rate }}% ({{ $key->loan_application_interest }})</p>
+							<p><strong>Interest Name - Rate (Total):</strong> {{ $key->loan_interest->loan_interest_name }} - {{ $key->loan_interest->loan_interest_rate }}% ({{ number_format($key->loan_application_interest,2) }})</p>
 						</div>
 						<div class="col-md-6">
 							<p><strong>Payment Terms:</strong> {{ $key->loan_payment_term->loan_payment_term_name }}</p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Total Amount:</strong> PHP {{ $key->loan_application_total_amount }}</p>
+							<p><strong>Total Amount:</strong> PHP {{ number_format($key->loan_application_total_amount,2) }}</p>
 							<p></p>
 						</div>
 						<div class="col-md-6">
-							<p><strong>Periodic Rate:</strong> PHP {{ $key->loan_application_periodic_rate }}</p>
+							<p><strong>Periodic Rate:</strong> PHP {{ number_format($key->loan_application_periodic_rate,2) }}</p>
 						</div>
 						<div class="col-md-12">
 							<p><strong>Purpose:</strong> {{ $key->loan_application_purpose }}</p>
@@ -51,7 +51,13 @@
 							<p><strong>Disbursement Date:</strong> {{ date('F j, Y', strtotime($key->loan_application_disbursement_date)) }}</p>
 						</div>
 						<div class="col-md-6">
+							<p><strong>Collection Start Date:</strong> {{ date('F j, Y', strtotime($key->loan_application_collection_date)) }}</p>
+						</div>
+						<div class="col-md-6">
 							<p><strong>Maturity Date:</strong> {{ date('F j, Y', strtotime($maturity_date->payment_collection_date)) }}</p>
+						</div>
+						<div class="col-md-6">
+							<p><strong>Remarks:</strong> {{ $key->loan_application_remarks }}</p>
 						</div>
 						<hr>
 						<div class="col-md-12">
@@ -60,13 +66,15 @@
 	                          <thead>
 	                            <tr>
 	                              <th>Date</th>
-	                              <th>Amount</th>
+	                              <th>Principal</th>
+	                              <th>Interest</th>
 	                            </tr>
 	                            <tbody>
 	                              @foreach($key->payment_collections as $payment_collection)
 	                              	<tr>
 	                              		<td>{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
-	                              		<td>{{ date('F j, Y', strtotime($payment_collection->payment_collection_amount)) }}</td>
+	                              		<td>{{ number_format($payment_collection->payment_collection_principal_amount,2) }}</td>
+	                              		<td>{{ number_format($payment_collection->payment_collection_interest_amount,2) }}</td>
 	                              	</tr>
 	                              @endforeach
 	                            </tbody>
@@ -159,6 +167,14 @@
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
               <input type="text" id="disbursement_date" name="disbursement_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_disbursement_date !!}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="collection_date" class="control-label">Change Start Collection Date</label>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
+              <input type="text" id="collection_date" name="collection_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_collection_date !!}">
             </div>
           </div>
 
@@ -339,6 +355,8 @@
 												<tr>
 													<th>Date</th>
 													<th>Amount</th>
+													<th>Principal</th>
+                                					<th>Interest</th>
 												</tr>
 												<tbody>
 
@@ -450,33 +468,33 @@
 	       </script>
 
 				 <script type="text/javascript">
-			     $("#computeBtn").click(function(){
-			         $.ajax({
-			             type: "POST",
-			             url: '{!! url('loan_applications/precompute') !!}',
-			             dataType: 'json',
-			             data:
-			             {
-			               loan_application_amount: document.getElementById('amount').value,
-			               filing_fee: document.getElementById('filing_fee').value,
-			               service_fee: document.getElementById('service_fee').value,
-			               disbursement_date: document.getElementById('disbursement_date').value,
-			               payment_term_id: document.getElementById('payment_term_id').value,
-			               payment_schedule_id: document.getElementById('payment_schedule_id').value,
-			               interest_id: document.getElementById('loan_interest_id').value
-			             },
-			             }).success(function(response) {
-			               var trHTML = '';
-			               for (i = 0; i < response.payment_periods.length; i++)
-			               {
-			                 trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rate).toFixed(2) + '</td></tr>';
-			               }
-			               $('#pre_payment_scheds').append(trHTML);
+				    $("#computeBtn").click(function(){
+				        $.ajax({
+				            type: "POST",
+				            url: '{!! url('loan_applications/precompute') !!}',
+				            dataType: 'json',
+				            data:
+				            {
+				              loan_application_amount: document.getElementById('amount').value,
+				              filing_fee: document.getElementById('filing_fee').value,
+				              service_fee: document.getElementById('service_fee').value,
+				              disbursement_date: document.getElementById('disbursement_date').value,
+				              payment_term_id: document.getElementById('payment_term_id').value,
+				              payment_schedule_id: document.getElementById('payment_schedule_id').value,
+				              interest_id: document.getElementById('loan_interest_id').value
+				            },
+				            }).success(function(response) {
+				              var trHTML = '';
+				              for (i = 0; i < response.payment_periods.length; i++)
+				              {
+				                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) +'</td></tr>';
+				              }
+				              $('#payment_scheds').append(trHTML);
 
-			               var table = $('#pre_payment_scheds').DataTable();
-			               $('.pre_results').html('<p>Total Loan: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.monthly_interest).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>')
-			             });
-			     });
-			   </script>
+				              var table = $('#payment_scheds').DataTable();
+				              $('.results').html('<p>Total Loan: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.monthly_interest).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>')
+				            });
+				    });
+				  </script>
 	@endsection
 @endsection

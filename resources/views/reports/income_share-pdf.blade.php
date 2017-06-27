@@ -126,15 +126,15 @@ use App\Company;
                 $payment_collection_count_loan_application = PaymentCollection::where('loan_application_id', '=', $payment_collection->loan_application_id)->count();
                 if($payment_collection->is_paid == 1)
                 {
-                    $totalAmountCollectedThisCycle += $payment_collection->payment_collection_amount;
-                    $totalPrincipalCollectedThisCycle += ($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application);
-                    $totalIncomeCollectedThisCycle += ( ($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application );
+                    $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection_interest_amount;
+                    $totalPrincipalCollectedThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalIncomeCollectedThisCycle += $payment_collection->payment_collection_interest_amount;
                 }
                 else if($payment_collection->is_paid == 0)
                 {
-                    $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_amount;
-                    $totalPrincipalOutstandingThisCycle += ($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application);
-                    $totalIncomeOutstandingThisCycle += ( ($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application );
+                    $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection_interest_amount;
+                    $totalPrincipalOutstandingThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalIncomeOutstandingThisCycle += $payment_collection->payment_collection_interest_amount;
                 }
             }
 
@@ -217,7 +217,7 @@ use App\Company;
                 </tr>
 
                 <tr>
-                    <td width="30%">Income Share</td>
+                    <td width="30%">Income Share with {{ $company->company_name }}</td>
                     <td width="20%" align="right">{{$company->company_income_share}}%</td>
                     <td width="50%" align="right">{{ number_format($totalWithOutstandingShareThisCycle, 2) }}</td>
                 </tr>

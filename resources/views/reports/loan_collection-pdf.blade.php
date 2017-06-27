@@ -10,13 +10,9 @@ use App\Company;
 	$today = gmdate("Y/m/d",$timestamp);
 	$company_id = Session::get('company_id', 1);
     $date = Session::get('date');
-
     $payment_collections = PaymentCollection::where('payment_collection_date', '=', $date)
+            ->where('company_id', '=', $company_id)
             ->with('loan_application')
-            ->whereHas('loan_application.loan_borrower', function($q) {
-                $company_id = Session::get('company_id', 1);
-                $q->where('company_id', '=', $company_id);
-            })
             ->with('loan_application.loan_interest')
             ->with('loan_application.loan_payment_term')
             ->with('loan_application.loan_borrower')
@@ -127,15 +123,15 @@ use App\Company;
                 $payment_collection_count_loan_application = PaymentCollection::where('loan_application_id', '=', $payment_collection->loan_application_id)->count();
                 if($payment_collection->is_paid == 1)
                 {
-                    $totalAmountCollectedThisCycle += $payment_collection->payment_collection_amount;
-                    $totalPrincipalCollectedThisCycle += ($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application);
-                    $totalIncomeCollectedThisCycle += ( ($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application );
+                    $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount;
+                    $totalPrincipalCollectedThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalIncomeCollectedThisCycle += $payment_collection->payment_collection_interest_amount;
                 }
                 else if($payment_collection->is_paid == 0)
                 {
-                    $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_amount;
-                    $totalPrincipalOutstandingThisCycle += ($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application);
-                    $totalIncomeOutstandingThisCycle += ( ($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application );
+                    $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount;
+                    $totalPrincipalOutstandingThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalIncomeOutstandingThisCycle += $payment_collection->payment_collection_interest_amount;
                 }
             }
         ?>
@@ -190,12 +186,12 @@ use App\Company;
             </thead>
             <tbody>
                 @foreach($payment_collections as $payment_collection)
-                    @if($payment_collection->is_paid == 1 && $payment_collection->payment_collection_amount != 0)
+                    @if($payment_collection->is_paid == 1 && ($payment_collection->payment_collection_principal_amount != 0 || $payment_collection->payment_collection_interest_amount != 0))
                         <tr>
                             <td>{{ $payment_collection->loan_application->id }}</td>
                             <td>{{ $payment_collection->loan_application->loan_borrower->borrower_last_name }}, {{ $payment_collection->loan_application->loan_borrower->borrower_first_name }} {{ $payment_collection->loan_application->loan_borrower->borrower_middle_name }}</td>
-                            <td>PHP {{ number_format($payment_collection->loan_application->loan_application_amount / $payment_collection_count_loan_application,2) }}</td>
-                            <td>PHP {{ number_format(($payment_collection->loan_application->loan_application_total_amount - $payment_collection->loan_application->loan_application_amount) / $payment_collection_count_loan_application ,2) }}</td>
+                            <td>PHP {{ number_format($payment_collection->payment_collection_principal_amount,2) }}</td>
+                            <td>PHP {{ number_format($payment_collection->payment_collection_interest_amount ,2) }}</td>
                         </tr>
                     @endif
                 @endforeach

@@ -22,21 +22,17 @@ use App\PaymentCollection;
 
     $loan_balance = PaymentCollection::where('loan_application_id', '=', $application_id)
     		->where('is_paid', '=', '0')
-    		->sum('payment_collection_amount');
+    		->sum(DB::raw('payment_collection_principal_amount + payment_collection_interest_amount'));
 
    	$total_collection_cycles = PaymentCollection::where('loan_application_id', '=', $application_id)
    			->count();
-
-    $due_date = PaymentCollection::where('loan_application_id', '=', $application_id)
-    		->first();
 
    	$paid_payment_collections = PaymentCollection::where('loan_application_id', '=', $application_id)
    			->where('is_paid', '=', 1)
    			->get();
 
-    $first_repayment = true;
-
     $trans_number = 1;
+    $first_repayment = true;
 ?>
 
 
@@ -125,7 +121,7 @@ use App\PaymentCollection;
               <normal style="font-size: 18px">Moo Loans Inc.</normal>
             </p>
           @foreach($loan_applications as $loan_application)
-          <?php $balance_amount = $loan_application->loan_application_total_amount; ?>
+          <?php $balance_amount = $loan_application->loan_application_amount; ?>
 
             <div class="loaninfo">
                   <center><p><strong>STATEMENT OF ACCOUNT</strong></p></center>
@@ -222,9 +218,9 @@ use App\PaymentCollection;
                     		<strong>{{ date('F j, Y', strtotime($loan_application->loan_application_disbursement_date)) }}</strong>
                     	</td>
                     	<td width="50%">
-                    		<sup>Due Date</sup>
+                    		<sup>Start Collection Date</sup>
                     		<br>
-                    		<strong>{{ date('F j, Y', strtotime($due_date->payment_collection_date))  }}</strong>
+                    		<strong>{{ date('F j, Y', strtotime($loan_application->loan_application_collection_date))  }}</strong>
                     	</td>
                     </tr>
                     <tr>
@@ -265,45 +261,59 @@ use App\PaymentCollection;
                     		<td align="right">+{{ number_format($loan_application->loan_application_amount,2) }}</td>
                     		<td align="right">{{ number_format($loan_application->loan_application_amount,2) }}</td>
                     	</tr>
-                    	<!-- Interest -->
-                    	<tr>
-                    		<td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
-                    		<td align="left">{{ date('F j, Y', strtotime($due_date->payment_collection_date))  }}</td>
-                    		<td>Interest</td>
-                    		<td align="right">+{{ number_format($loan_application->loan_application_interest * $loan_application->loan_payment_term->loan_payment_term_no_of_months,2) }}</td>
-                    		<td align="right">{{ number_format((($loan_application->loan_application_interest * $loan_application->loan_payment_term->loan_payment_term_no_of_months) + $loan_application->loan_application_amount), 2) }}</td>
-                    	</tr>
+                      @if($loan_application->loan_application_filing_service_payment == 0)
                     	<!-- Service Fee -->
                     	<tr>
                     		<td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
-                    		<td align="left">{{ date('F j, Y', strtotime($due_date->payment_collection_date))  }}</td>
+                    		<td align="left">{{ date('F j, Y', strtotime($loan_application->loan_application_collection_date))  }}</td>
                     		<td>Service Fee</td>
                     		<td align="right">+{{ number_format($loan_application->loan_application_service_fee,2) }}</td>
-                    		<td align="right">{{ number_format( (($loan_application->loan_application_interest * $loan_application->loan_payment_term->loan_payment_term_no_of_months) + ($loan_application->loan_application_service_fee + $loan_application->loan_application_amount)) , 2) }}</td>
+                        <?php
+                          $balance_amount += $loan_application->loan_application_service_fee;
+                        ?>
+                        <td align="right">{{ number_format($balance_amount , 2) }}</td>
                     	</tr>
-                		<!-- Filing Fee -->
-                		<tr>
-                			<td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
-                			<td align="left">{{ date('F j, Y', strtotime($due_date->payment_collection_date)) }}</td>
-                			<td>Filing Fee</td>
-                			<td align="right">+{{ number_format($loan_application->loan_application_filing_fee,2) }}</td>
-                			<td align="right">{{ number_format( (($loan_application->loan_application_interest * $loan_application->loan_payment_term->loan_payment_term_no_of_months) + ($loan_application->loan_application_service_fee + $loan_application->loan_application_filing_fee + $loan_application->loan_application_amount)) , 2) }}</td>
-                		</tr>
+                  		<!-- Filing Fee -->
+                  		<tr>
+                  			<td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
+                  			<td align="left">{{ date('F j, Y', strtotime($loan_application->loan_application_collection_date)) }}</td>
+                  			<td>Filing Fee</td>
+                  			<td align="right">+{{ number_format($loan_application->loan_application_filing_fee,2) }}</td>
+                        <?php
+                          $balance_amount += $loan_application->loan_application_filing_fee;
+                        ?>
+                  			<td align="right">{{ number_format($balance_amount , 2) }}</td>
+                  		</tr>
+                      @endif
 
                 		@foreach($paid_payment_collections as $paid_payment_collection)
-                			@if($loan_application->loan_application_filing_service_payment == 0)
-                			    
-                				@if($first_repayment)
-                					<tr>
-                					<td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
-                					<td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
-                					<td>Repayment - Interest</td>
-                					<td align="right">-{{ number_format( (($loan_application->loan_application_total_amount - $loan_application->loan_application_amount) / $total_collection_cycles) - ($loan_application->loan_application_service_fee + $loan_application->loan_application_filing_fee), 2 ) }}</td>
-                					<?php
-                						$balance_amount -= (($loan_application->loan_application_total_amount - $loan_application->loan_application_amount) / $total_collection_cycles) - ($loan_application->loan_application_service_fee + $loan_application->loan_application_filing_fee);
-                					?>
-                					<td align="right">{{ number_format($balance_amount,2) }}</td>
-                					</tr>
+                          
+                          <!-- Interest -->
+                          <tr>
+                            <td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
+                            <td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
+                            <td>Interest</td>
+                            <td align="right">+{{ number_format( $paid_payment_collection->payment_collection_interest_amount, 2)  }} </td>
+                            <?php
+                              $balance_amount += $paid_payment_collection->payment_collection_interest_amount;
+                            ?>
+                            <td align="right">{{ number_format($balance_amount,2) }}</td>
+                          </tr>                          
+
+                          <!-- Repayment - Interest -->
+                          <tr>
+                            <td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
+                            <td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
+                            <td>Repayment - Interest</td>
+                            <td align="right">-{{ number_format( $paid_payment_collection->payment_collection_interest_amount, 2)  }} </td>
+                            <?php
+                              $balance_amount -= $paid_payment_collection->payment_collection_interest_amount;
+                            ?>
+                            <td align="right">{{ number_format($balance_amount,2) }}</td>
+                          </tr>
+
+                			@if($loan_application->loan_application_filing_service_payment == 0 && $first_repayment)
+                          <!-- Repayment - Service Fee -->
                 					<tr>
                 						<td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
                 						<td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
@@ -312,6 +322,8 @@ use App\PaymentCollection;
                 						<?php $balance_amount -= $loan_application->loan_application_service_fee; ?>
                 						<td align="right">{{ number_format($balance_amount,2) }}</td>
                 					</tr>
+
+                          <!-- Repayment - Filing Fee -->
                 					<tr>
                 						<td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>
                 						<td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
@@ -320,47 +332,24 @@ use App\PaymentCollection;
                 						<?php $balance_amount -= $loan_application->loan_application_filing_fee; ?>
                 						<td align="right">{{ number_format($balance_amount,2) }}</td>
                 					</tr>
-                					<tr>
-                						<td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>
-                						<td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
-                						<td>Repayment - Principal</td>
-                						<?php
-                							$balance_amount -= ($loan_application->loan_application_amount / $total_collection_cycles);
-                						?>
-                						<td align="right">-{{ number_format($loan_application->loan_application_amount / $total_collection_cycles,2) }}</td>
-                						<td align="right">{{ number_format($balance_amount) }}</td>
-                					</tr>
-                				@endif
+                          <?php
+                            $first_repayment = false;
+                          ?>
+                			@endif <!-- loan_application_filing_service_payment -->
 
-                				@if (!$first_repayment)
-	                				<!-- Interest -->
-	                				<tr>
-	                					<td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
-	                					<td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
-	                					<td>Repayment - Interest</td>
-	                					<td align="right">-{{ number_format( (($loan_application->loan_application_total_amount - $loan_application->loan_application_amount) / $total_collection_cycles) - ($loan_application->loan_application_service_fee + $loan_application->loan_application_filing_fee), 2 ) }}</td>
-	                					<?php
-	                						$balance_amount -= (($loan_application->loan_application_total_amount - $loan_application->loan_application_amount) / $total_collection_cycles) - ($loan_application->loan_application_service_fee + $loan_application->loan_application_filing_fee);
-	                					?>
-	                					<td align="right">{{ number_format($balance_amount,2) }}</td>
-	                				</tr>
-
-	                					<!-- Principal -->
-	                					<tr>
-	                						<td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>
-	                						<td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
-	                						<td>Repayment - Principal</td>
-	                						<?php
-	                							$balance_amount -= ($loan_application->loan_application_amount / $total_collection_cycles);
-	                						?>
-	                						<td align="right">-{{ number_format($loan_application->loan_application_amount / $total_collection_cycles,2) }}</td>
-	                						<td align="right">{{ number_format($balance_amount,2) }}</td>
-	                				</tr>
-                				@endif
-
-                				</tbody>
-                				<?php $first_repayment = false; ?>
-                			@endif
+                          <!-- Repayment - Principal -->
+                          <tr>
+                            <td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>
+                            <td align="left">{{ date('F j, Y', strtotime($paid_payment_collection->payment_collection_date)) }}</td>
+                            <td>Repayment - Principal</td>
+                            <td align="right">-{{ number_format($paid_payment_collection->payment_collection_principal_amount ,2) }}</td>
+                            <?php
+                              $balance_amount -= $paid_payment_collection->payment_collection_principal_amount;
+                            ?>
+                            <td align="right">{{ number_format($balance_amount) }}</td>
+                          </tr>
+                      
+                        </tbody>
                 		@endforeach
                     </tbody>
                   </table>

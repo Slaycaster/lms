@@ -96,6 +96,7 @@ class LoanPaymentController extends Controller
         $loan_application_id = Request::input('application_id');
         $next_due_date = Request::input('next_due_date');
         $termination_fee = Request::input('termination_fee');
+        $interest_termination = Request::input('interest_termination');
 
         //Update the loan application to terminated (Archive it)
         $loan_application = LoanApplication::find(Request::input('application_id'));
@@ -107,13 +108,13 @@ class LoanPaymentController extends Controller
         DB::table('payment_collections')
             ->where('payment_collection_date', '=', $next_due_date)
             ->where('loan_application_id', '=', $loan_application_id)
-            ->update(array('payment_collection_amount' => $termination_fee, 'is_paid' => 1));
+            ->update(array('payment_collection_principal_amount' => $termination_fee, 'payment_collection_interest_amount' => $interest_termination, 'is_paid' => 1));
 
         //Updates the rest of the payment collection's amount to 0.
         DB::table('payment_collections')
             ->where('loan_application_id', '=', $loan_application_id)
             ->where('is_paid', '=', 0)
-            ->update(array('payment_collection_amount' => 0, 'is_paid' => 1));
+            ->update(array('payment_collection_principal_amount' => 0, 'payment_collection_interest_amount' => 0, 'is_paid' => 1));
 
         Session::flash('message', 'Loan Termination Successful!');
 

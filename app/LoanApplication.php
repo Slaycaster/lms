@@ -15,7 +15,7 @@ class LoanApplication extends Model
 	protected $primaryKey = 'id';
 	// protected $guarded = [];
 	//protected $hidden = ['created_at', 'updated_at'];
-	protected $fillable = ['loan_application_is_active', 'loan_application_amount', 'loan_application_total_amount', 'loan_application_interest', 'loan_application_periodic_rate', 'loan_application_purpose', 'loan_application_status', 'loan_application_filing_fee', 'loan_application_service_fee', 'loan_application_remarks', 'loan_application_disbursement_date', 'loan_application_comaker_id1', 'loan_application_comaker_id2', 'loan_borrower_id', 'payment_term_id', 'loan_interest_id', 'payment_schedule_id', 'company_id', 'created_at'];
+	protected $fillable = ['loan_application_is_active', 'loan_application_amount', 'loan_application_total_amount', 'loan_application_interest', 'loan_application_periodic_rate', 'loan_application_purpose', 'loan_application_status', 'loan_application_filing_fee', 'loan_application_service_fee', 'loan_application_remarks', 'loan_application_disbursement_date', 'loan_application_collection_date', 'loan_application_comaker_id1', 'loan_application_comaker_id2', 'loan_borrower_id', 'payment_term_id', 'loan_interest_id', 'payment_schedule_id', 'company_id', 'created_at'];
 	public $timestamps = true;
 
 	/*
@@ -62,11 +62,6 @@ class LoanApplication extends Model
 	public function payment_schedule()
 	{
 		return $this->belongsTo('App\PaymentSchedule', 'payment_schedule_id', 'id');
-	}
-
-	public function loan_payments()
-	{
-		return $this->hasMany('App\LoanPayment', 'loan_application_id');
 	}
 
 	public function payment_collections()

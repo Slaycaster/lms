@@ -24,6 +24,9 @@
 					@if (Session::has('message'))
                   		<div class="alert alert-info">{{ Session::get('message') }}</div>
               		@endif
+              		@if (Session::has('message2'))
+                  		<div class="alert alert-warning">{{ Session::get('message2') }}</div>
+              		@endif
 					<a href="{{ url('admin/loan_applications/create') }}" class="btn btn-primary btn-sm">+ New Loan Application</a>
 					<br><br>
 					<div class="table-responsive">

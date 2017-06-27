@@ -213,6 +213,17 @@
                 </div>
 
                 <div class="col-md-3 col-sm-7">
+                  <!-- Start Collection Date Form Group -->
+                  <div class="form-group">
+                    <label for="collection_date" class="control-label">Start Collection Date </label>
+                    <div class="input-group">
+                      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                      <input id="collection_date" class="datepicker" name="collection_date" class="form-control">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-3 col-sm-7">
                   <!-- Computation Form Group -->
                   <div class="form-group">
                     <label for="pre_compute" class="control-label">Total Computations and Scheduling </label>
@@ -252,6 +263,8 @@
                               <tr>
                                 <th>Date</th>
                                 <th>Amount</th>
+                                <th>Principal</th>
+                                <th>Interest</th>
                               </tr>
                               <tbody>
 
@@ -395,6 +408,7 @@
               filing_fee: document.getElementById('filing_fee').value,
               service_fee: document.getElementById('service_fee').value,
               disbursement_date: document.getElementById('disbursement_date').value,
+              collection_date: document.getElementById('collection_date').value,
               payment_term_id: document.getElementById('payment_term_id').value,
               payment_schedule_id: document.getElementById('payment_schedule_id').value,
               interest_id: document.getElementById('loan_interest_id').value
@@ -403,7 +417,7 @@
               var trHTML = '';
               for (i = 0; i < response.payment_periods.length; i++)
               {
-                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) + '</td></tr>';
+                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) +'</td></tr>';
               }
               $('#payment_scheds').append(trHTML);
 

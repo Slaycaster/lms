@@ -26,7 +26,8 @@
 		$cyclesRemain = 0;
 		$cyclesDueDates = array();
 		$index = 0;
-		$terminationFee = $key[0]->loan_application_total_amount;
+		$terminationFee = $key[0]->loan_application_amount;
+		$interestTermination = 0;
 		$nextCollectionDate = '';
 
 		foreach ($key[0]->payment_collections as $payment_collection)
@@ -40,7 +41,8 @@
 
 			if ($payment_collection->is_paid == 1)
 			{
-				$terminationFee -= $payment_collection->payment_collection_amount;
+				$terminationFee -= $payment_collection->payment_collection_principal_amount;
+				$interestTermination = $payment_collection->payment_collection_interest_amount;
 				$cyclesPaid ++;
 			}
 			//check also if the previous cycle that is in the same month isn't paid yet, if that's the case, do not include the next cycle of the same month to the due cycle (confusing af but it works)
@@ -48,7 +50,8 @@
 			{
 				$cyclesDueDates[$index]["id"] = $payment_collection->id;
 				$cyclesDueDates[$index]["date"] = $payment_collection->payment_collection_date;
-				$cyclesDueDates[$index]["collection_amount"] = $payment_collection->payment_collection_amount;
+				$cyclesDueDates[$index]["collection_principal_amount"] = $payment_collection->payment_collection_principal_amount;
+				$cyclesDueDates[$index]["collection_interest_amount"] = $payment_collection->payment_collection_interest_amount;
 				$cyclesDueDates[$index]["is_paid"] = $payment_collection->is_paid;
 				$cyclesDue ++;
 				$index++;
@@ -117,7 +120,8 @@
 							<thead>
 								<tr>
 									<td><strong>Cycle Date</strong></td>
-									<td><strong>Amount</strong></td>
+									<td><strong>Principal</strong></td>
+									<td><strong>Interest</strong></td>
 									<td><strong>Pay?</strong></td>
 								</tr>
 							</thead>
@@ -125,7 +129,8 @@
 								@foreach($cyclesDueDates as $cyclesDueDate)
 									<tr>
 										<td>{{$cyclesDueDate["date"]}}</td>
-										<td>PHP {{ number_format($cyclesDueDate["collection_amount"], 2) }}</td>
+										<td>PHP {{ number_format($cyclesDueDate["collection_principal_amount"], 2) }}</td>
+										<td>PHP {{ number_format($cyclesDueDate["collection_interest_amount"], 2) }}</td>
 										<td>{{ Form::checkbox('payment_collection_id[]', $cyclesDueDate["id"]) }}</td>
 									</tr>
 								@endforeach
@@ -137,7 +142,7 @@
 					<hr>
 						<h4>Process Termination</h4>
 						<p><strong>Clicking the button below will terminate the current loan application. Please be careful.</strong></p>
-						<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee,2)}}</strong></p>
+						<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee + $interestTermination,2)}}</strong></p>
 						<p>It will be reflected on the next cycle on: <strong>{{ $nextCollectionDate }}</strong></p>
 						<button type="submit" data-toggle="modal" data-target="#terminationModal" class="btn btn-block btn-danger btn-sm" name="approve">Process Termination</button>
 				</div>
@@ -277,7 +282,8 @@
 					    	{{ Form::hidden('next_due_date', $nextCollectionDate) }}
 							{{ Form::hidden('application_id', $key[0]->id) }}
 							{{ Form::hidden('termination_fee', $terminationFee) }}
-							<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee,2)}}</strong></p>
+							{{ Form::hidden('interest_termination', $interestTermination) }}
+							<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee + $interestTermination,2)}}</strong></p>
 							<p>It will be reflected on the next cycle on: <strong>{{ $nextCollectionDate }}</strong></p>
 							<p>Are you really sure on terminating this loan application?</p>
 					    

@@ -28,6 +28,7 @@ class CreateLoanApplicationsTable extends Migration
             $table->string('loan_applciation_filing_service_payment');
             $table->text('loan_application_remarks');
             $table->date('loan_application_disbursement_date');
+            $table->date('loan_application_collection_date');
             //RELATIONSHIPS
             $table->integer('loan_application_comaker_id1'); //(borrower_id)
             $table->integer('loan_application_comaker_id2'); //(borrower_id)
