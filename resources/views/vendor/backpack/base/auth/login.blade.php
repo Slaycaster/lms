@@ -8,6 +8,7 @@
                     <div class="box-title">{{ trans('backpack::base.login') }}</div>
                 </div>
                 <div class="box-body">
+                    <center><img src="{{ asset('img/mooloans_logo_web.jpg') }}" class="img-responsive"></center>
                     <form class="form-horizontal" role="form" method="POST" action="{{ url(config('backpack.base.route_prefix').'/login') }}">
                         {!! csrf_field() !!}
 

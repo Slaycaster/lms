@@ -3,7 +3,7 @@
 @section('header')
     <section class="content-header">
       <h1>
-        Approved Loan Application Report<small></small>
+        Approved Loan Application Report<small>Generate approved loan applications</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>

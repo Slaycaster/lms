@@ -4,7 +4,7 @@
 @section('header')
     <section class="content-header">
       <h1>
-        Archived Loan Applications<small></small>
+        Archived Loan Applications<small>All cleared/terminated Loan Applications</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>

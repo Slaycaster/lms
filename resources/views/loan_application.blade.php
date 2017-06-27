@@ -3,7 +3,7 @@
 @section('header')
     <section class="content-header">
       <h4>
-        Loan Application<small></small>
+        Loan Application<small>All active Loan Applications in the database.</small>
       </h4>
       <ol class="breadcrumb">
         <li><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>

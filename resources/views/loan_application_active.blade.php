@@ -4,7 +4,7 @@
 @section('header')
     <section class="content-header">
       <h1>
-        Approve/Decline Loan Applications<small></small>
+        Approve/Decline Loan Applications<small>Approve or decline Loan Applications or change its details.</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>

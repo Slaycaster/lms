@@ -46,7 +46,7 @@
             }
 
             .title {
-                font-size: 84px;
+                font-size: 32px;
             }
 
             .links > a {
@@ -69,6 +69,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     <a href="{{ url('admin/login') }}">Login</a>
+                    <a href="http://fdenimar.com" target="_blank">FDENIMAR.COM</a>
                     <!--
                     <a href="{{ url('/register') }}">Register</a>
                     -->
@@ -76,8 +77,9 @@
             @endif
 
             <div class="content">
+                <center><img src="{{ asset('img/mooloans_logo_web_medium.jpg') }}" class="img-responsive"></center>
                 <div class="title m-b-md">
-                    Loan Management System
+                    loan management system
                 </div>
                 <!--
                 <div class="links">
