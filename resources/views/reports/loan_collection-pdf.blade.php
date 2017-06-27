@@ -186,7 +186,7 @@ use App\Company;
             </thead>
             <tbody>
                 @foreach($payment_collections as $payment_collection)
-                    @if($payment_collection->is_paid == 1 && ($payment_collection->payment_collection_principal_amount != 0 || $payment_collection->payment_collection_interest_amount != 0))
+                    @if(($payment_collection->payment_collection_principal_amount != 0 || $payment_collection->payment_collection_interest_amount != 0))
                         <tr>
                             <td>{{ $payment_collection->loan_application->id }}</td>
                             <td>{{ $payment_collection->loan_application->loan_borrower->borrower_last_name }}, {{ $payment_collection->loan_application->loan_borrower->borrower_first_name }} {{ $payment_collection->loan_application->loan_borrower->borrower_middle_name }}</td>
