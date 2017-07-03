@@ -200,17 +200,17 @@ class LoanApplicationController extends Controller
         $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
         if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
         {
-            $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date)); //Get the 15th day of the current month as start date
             $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
         }
         else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
         {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date)); //Get the last date of this month as start date
             $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
         }
         else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
         {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the last date of this month as start date
             $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
         }
 
@@ -394,17 +394,17 @@ class LoanApplicationController extends Controller
             $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
             if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
             {
-                $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
+                $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the 15th day of the current month as start date
                 $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
             }
             else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
             {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
+                $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the last date of this month as start date
                 $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
             }
             else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
             {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
+                $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the last date of this month as start date
                 $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
             }
 
@@ -558,17 +558,17 @@ class LoanApplicationController extends Controller
             $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
             if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
             {
-                $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
+                $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the 15th day of the current month as start date
                 $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
             }
             else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
             {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
+                $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the last date of this month as start date
                 $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
             }
             else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
             {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
+                $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the last date of this month as start date
                 $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
             }
 
@@ -888,17 +888,17 @@ class LoanApplicationController extends Controller
         $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
         if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
         {
-            $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the 15th day of the current month as start date
             $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
         }
         else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
         {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the last date of this month as start date
             $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
         }
         else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
         {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date));  //Get the last date of this month as start date
             $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
         }
 
