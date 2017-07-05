@@ -250,6 +250,7 @@
                         </button>
                         <i class="fa fa-circle-o-notch fa-4x"></i>
                         <h4 class="modal-title" id="myModalLabel"><b>Pre-computed Payment Schedule</b></h4>
+                        <a href="" class="btn btn-default pull-right"><span class="fa fa-print"></span> Print</a>
                     </div>
 
 
@@ -425,7 +426,7 @@
               $('#payment_scheds').append(trHTML);
 
               var table = $('#payment_scheds').DataTable();
-              $('.results').html('<p>Total Loan: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.monthly_interest).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>')
+              $('.results').html('<p>Principal: <strong>PHP '+ parseFloat(response.principal_amount).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.total_interest).toFixed(2)+'</strong><p>Total Fees: <strong>PHP '+ parseFloat(response.total_fees).toFixed(2)+'</strong></p><p>Total Due: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>')
             });
     });
   </script>

@@ -185,6 +185,21 @@ class LoanApplicationController extends Controller
         $interest_id = $request->input('loan_interest_id');
         $filing_service_payment_type = $request->input('filing_service_payment_type');
 
+        $this->validate($request, [
+            'borrower_id' => 'required',
+            'amount' => 'required|numeric',
+            'disbursement_date' => 'required|date',
+            'collection_date' => 'required|date',
+            'payment_term_id' => 'required',
+            'payment_schedule_id' => 'required',
+            'loan_interest_id' => 'required',
+            'filing_service_payment_type' => 'required',
+            'loan_application_comaker_id1' => 'nullable',
+            'loan_application_comaker_id2' => 'nullable',
+            'filing_fee' => 'nullable|numeric',
+            'service_fee' => 'nullable|numeric'
+        ]);
+
         //And query those data with ids to get the real meat out of it.
         $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
         $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
@@ -251,14 +266,43 @@ class LoanApplicationController extends Controller
         $loan_application->loan_application_periodic_rate = round($periodicRate, 2);
         $loan_application->loan_application_purpose = $request->input('purpose');
         $loan_application->loan_application_status = "Pending";
-        $loan_application->loan_application_filing_fee = $request->input('filing_fee');
-        $loan_application->loan_application_service_fee = $request->input('service_fee');
+        if ($request->input('filing_fee') == null)
+        {
+            $loan_application->loan_application_filing_fee = 0;
+        }
+        else 
+        {
+            $loan_application->loan_application_filing_fee = $request->input('filing_fee');   
+        }
+        if ($request->input('service_fee') == null)
+        {
+            $loan_application->loan_application_service_fee = 0;
+        }
+        else
+        {
+            $loan_application->loan_application_service_fee = $request->input('service_fee');       
+        }
         $loan_application->loan_application_filing_service_payment = $request->input('filing_service_payment_type');
         $loan_application->loan_application_disbursement_date = $request->input('disbursement_date');
         $loan_application->loan_application_collection_date = $request->input('collection_date');
         //Relationships
-        $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');
-        $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id');
+        if ($request->input('comaker1_id') == null)
+        {
+            $loan_application->loan_application_comaker_id1 = '1';
+        }
+        else
+        {
+            $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');   
+        }
+
+        if ($request->input('comaker2_id') == null)
+        {
+            $loan_application->loan_application_comaker_id2 = '2';
+        }
+        else
+        {
+            $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id');
+        }
         $loan_application->loan_borrower_id = $request->input('borrower_id');
         $loan_application->payment_term_id = $request->input('payment_term_id');
         $loan_application->loan_interest_id = $request->input('loan_interest_id');
@@ -553,7 +597,20 @@ class LoanApplicationController extends Controller
 
             $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
 
-            
+            $this->validate($request, [
+                'borrower_id' => 'required',
+                'amount' => 'required|numeric',
+                'disbursement_date' => 'required|date',
+                'collection_date' => 'required|date',
+                'payment_term_id' => 'required',
+                'payment_schedule_id' => 'required',
+                'loan_interest_id' => 'required',
+                'filing_service_payment_type' => 'required',
+                'loan_application_comaker_id1' => 'nullable',
+                'loan_application_comaker_id2' => 'nullable',
+                'filing_fee' => 'nullable|numeric',
+                'service_fee' => 'nullable|numeric'
+            ]);
             
             $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
             if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
@@ -614,8 +671,23 @@ class LoanApplicationController extends Controller
             $loan_application->loan_application_disbursement_date = $request->input('disbursement_date');
             $loan_application->loan_application_collection_date = $request->input('collection_date');
             //Relationships
-            $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');
-            $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id');
+            if ($request->input('comaker1_id') == null)
+            {
+                $loan_application->loan_application_comaker_id1 = '1';
+            }
+            else
+            {
+                $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');   
+            }
+            
+            if ($request->input('comaker2_id') == null)
+            {
+                $loan_application->loan_application_comaker_id2 = '2';
+            }
+            else
+            {
+                $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id');
+            }
             $loan_application->loan_borrower_id = $request->input('borrower_id');
             $loan_application->payment_term_id = $request->input('payment_term_id');
             $loan_application->loan_interest_id = $request->input('loan_interest_id');
@@ -987,6 +1059,9 @@ class LoanApplicationController extends Controller
             "payment_periods" => $payment_periods,
             "total_loan" => round($totalLoan + $miscellaneousRate, 2),
             "monthly_interest" => round($monthlyInterest, 2),
+            "total_interest" => round($monthlyInterest * $payment_term->loan_payment_term_no_of_months, 2),
+            "principal_amount" => round($loan_application_amount, 2),
+            "total_fees" => round($filing_fee + $service_fee,2),
             "payment_count" => $paymentPeriod_count,
             "periodic_rates" => $periodic_rates,
             "periodic_principal_rates" => $periodic_principal_rates,
