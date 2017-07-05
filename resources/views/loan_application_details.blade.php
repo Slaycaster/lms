@@ -362,19 +362,7 @@
 
 										</div>
 										<table class="table table-hover table-responsive" id="pre_payment_scheds" data-page-length='5'>
-											<thead>
-												<tr>
-													<th>Date</th>
-													<th>Amount</th>
-													<th>Principal</th>
-                                					<th>Interest</th>
-                                					<th>Filing Fee</th>
-                                					<th>Service Fee</th>
-												</tr>
-												<tbody>
-
-												</tbody>
-											</thead>
+											
 										</table>
 								</div>
 
@@ -499,17 +487,19 @@
 				              interest_id: document.getElementById('loan_interest_id').value
 				            },
 				            }).success(function(response) {
+
 				              var trHTML = '';
-				              $('#pre_payment_scheds').empty();
+				              $('#pre_payment_scheds').html("<thead><tr><th>Date</th><th>Amount</th><th>Principal</th><th>Interest</th><th>Filing Fee</th><th>Service Fee</th></tr><tbody></tbody></thead>");
 				              for (i = 0; i < response.payment_periods.length; i++)
 				              {
 				                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_filing_fee[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_service_fee[i]).toFixed(2) + '</td></tr>';
 				              }
 				              $('#pre_payment_scheds').append(trHTML);
-
 				              var table = $('#pre_payment_scheds').DataTable();
+				              
 				              $('.pre_results').html('<p>Principal: <strong>PHP '+ parseFloat(response.principal_amount).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.total_interest).toFixed(2)+'</strong><p>Total Fees: <strong>PHP '+ parseFloat(response.total_fees).toFixed(2)+'</strong></p><p>Total Due: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>')
 				            });
+
 				    });
 				  </script>
 	@endsection
