@@ -35,6 +35,9 @@
               @if (Session::has('message'))
                   <div class="alert alert-info">{{ Session::get('message') }}</div>
               @endif
+              @if (Session::has('error_message'))
+                  <div class="alert alert-danger">{{ Session::get('error_message') }}</div>
+              @endif
               <!-- Date & Time Form Group -->
               <div class="form-group">
                   <label for="time_date" class="control-label">
