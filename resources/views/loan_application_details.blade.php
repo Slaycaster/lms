@@ -500,6 +500,7 @@
 				            },
 				            }).success(function(response) {
 				              var trHTML = '';
+				              $('#pre_payment_scheds').empty();
 				              for (i = 0; i < response.payment_periods.length; i++)
 				              {
 				                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_filing_fee[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_service_fee[i]).toFixed(2) + '</td></tr>';
