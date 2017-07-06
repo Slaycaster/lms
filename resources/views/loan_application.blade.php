@@ -3,7 +3,7 @@
 @section('header')
     <section class="content-header">
       <h4>
-        Loan Application<small>All active Loan Applications in the database.</small>
+        Loan Application<small>  All active Loan Applications in the database.</small>
       </h4>
       <ol class="breadcrumb">
         <li><a href="{{ url(config('backpack.base.route_prefix')) }}">{{ config('backpack.base.project_name') }}</a></li>
@@ -14,7 +14,7 @@
 
 @section('content')
 	<div class="row">
-  <form action="{{url('admin/loan_applications/save')}}" method="POST">
+  <form action="{{url('admin/loan_applications/save')}}" method="POST" data-toggle="validator" role="form" id="form">
     {{ csrf_field() }}
     <div class="col-md-12">
       <div class="panel panel-primary">
@@ -60,8 +60,9 @@
                     <span class="input-group-addon"><i class="fa fa-address-book"></i></span>
                     <div class="row">
                       <div class="col-md-3">
-                        <input type="text" id="Text2"/>
+                        <input type="text" id="Text2" data-error="Client is required to create a loan, of course." required />
                       </div>
+                      
                       <div class="col-md-2">
                         <p><strong>Client ID: </strong><span id="ta-id"></span></p>
                         <input type="hidden" name="borrower_id" id="borrower_id">
@@ -71,6 +72,7 @@
                       </div>
                     </div>
                   </div>
+                  <div class="help-block with-errors"></div>
               </div>
 
               <!-- Co-Maker Form Group -->
@@ -122,9 +124,9 @@
                 <label for="amount" class="control-label">Loan Amount</label>
                 <div class="input-group">
                   <span class="input-group-addon">₱</span>
-                  <input id="amount" type="text" name="amount" class="form-control" autocomplete="off">
-                  <span class="input-group-addon">.00</span>
+                  <input id="amount" type="number" name="amount" class="form-control" autocomplete="off" data-error="Loan Amount (Principal) is required."  required>
                 </div>
+                <div class="help-block with-errors"></div>
               </div>
 
               <!-- Purpose Form Group -->
@@ -175,7 +177,7 @@
                     <label for="filing_fee" class="control-label">Filing Fee</label>
                     <div class="input-group">
                       <span class="input-group-addon">₱</span>
-                      <input type="text" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off">
+                      <input type="number" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off" value="0" required>
                     </div>
                   </div>
                 </div>
@@ -186,7 +188,7 @@
                     <label for="service_fee" class="control-label">Service Fee</label>
                     <div class="input-group">
                       <span class="input-group-addon">₱</span>
-                      <input type="text" id="service_fee" name="service_fee" class="form-control" autocomplete="off">
+                      <input type="number" id="service_fee" name="service_fee" class="form-control" autocomplete="off" value="0" required>
                     </div>
                   </div>
                 </div>
@@ -210,8 +212,9 @@
                     <label for="disbursement_date" class="control-label">Loan Disbursement Date </label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                      <input id="disbursement_date" class="datepicker" name="disbursement_date" class="form-control">
+                      <input id="disbursement_date" class="datepicker" name="disbursement_date" data-error="Date of disbursement is required" class="form-control" required>
                     </div>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
 
@@ -221,8 +224,9 @@
                     <label for="collection_date" class="control-label">Start Collection Date </label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                      <input id="collection_date" class="datepicker" name="collection_date" class="form-control">
+                      <input id="collection_date" class="datepicker" name="collection_date" data-error="Start Collection Date is required, and make sure it is on or after the disbursement date." class="form-control" required>
                     </div>
+                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
 
@@ -242,7 +246,6 @@
       </div>
     </div>
 
-          </form>
         <!-- Modal (Pop up when detail button clicked) -->
         <div class="modal fade" id="scheduleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -253,7 +256,21 @@
                         </button>
                         <i class="fa fa-circle-o-notch fa-4x"></i>
                         <h4 class="modal-title" id="myModalLabel"><b>Pre-computed Payment Schedule</b></h4>
-                        <a href="" class="btn btn-default pull-right"><span class="fa fa-print"></span> Print</a>
+                        <input type="hidden" name="interest_amount" id="interest_amount" value="0">
+                        <input type="hidden" name="total_fees" id="total_fees" value="0">
+                        <input type="hidden" name="total_loan" id="total_loan" value="0">
+                        <input type="hidden" name="payment_count" id="payment_count" value="0">
+
+                        <!-- Array Hidden Inputs -->
+                        <input type="hidden" name="payment_periods" id="payment_periods">
+                        <input type="hidden" name="periodic_rates" id="periodic_rates">
+                        <input type="hidden" name="periodic_principal_rates" id="periodic_principal_rates">
+                        <input type="hidden" name="periodic_interest_rates" id="periodic_interest_rates">
+                        <input type="hidden" name="periodic_filing_fee" id="periodic_filing_fee">
+                        <input type="hidden" name="periodic_service_fee" id="periodic_service_fee">
+
+                        <button type="submit" name="precompute" class="btn btn-default pull-right" onclick="$('form').attr('target', '_blank');"><span class="fa fa-print"></span> Print Preview</button>
+                        </form>
                     </div>
 
 
@@ -430,7 +447,20 @@
               $('#payment_scheds').append(trHTML);
               var table = $('#payment_scheds').DataTable();
               
-              $('.results').html('<p>Principal: <strong>PHP '+ parseFloat(response.principal_amount).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.total_interest).toFixed(2)+'</strong><p>Total Fees: <strong>PHP '+ parseFloat(response.total_fees).toFixed(2)+'</strong></p><p>Total Due: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>')
+              $('.results').html('<p>Principal: <strong>PHP '+ parseFloat(response.principal_amount).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.total_interest).toFixed(2)+'</strong><p>Total Fees: <strong>PHP '+ parseFloat(response.total_fees).toFixed(2)+'</strong></p><p>Total Due: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>');
+
+              $('#interest_amount').val(parseFloat(response.total_interest).toFixed(2));
+              $('#total_fees').val(parseFloat(response.total_fees).toFixed(2));
+              $('#total_loan').val(parseFloat(response.total_loan).toFixed(2));
+              $('#payment_count').val(response.payment_count);
+
+              //Arrays
+              $('#payment_periods').val(JSON.stringify(response.payment_periods));
+              $('#periodic_rates').val(JSON.stringify(response.periodic_rates));
+              $('#periodic_principal_rates').val(JSON.stringify(response.periodic_principal_rates));
+              $('#periodic_interest_rates').val(JSON.stringify(response.periodic_interest_rates));
+              $('#periodic_filing_fee').val(JSON.stringify(response.periodic_filing_fee));
+              $('#periodic_service_fee').val(JSON.stringify(response.periodic_service_fee));
             });
     });
   </script>

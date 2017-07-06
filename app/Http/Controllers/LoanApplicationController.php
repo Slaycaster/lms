@@ -128,7 +128,7 @@ class LoanApplicationController extends Controller
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->stream();
     }
 
@@ -139,7 +139,7 @@ class LoanApplicationController extends Controller
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->stream();
     }
 
@@ -150,7 +150,7 @@ class LoanApplicationController extends Controller
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->stream();   
     }
 
@@ -161,7 +161,7 @@ class LoanApplicationController extends Controller
         $pdf->output();
         $dom_pdf = $pdf->getDomPDF();
         $canvas = $dom_pdf->get_canvas();
-        $canvas->page_text(808, 580, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
         return $pdf->stream();   
     }
 
@@ -174,7 +174,7 @@ class LoanApplicationController extends Controller
     {
         //Compute
         //Get all post inputs
-        $company = Borrower::where('id', '=', $request->input('borrower_id'))->first();
+        $company = Borrower::where('id', '=', $request->input('borrower_id'))->with('company')->first();
         $loan_application_amount = $request->input('amount');
         $filing_fee = $request->input('filing_fee');
         $service_fee = $request->input('service_fee');
@@ -211,6 +211,60 @@ class LoanApplicationController extends Controller
 
         $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
 
+        //if going to preview FIRST
+        if (isset($_POST['precompute']))
+        {
+            Session::put('loan_borrower_id', $request->input('borrower_id'));
+            if ($request->input('comaker1_id') == null)
+            {
+                Session::put('comaker1_id', 1);
+            }
+            else
+            {
+                Session::put('comaker1_id', $request->input('comaker1_id'));
+            }
+
+            if ($request->input('comaker2_id') == null)
+            {
+                Session::put('comaker2_id', 2);
+            }
+            else
+            {
+                Session::put('comaker2_id', $request->input('comaker2_id'));
+            }
+            //Initial Input
+            Session::put('company', $company->company->company_name);
+            Session::put('principal', $request->input('amount'));
+            Session::put('purpose', $request->input('purpose'));
+            Session::put('filing_fee', $request->input('filing_fee'));
+            Session::put('service_fee', $request->input('service_fee'));
+            Session::put('filing_service_payment_type', $request->input('filing_service_payment_type'));
+            Session::put('disbursement_date', $request->input('disbursement_date'));
+            Session::put('collection_date', $request->input('collection_date'));
+            Session::put('payment_term', $payment_term->loan_payment_term_name);
+            Session::put('payment_schedule', $payment_schedule->payment_schedule_name);
+
+            //Came from pre-compute
+            Session::put('interest_name', $interest->loan_interest_name);
+            Session::put('interest_amount', $request->input('interest_amount'));
+            Session::put('total_fees', $request->input('total_fees'));
+            Session::put('total_loan', $request->input('total_loan'));
+            Session::put('payment_count', $request->input('payment_count'));
+            //Array Session Put
+            Session::put('payment_periods', $request->input('payment_periods'));
+            Session::put('periodic_rates', $request->input('periodic_rates'));
+            Session::put('periodic_principal_rates', $request->input('periodic_principal_rates'));
+            Session::put('periodic_interest_rates', $request->input('periodic_interest_rates'));
+            Session::put('periodic_filing_fee', $request->input('periodic_filing_fee'));
+            Session::put('periodic_service_fee', $request->input('periodic_service_fee'));
+
+            $pdf = PDF::loadView('reports.precompute-pdf')->setPaper('A4');
+            $pdf->output();
+            $dom_pdf = $pdf->getDomPDF();
+            $canvas = $dom_pdf ->get_canvas();
+            $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+            return $pdf->stream();
+        }
         
         $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
         if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
@@ -565,18 +619,8 @@ class LoanApplicationController extends Controller
 
     public function process_application(Request $request)
     {
-        /*--------------------------------------------------
-            Update the current loan application to the database
-        ---------------------------------------------------*/
-        $loan_application = LoanApplication::find($request->input('loan_application_id'));
-
-        if ($request->input('change_details') === 'yes')
-        {
-          //Loan application core details will be updated...
-
-          //So pre-compute first
-          //Get all post inputs
-          $company = Borrower::where('id', '=', $request->input('borrower_id'))->first();
+        //Get all post inputs
+          $company = Borrower::where('id', '=', $request->input('borrower_id'))->with('company')->first();
           $loan_application_amount = $request->input('amount');
           $filing_fee = $request->input('filing_fee');
           $service_fee = $request->input('service_fee');
@@ -587,9 +631,21 @@ class LoanApplicationController extends Controller
           $interest_id = $request->input('loan_interest_id');
 
           //And query those data with ids to get the real meat out of it.
-            $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
-            $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
-            $interest = LoanInterest::where('id', '=', $interest_id)->first();
+        $payment_term = LoanPaymentTerm::where('id', '=', $payment_term_id)->first();
+        $payment_schedule = PaymentSchedule::where('id', '=', $payment_schedule_id)->first();
+        $interest = LoanInterest::where('id', '=', $interest_id)->first();
+
+        /*--------------------------------------------------
+            Update the current loan application to the database
+        ---------------------------------------------------*/
+        $loan_application = LoanApplication::find($request->input('loan_application_id'));
+
+        if ($request->input('change_details') === 'yes')
+        {
+          //Loan application core details will be updated...
+
+          //So pre-compute first
+          
 
             $periodicRate = 0; //loan monthly/kinsenas/whatever rate
             $miscellaneousRate = 0; //if so happens that filing fee and service fee wouldn't be amortized
@@ -764,6 +820,59 @@ class LoanApplicationController extends Controller
         {
             $loan_application->loan_application_status = "Declined";
             Session::flash('message', 'Loan Application Declined!');
+        }
+        else if (isset($_POST['precompute']))
+        {
+            Session::put('loan_borrower_id', $request->input('borrower_id'));
+            if ($request->input('comaker1_id') == null)
+            {
+                Session::put('comaker1_id', 1);
+            }
+            else
+            {
+                Session::put('comaker1_id', $request->input('comaker1_id'));
+            }
+
+            if ($request->input('comaker2_id') == null)
+            {
+                Session::put('comaker1_id', 2);
+            }
+            else
+            {
+                Session::put('comaker1_id', $request->input('comaker2_id'));
+            }
+            //Initial Input
+            Session::put('company', $company->company->company_name);
+            Session::put('principal', $request->input('amount'));
+            Session::put('purpose', $request->input('purpose'));
+            Session::put('filing_fee', $request->input('filing_fee'));
+            Session::put('service_fee', $request->input('service_fee'));
+            Session::put('filing_service_payment_type', $request->input('filing_service_payment_type'));
+            Session::put('disbursement_date', $request->input('disbursement_date'));
+            Session::put('collection_date', $request->input('collection_date'));
+            Session::put('payment_term', $payment_term->loan_payment_term_name);
+            Session::put('payment_schedule', $payment_schedule->payment_schedule_name);
+
+            //Came from pre-compute
+            Session::put('interest_name', $interest->loan_interest_name);
+            Session::put('interest_amount', $request->input('interest_amount'));
+            Session::put('total_fees', $request->input('total_fees'));
+            Session::put('total_loan', $request->input('total_loan'));
+            Session::put('payment_count', $request->input('payment_count'));
+            //Array Session Put
+            Session::put('payment_periods', $request->input('payment_periods'));
+            Session::put('periodic_rates', $request->input('periodic_rates'));
+            Session::put('periodic_principal_rates', $request->input('periodic_principal_rates'));
+            Session::put('periodic_interest_rates', $request->input('periodic_interest_rates'));
+            Session::put('periodic_filing_fee', $request->input('periodic_filing_fee'));
+            Session::put('periodic_service_fee', $request->input('periodic_service_fee'));
+
+            $pdf = PDF::loadView('reports.precompute-pdf')->setPaper('A4');
+            $pdf->output();
+            $dom_pdf = $pdf->getDomPDF();
+            $canvas = $dom_pdf ->get_canvas();
+            $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+            return $pdf->stream();
         }
 
         //Put a remarks...

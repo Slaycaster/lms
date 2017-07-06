@@ -95,11 +95,7 @@ use App\LoanApplication;
 	</head>
 <center>
 	<body>
-		<p style="text-align: center;">
-	        <normal style="font-size: 18px">Moo Loans Inc.</normal>
-	        <br>
-	        <strong>APPROVED LOAN APPLICATION REPORT<br>as of {{$today}}</strong>
-	    </p>
+		<center><img src="{{ asset('img/mooloans_logo_web.jpg') }}" width="30%" height="30%" style="position: inherit;"></center>
 	    <h5>Active Loan Applications: {{$loan_application_count}}</h5>
 	    <table border="1">
 	    	<thead>

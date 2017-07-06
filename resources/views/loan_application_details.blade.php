@@ -84,7 +84,7 @@
 					</div>
 					<hr>
 					<h4>Approve/Decline</h4>
-					<form action="{{url('admin/loan_applications/process_application')}}" method="POST">
+					<form action="{{url('admin/loan_applications/process_application')}}" method="POST" data-toggle="validator" role="form" id="form">
 					{{ csrf_field() }}
 					<input type="hidden" name="loan_application_id" value="{!! $key->id !!}">
 
@@ -99,6 +99,15 @@
 					<button type="submit" class="btn btn-block btn-warning btn-sm" name="decline">Decline Loan Application</button>
 					<hr/>
 					<h4>Change Application Form Details</h4>
+					@if (count($errors) > 0)
+		                  <div class="alert alert-danger">
+		                      <ul>
+		                          @foreach ($errors->all() as $error)
+		                              <li>{{ $error }}</li>
+		                          @endforeach
+		                      </ul>
+		                  </div>
+		              @endif
 					<!-- CHANGE/EDIT FORM -->
 					<!-- Amount Form Group -->
 					<div class="form-group">
@@ -158,7 +167,7 @@
             <label for="amount" class="control-label">Change Principal Loan Amount</label>
             <div class="input-group">
               <span class="input-group-addon">₱</span>
-              <input type="text" id="amount" name="amount" class="form-control" value="{!! $key->loan_application_amount !!}">
+              <input type="text" id="amount" name="amount" class="form-control" value="{!! $key->loan_application_amount !!}" required>
             </div>
           </div>
 
@@ -166,7 +175,7 @@
             <label for="disbursement_date" class="control-label">Change Disbursement Date</label>
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-              <input type="text" id="disbursement_date" name="disbursement_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_disbursement_date !!}">
+              <input type="text" id="disbursement_date" name="disbursement_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_disbursement_date !!}" required>
             </div>
           </div>
 
@@ -174,7 +183,7 @@
             <label for="collection_date" class="control-label">Change Start Collection Date</label>
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-              <input type="text" id="collection_date" name="collection_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_collection_date !!}">
+              <input type="text" id="collection_date" name="collection_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_collection_date !!}" required>
             </div>
           </div>
 
@@ -220,7 +229,7 @@
 								<label for="filing_fee" class="control-label">Change Filing Fee</label>
 								<div class="input-group">
 									<span class="input-group-addon">₱</span>
-									<input type="text" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off" value="{!! $key->loan_application_filing_fee !!}">
+									<input type="text" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off" value="{!! $key->loan_application_filing_fee !!}" required>
 								</div>
 							</div>
 						</div>
@@ -231,7 +240,7 @@
 								<label for="service_fee" class="control-label">Change Service Fee</label>
 								<div class="input-group">
 									<span class="input-group-addon">₱</span>
-									<input type="text" id="service_fee" name="service_fee" class="form-control" autocomplete="off" value="{!! $key->loan_application_service_fee !!}">
+									<input type="text" id="service_fee" name="service_fee" class="form-control" autocomplete="off" value="{!! $key->loan_application_service_fee !!}" required>
 								</div>
 							</div>
 						</div>
@@ -258,7 +267,7 @@
 						</div>
 					</div>
 
-					</form>
+					
 				</div>
 			</div>
 		</div>
@@ -353,7 +362,21 @@
 										</button>
 										<i class="fa fa-circle-o-notch fa-4x"></i>
 										<h4 class="modal-title" id="myModalLabel"><b>Pre-computed Payment Schedule</b></h4>
-										<a href="" class="btn btn-default pull-right"><span class="fa fa-print"></span> Print</a>
+										<input type="hidden" name="interest_amount" id="interest_amount" value="0">
+										<input type="hidden" name="total_fees" id="total_fees" value="0">
+										<input type="hidden" name="total_loan" id="total_loan" value="0">
+										<input type="hidden" name="payment_count" id="payment_count" value="0">
+
+										<!-- Array Hidden Inputs -->
+										<input type="hidden" name="payment_periods" id="payment_periods">
+										<input type="hidden" name="periodic_rates" id="periodic_rates">
+										<input type="hidden" name="periodic_principal_rates" id="periodic_principal_rates">
+										<input type="hidden" name="periodic_interest_rates" id="periodic_interest_rates">
+										<input type="hidden" name="periodic_filing_fee" id="periodic_filing_fee">
+										<input type="hidden" name="periodic_service_fee" id="periodic_service_fee">
+
+										<button type="submit" name="precompute" class="btn btn-default pull-right" onclick="$('form').attr('target', '_blank');"><span class="fa fa-print"></span> Print Preview</button>
+										</form>
 								</div>
 
 
@@ -378,6 +401,7 @@
 						</div>
 				</div>
 		</div>
+		<!-- End Modal -->
 
 		@endforeach
 	</div>
@@ -489,7 +513,7 @@
 				            }).success(function(response) {
 
 				              var trHTML = '';
-				              $('#pre_payment_scheds').html("<thead><tr><th>Date</th><th>Amount</th><th>Principal</th><th>Interest</th><th>Filing Fee</th><th>Service Fee</th></tr><tbody></tbody></thead>");
+				              $('#pre_payment_scheds').html("<thead><tr><th>Date</th><th>Amount</th><th>Principal</th><th>Interest</th><th>Filing Fee</th><th>Service Fee</th></tr></thead><tbody></tbody>");
 				              for (i = 0; i < response.payment_periods.length; i++)
 				              {
 				                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_filing_fee[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_service_fee[i]).toFixed(2) + '</td></tr>';
@@ -497,7 +521,21 @@
 				              $('#pre_payment_scheds').append(trHTML);
 				              var table = $('#pre_payment_scheds').DataTable();
 				              
-				              $('.pre_results').html('<p>Principal: <strong>PHP '+ parseFloat(response.principal_amount).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.total_interest).toFixed(2)+'</strong><p>Total Fees: <strong>PHP '+ parseFloat(response.total_fees).toFixed(2)+'</strong></p><p>Total Due: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>')
+				              $('.pre_results').html('<p>Principal: <strong>PHP '+ parseFloat(response.principal_amount).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.total_interest).toFixed(2)+'</strong><p>Total Fees: <strong>PHP '+ parseFloat(response.total_fees).toFixed(2)+'</strong></p><p>Total Due: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>');
+
+				              $('#interest_amount').val(parseFloat(response.total_interest).toFixed(2));
+				              $('#total_fees').val(parseFloat(response.total_fees).toFixed(2));
+				              $('#total_loan').val(parseFloat(response.total_loan).toFixed(2));
+				              $('#payment_count').val(response.payment_count);
+
+				              //Arrays
+				              $('#payment_periods').val(JSON.stringify(response.payment_periods));
+				              $('#periodic_rates').val(JSON.stringify(response.periodic_rates));
+				              $('#periodic_principal_rates').val(JSON.stringify(response.periodic_principal_rates));
+				              $('#periodic_interest_rates').val(JSON.stringify(response.periodic_interest_rates));
+				              $('#periodic_filing_fee').val(JSON.stringify(response.periodic_filing_fee));
+				              $('#periodic_service_fee').val(JSON.stringify(response.periodic_service_fee));
+
 				            });
 
 				    });

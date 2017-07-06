@@ -86,11 +86,7 @@ use App\LoanApplication;
 	</head>
 
 	<body>
-		<p style="text-align: center;">
-	        <normal style="font-size: 18px">Moo Loans Inc.</normal>
-	        <br>
-	        <strong>PROMISSORY NOTE<br></strong>
-	    </p>
+		<center><img src="{{ asset('img/mooloans_logo_web.jpg') }}" width="30%" height="30%" style="position: inherit;"></center>
 	    <br>
 	    @foreach($loan_applications as $loan_application)
 

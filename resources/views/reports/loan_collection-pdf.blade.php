@@ -100,9 +100,8 @@ use App\Company;
     </head>
 
     <body onload="window.print();">
+        <center><img src="{{ asset('img/mooloans_logo_web.jpg') }}" width="30%" height="30%" style="position: inherit;"></center>
         <p style="text-align: center;">
-            <normal style="font-size: 18px">Moo Loans Inc.</normal>
-            <br>
             <strong>LOAN COLLECTION REPORT <br>as of this cycle, {{$date}}</strong>
             <hr>
             <br>

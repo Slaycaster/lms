@@ -117,9 +117,7 @@ use App\PaymentCollection;
       </head>
 
       <body>
-            <p style="text-align: center;">
-              <normal style="font-size: 18px">Moo Loans Inc.</normal>
-            </p>
+          <center><img src="{{ asset('img/mooloans_logo_web.jpg') }}" width="30%" height="30%" style="position: inherit;"></center>
           @foreach($loan_applications as $loan_application)
           <?php $balance_amount = $loan_application->loan_application_amount; ?>
 
