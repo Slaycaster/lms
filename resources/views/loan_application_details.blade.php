@@ -175,7 +175,7 @@
             <label for="disbursement_date" class="control-label">Change Disbursement Date</label>
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-              <input type="text" id="disbursement_date" name="disbursement_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_disbursement_date !!}" required>
+              <input type="text" id="disbursement_date" name="disbursement_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_disbursement_date !!}">
             </div>
           </div>
 
@@ -183,7 +183,7 @@
             <label for="collection_date" class="control-label">Change Start Collection Date</label>
             <div class="input-group">
               <span class="input-group-addon"><i class="fa fa-calendar"></i> </span>
-              <input type="text" id="collection_date" name="collection_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_collection_date !!}" required>
+              <input type="text" id="collection_date" name="collection_date" class="form-control datepicker" placeholder="yyyy-mm-dd" value="{!! $key->loan_application_collection_date !!}">
             </div>
           </div>
 

@@ -835,11 +835,11 @@ class LoanApplicationController extends Controller
 
             if ($request->input('comaker2_id') == null)
             {
-                Session::put('comaker1_id', 2);
+                Session::put('comaker2_id', 2);
             }
             else
             {
-                Session::put('comaker1_id', $request->input('comaker2_id'));
+                Session::put('comaker2_id', $request->input('comaker2_id'));
             }
             //Initial Input
             Session::put('company', $company->company->company_name);

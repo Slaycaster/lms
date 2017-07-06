@@ -212,9 +212,8 @@
                     <label for="disbursement_date" class="control-label">Loan Disbursement Date </label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                      <input id="disbursement_date" class="datepicker" name="disbursement_date" data-error="Date of disbursement is required" class="form-control" required>
+                      <input id="disbursement_date" class="datepicker" name="disbursement_date" class="form-control">
                     </div>
-                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
 
@@ -224,9 +223,8 @@
                     <label for="collection_date" class="control-label">Start Collection Date </label>
                     <div class="input-group">
                       <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                      <input id="collection_date" class="datepicker" name="collection_date" data-error="Start Collection Date is required, and make sure it is on or after the disbursement date." class="form-control" required>
+                      <input id="collection_date" class="datepicker" name="collection_date" class="form-control">
                     </div>
-                    <div class="help-block with-errors"></div>
                   </div>
                 </div>
 
