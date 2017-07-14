@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use App\LoanApplication;
 use App\PaymentSchedule;
@@ -314,36 +314,35 @@ use App\PaymentCollection;
                             <td align="right">{{ number_format($balance_amount,2) }}</td>
                           </tr>
 
-                       @if($payment_collection->is_paid == 1)
-                          <!-- Repayment - Interest -->
+                          <!-- Payment - Interest -->
                           <tr>
                             <td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
                             <td align="left">{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
-                            <td>Repayment - Interest</td>
+                            <td>Payment - Interest</td>
                             <td align="right">-{{ number_format( $payment_collection->payment_collection_interest_amount, 2)  }} </td>
                             <?php
                               $balance_amount -= $payment_collection->payment_collection_interest_amount;
                             ?>
                             <td align="right">{{ number_format($balance_amount,2) }}</td>
                           </tr>
-                        @endif
+                      
 
                       @if($loan_application->loan_application_filing_service_payment == 0 && $first_repayment)
-                          <!-- Repayment - Service Fee -->
+                          <!-- Payment - Service Fee -->
                           <tr>
                             <td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
                             <td align="left">{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
-                            <td>Repayment - Service Fee</td>
+                            <td>Payment - Service Fee</td>
                             <td align="right">-{{ number_format($loan_application->loan_application_service_fee,2) }}</td>
                             <?php $balance_amount -= $loan_application->loan_application_service_fee; ?>
                             <td align="right">{{ number_format($balance_amount,2) }}</td>
                           </tr>
 
-                          <!-- Repayment - Filing Fee -->
+                          <!-- Payment - Filing Fee -->
                           <tr>
                             <td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>
                             <td align="left">{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
-                            <td>Repayment - Filing Fee</td>
+                            <td>Payment - Filing Fee</td>
                             <td align="right">-{{ number_format($loan_application->loan_application_filing_fee,2) }}</td>
                             <?php $balance_amount -= $loan_application->loan_application_filing_fee; ?>
                             <td align="right">{{ number_format($balance_amount,2) }}</td>
@@ -354,41 +353,39 @@ use App\PaymentCollection;
                       @endif <!-- loan_application_filing_service_payment -->
 
                       @if($loan_application->loan_application_filing_service_payment != 0)
-                          <!-- Repayment - Service Fee -->
+                          <!-- Payment - Service Fee -->
                           <tr>
                             <td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
                             <td align="left">{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
-                            <td>Repayment - Service Fee</td>
+                            <td>Payment - Service Fee</td>
                             <td align="right">-{{ number_format($payment_collection->payment_collection_service_fee,2) }}</td>
                             <?php $balance_amount -= $payment_collection->payment_collection_service_fee; ?>
                             <td align="right">{{ number_format($balance_amount,2) }}</td>
                           </tr>
 
-                          <!-- Repayment - Filing Fee -->
+                          <!-- Payment - Filing Fee -->
                           <tr>
                             <td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>
                             <td align="left">{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
-                            <td>Repayment - Filing Fee</td>
+                            <td>Payment - Filing Fee</td>
                             <td align="right">-{{ number_format($payment_collection->payment_collection_filing_fee,2) }}</td>
                             <?php $balance_amount -= $payment_collection->payment_collection_filing_fee; ?>
                             <td align="right">{{ number_format($balance_amount,2) }}</td>
                           </tr>
                       @endif
 
-                        @if($payment_collection->is_paid = 1)
-                          <!-- Repayment - Principal -->
+                          <!-- Payment - Principal -->
                           <tr>
                             <td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>
                             <td align="left">{{ date('F j, Y', strtotime($payment_collection->payment_collection_date)) }}</td>
-                            <td>Repayment - Principal</td>
+                            <td>Payment - Principal</td>
                             <td align="right">-{{ number_format($payment_collection->payment_collection_principal_amount ,2) }}</td>
                             <?php
                               $balance_amount -= $payment_collection->payment_collection_principal_amount;
                             ?>
                             <td align="right">{{ number_format($balance_amount) }}</td>
                           </tr>
-                        @endif
-
+                   
                         </tbody>
                     @endforeach
                     </tbody>

@@ -35,7 +35,7 @@
 				                <th>Company Code</th>
 				                <th>Interest Rate</th>
 				                <th>Principal Amount</th>
-				                <th>Interest</th>
+				                <th>Monthly Interest</th>
 				                <th>Total Loan Amount</th>
 				                <th>Payment Terms</th>
 				                <th>Actions</th>
@@ -55,7 +55,7 @@
 		        serverSide: true,
 		        ajax: '{!! url('loan_applications/active/data') !!}',
 		        columns: [
-		          {data: 'id', name: 'loan_applications.id'},
+		          {data: 'id', name: 'loan_applications.id', order: 'desc', searchable: false},
 		          {data: 'loan_application_status', name: 'loan_applications.loan_application_status'},
 		          {data: 'loan_application_disbursement_date', name: 'loan_applications.loan_application_disbursement_date'},
 		          {data: 'loan_borrower.borrower_last_name', name: 'loan_borrower.borrower_last_name'},
@@ -66,8 +66,9 @@
 		          {data: 'loan_application_interest', name: 'loan_applications.loan_application_interest'},
 		          {data: 'loan_application_total_amount', name: 'loan_applications.loan_application_total_amount'},
 		          {data: 'loan_payment_term.loan_payment_term_name', name: 'loan_payment_term.loan_payment_term_name'},
-		          {data: 'Actions', name: 'Actions', orderable: false, searchable: false}
-		        ]
+		          {data: 'Actions', name: 'Actions', orderable: false, searchable: false},
+		        ],
+		        order: [ [0, 'desc'] ]
 		      });
 		    });
 		</script>

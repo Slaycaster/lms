@@ -42,7 +42,7 @@
 				                <th>Company Code</th>
 				                <th>Interest Rate</th>
 				                <th>Principal Amount</th>
-				                <th>Interest</th>
+				                <th>Monthly Interest</th>
 				                <th>Total Loan Amount</th>
 				                <th>Payment Terms</th>
 				              </tr>
@@ -74,7 +74,8 @@
 		          {data: 'loan_application_interest', name: 'loan_applications.loan_application_interest', searchable: false},
 		          {data: 'loan_application_total_amount', name: 'loan_applications.loan_application_total_amount', searchable: false},
 		          {data: 'loan_payment_term.loan_payment_term_name', name: 'loan_payment_term.loan_payment_term_name', searchable: false}
-		        ]
+		        ],
+		        order: [ [0, 'desc'] ]
 		      });
 		    });
 		</script>

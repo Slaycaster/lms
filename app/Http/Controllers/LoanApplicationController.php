@@ -267,21 +267,8 @@ class LoanApplicationController extends Controller
         }
         
         $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
-        if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
-        {
-            $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
-            $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
-        }
-        else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
-        {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
-            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
-        }
-        else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
-        {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
-            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
-        }
+        $paymentStartDate = date('Y-m-d', strtotime($collection_date)); //Get the last date of this month as start date
+        $paymentEndDate = date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 3 weeks'));  
 
         $payment_periods = $this->get_months($paymentStartDate, $paymentEndDate);
         $paymentPeriod_count = count($payment_periods);
@@ -490,21 +477,8 @@ class LoanApplicationController extends Controller
             $monthlyInterest = $loan_application_amount * ($interest->loan_interest_rate * .01);
             
             $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
-            if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
-            {
-                $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
-                $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
-            }
-            else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
-            {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
-                $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
-            }
-            else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
-            {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
-                $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
-            }
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date)); //Get the last date of this month as start date
+            $paymentEndDate = date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 3 weeks'));  
 
             $payment_periods = $this->get_months($paymentStartDate, $paymentEndDate);
             $paymentPeriod_count = count($payment_periods);
@@ -669,21 +643,8 @@ class LoanApplicationController extends Controller
             ]);
             
             $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
-            if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
-            {
-                $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
-                $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
-            }
-            else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
-            {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
-                $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
-            }
-            else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
-            {
-                $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
-                $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
-            }
+            $paymentStartDate = date('Y-m-d', strtotime($collection_date)); //Get the last date of this month as start date
+            $paymentEndDate = date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 3 weeks'));  
 
             $payment_periods = $this->get_months($paymentStartDate, $paymentEndDate);
             $paymentPeriod_count = count($payment_periods);
@@ -897,7 +858,7 @@ class LoanApplicationController extends Controller
             $param1 = $request->input('para1');
             $borrowers = Borrower::join('companies', 'borrowers.company_id', '=', 'companies.id')
                 ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
-                ->get(['borrowers.id', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'companies.company_code']);
+                ->get(['borrowers.id', DB::raw('CONCAT(borrower_last_name, ", ", borrower_first_name, " ", borrower_middle_name) AS borrower_name'), 'companies.company_code']);
             return json_encode($borrowers, JSON_PRETTY_PRINT);
         }
         else
@@ -906,7 +867,7 @@ class LoanApplicationController extends Controller
             $borrowers = Borrower::join('companies', 'borrowers.company_id', '=', 'companies.id')
                 ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
                 ->where('company_id', '=', Auth::user()->company->id)
-                ->get(['borrowers.id', 'borrower_last_name', 'borrower_first_name', 'borrower_middle_name', 'companies.company_code']);
+                ->get(['borrowers.id', DB::raw('CONCAT(borrower_last_name, ", ", borrower_first_name, " ", borrower_middle_name) AS borrower_name'), 'companies.company_code']);
             return json_encode($borrowers, JSON_PRETTY_PRINT);
         }
     }
@@ -1067,21 +1028,8 @@ class LoanApplicationController extends Controller
 
         
         $last_day_from_disbursement_date = date('Y-m-t', strtotime($collection_date));
-        if (date('d', strtotime($collection_date)) < 15) //if the disbursement date was less than or equal to the 15th
-        {
-            $paymentStartDate = date('Y-m-15', strtotime($collection_date)); //Get the 15th day of the current month as start date
-            $paymentEndDate = date('Y-m-15', strtotime($collection_date . '+' . ($payment_term->loan_payment_term_no_of_months) . 'months'));
-        }
-        else if (date('d', strtotime($collection_date)) < date('t', strtotime($collection_date)) )
-        {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date)))); //Get the last date of this month as start date
-            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months'))));
-        }
-        else if (date('d', strtotime($collection_date)) == date('t', strtotime($collection_date)))
-        {
-            $paymentStartDate = date('Y-m-d', strtotime(date('Y-m-15', strtotime($collection_date . '+ 1 week')))); //Get the last date of this month as start date
-            $paymentEndDate = date('Y-m-d', strtotime(date('Y-m-t', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 1 week'))));   
-        }
+        $paymentStartDate = date('Y-m-d', strtotime($collection_date)); //Get the last date of this month as start date
+        $paymentEndDate = date('Y-m-d', strtotime($collection_date. '+' . ($payment_term->loan_payment_term_no_of_months). 'months - 3 weeks'));  
 
         $payment_periods = $this->get_months($paymentStartDate, $paymentEndDate);
         $paymentPeriod_count = count($payment_periods);

@@ -120,13 +120,17 @@
               </div>
 
               <!-- Amount Form Group -->
-              <div class="form-group">
-                <label for="amount" class="control-label">Loan Amount</label>
-                <div class="input-group">
-                  <span class="input-group-addon">₱</span>
-                  <input id="amount" type="number" name="amount" class="form-control" autocomplete="off" data-error="Loan Amount (Principal) is required."  required>
+              <div class="row">
+                <div class="col-md-3 col-sm-5">
+                  <div class="form-group">
+                    <label for="amount" class="control-label">Loan Amount</label>
+                    <div class="input-group">
+                      <span class="input-group-addon">₱</span>
+                      <input id="amount" type="number" name="amount" class="form-control" autocomplete="off" data-error="Loan Amount (Principal) is required."  required>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                  </div>
                 </div>
-                <div class="help-block with-errors"></div>
               </div>
 
               <!-- Purpose Form Group -->
@@ -152,7 +156,7 @@
                     <div class="form-group">
                       <label for="loan_interest_id" class="control-label">Loan Interest</label>
                       <div class="input-group">
-                        {{ Form::select('loan_interest_id', $loan_interests, null, ['class' => 'form-control', 'id' => 'loan_interest_id']) }}
+                        {{ Form::select('loan_interest_id', $loan_interests, 5, ['class' => 'form-control', 'id' => 'loan_interest_id']) }}
                       </div>
                     </div>
                 </div>
@@ -177,7 +181,7 @@
                     <label for="filing_fee" class="control-label">Filing Fee</label>
                     <div class="input-group">
                       <span class="input-group-addon">₱</span>
-                      <input type="number" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off" value="0" required>
+                      <input type="number" id="filing_fee" name="filing_fee" class="form-control" autocomplete="off" required>
                     </div>
                   </div>
                 </div>
@@ -188,7 +192,7 @@
                     <label for="service_fee" class="control-label">Service Fee</label>
                     <div class="input-group">
                       <span class="input-group-addon">₱</span>
-                      <input type="number" id="service_fee" name="service_fee" class="form-control" autocomplete="off" value="0" required>
+                      <input type="number" id="service_fee" name="service_fee" class="form-control" autocomplete="off" required>
                     </div>
                   </div>
                 </div>
@@ -277,15 +281,15 @@
 
                         </div>
                         <div class="table-responsive">
-                          <table class="table table-hover table-responsive" id="payment_scheds" data-page-length='5'>
+                          <table class="table table-hover table-responsive" id="payment_scheds" data-page-length='10'>
                             <thead>
                               <tr>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Principal</th>
-                                <th>Interest</th>
-                                <th>Filing Fee</th>
-                                <th>Service Fee</th>
+                                <th width="20%">Date</th>
+                                <th width="20%">Amount</th>
+                                <th width="20%">Principal</th>
+                                <th width="20%">Interest</th>
+                                <th width="10%">Filing   Fee</th>
+                                <th width="10%">Service  Fee</th>
                               </tr>
                               <tbody>
 
@@ -315,7 +319,7 @@
         $(document).ready(function () {
             var text2 = $("#Text2").tautocomplete({
                 width: "600px",
-                columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
+                columns: ['Name', 'Company'],
                 placeholder: "Search for Client by Last Name",
                 norecord: "No Records Found",
                 highlight: "",
@@ -330,7 +334,7 @@
                         var searchData = eval("/" + text2.searchdata() + "/gi");
 
                         $.each(data, function (i, v) {
-                            if (v.borrower_last_name.search(new RegExp(searchData)) != -1) {
+                            if (v.borrower_name.search(new RegExp(searchData)) != -1) {
                                 filterData.push(v);
                             }
                         });
@@ -346,7 +350,7 @@
 
             var comaker1 = $("#comaker1").tautocomplete({
                 width: "600px",
-                columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
+                columns: ['Name', 'Company'],
                 placeholder: "Search for Co-Maker 1 by Last Name",
                 norecord: "No Records Found",
                 highlight: "",
@@ -362,7 +366,7 @@
                         var searchData = eval("/" + comaker1.searchdata() + "/gi");
 
                         $.each(data, function (i, v) {
-                            if (v.borrower_last_name.search(new RegExp(searchData)) != -1) {
+                            if (v.borrower_name.search(new RegExp(searchData)) != -1) {
                                 filterData.push(v);
                             }
                         });
@@ -378,7 +382,7 @@
 
             var comaker2 = $("#comaker2").tautocomplete({
                 width: "600px",
-                columns: ['Last Name', 'First Name', 'Middle Name', 'Company'],
+                columns: ['Name', 'Company'],
                 placeholder: "Search for Co-Maker 2 by Last Name",
                 norecord: "No Records Found",
                 highlight: "",
@@ -394,7 +398,7 @@
                         var searchData = eval("/" + comaker2.searchdata() + "/gi");
 
                         $.each(data, function (i, v) {
-                            if (v.borrower_last_name.search(new RegExp(searchData)) != -1) {
+                            if (v.borrower_name.search(new RegExp(searchData)) != -1) {
                                 filterData.push(v);
                             }
                         });
@@ -436,14 +440,21 @@
               interest_id: document.getElementById('loan_interest_id').value
             },
             }).success(function(response) {
-              var trHTML = '';
-               $('#pre_payment_scheds').html("<thead><tr><th>Date</th><th>Amount</th><th>Principal</th><th>Interest</th><th>Filing Fee</th><th>Service Fee</th></tr><tbody></tbody></thead>");
+              if ( ! $.fn.DataTable.isDataTable( '#payment_scheds' ) ) {
+                  var table = $('#payment_scheds').DataTable();
+                }
+              table.clear();
               for (i = 0; i < response.payment_periods.length; i++)
               {
-                trHTML += '<tr><td>' + response.payment_periods[i] + '</td><td>PHP ' + parseFloat(response.periodic_rates[i]).toFixed(2) +  '</td><td>PHP ' + parseFloat(response.periodic_principal_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_interest_rates[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_filing_fee[i]).toFixed(2) + '</td><td>PHP ' + parseFloat(response.periodic_service_fee[i]).toFixed(2) + '</td></tr>';
+                table.row.add([
+                          response.payment_periods[i], 
+                          "PHP "+ parseFloat(response.periodic_rates[i]).toFixed(2),
+                          "PHP "+ parseFloat(response.periodic_principal_rates[i]).toFixed(2),
+                          "PHP "+ parseFloat(response.periodic_interest_rates[i]).toFixed(2),
+                          "PHP "+ parseFloat(response.periodic_filing_fee[i]).toFixed(2),
+                          "PHP "+ parseFloat(response.periodic_service_fee[i]).toFixed(2)
+                          ]).draw(true);
               }
-              $('#payment_scheds').append(trHTML);
-              var table = $('#payment_scheds').DataTable();
               
               $('.results').html('<p>Principal: <strong>PHP '+ parseFloat(response.principal_amount).toFixed(2)+'</strong></p><p>Interest: <strong>PHP '+ parseFloat(response.total_interest).toFixed(2)+'</strong><p>Total Fees: <strong>PHP '+ parseFloat(response.total_fees).toFixed(2)+'</strong></p><p>Total Due: <strong>PHP '+ parseFloat(response.total_loan).toFixed(2)+'</strong></p><p>Payment Collections: <strong>'+response.payment_count+'</strong></p><hr>');
 

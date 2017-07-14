@@ -95,7 +95,7 @@ use App\LoanApplication;
 	</head>
 <center>
 	<body>
-		<center><img src="{{ asset('img/mooloans_logo_web.jpg') }}" width="30%" height="30%" style="position: inherit;"></center>
+		<center><img src="{{ asset('img/mooloans_logo_web.jpg') }}" width="30%" style="position: inherit;"></center>
 	    <h5>Active Loan Applications: {{$loan_application_count}}</h5>
 	    <table border="1">
 	    	<thead>

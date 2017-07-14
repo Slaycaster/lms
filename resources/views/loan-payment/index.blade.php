@@ -71,7 +71,8 @@
 		          {data: 'loan_application_total_amount', name: 'loan_applications.loan_application_total_amount'},
 		          {data: 'loan_payment_term.loan_payment_term_name', name: 'loan_payment_term.loan_payment_term_name'},
 		          {data: 'Actions', name: 'Actions', orderable: false, searchable: false}
-		        ]
+		        ],
+		        order: [ [0, 'desc'] ]
 		      });
 		    });
 		</script>

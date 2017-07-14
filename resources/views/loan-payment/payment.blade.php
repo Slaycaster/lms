@@ -52,6 +52,8 @@
 				$cyclesDueDates[$index]["date"] = $payment_collection->payment_collection_date;
 				$cyclesDueDates[$index]["collection_principal_amount"] = $payment_collection->payment_collection_principal_amount;
 				$cyclesDueDates[$index]["collection_interest_amount"] = $payment_collection->payment_collection_interest_amount;
+				$cyclesDueDates[$index]["collection_filing_fee"] = $payment_collection->payment_collection_filing_fee;
+				$cyclesDueDates[$index]["collection_service_fee"] = $payment_collection->payment_collection_service_fee;
 				$cyclesDueDates[$index]["is_paid"] = $payment_collection->is_paid;
 				$cyclesDue ++;
 				$index++;
@@ -122,6 +124,8 @@
 									<td><strong>Cycle Date</strong></td>
 									<td><strong>Principal</strong></td>
 									<td><strong>Interest</strong></td>
+									<td><strong>Filing Fee</strong></td>
+									<td><strong>Service Fee</strong></td>
 									<td><strong>Pay?</strong></td>
 								</tr>
 							</thead>
@@ -131,6 +135,8 @@
 										<td>{{$cyclesDueDate["date"]}}</td>
 										<td>PHP {{ number_format($cyclesDueDate["collection_principal_amount"], 2) }}</td>
 										<td>PHP {{ number_format($cyclesDueDate["collection_interest_amount"], 2) }}</td>
+										<td>PHP {{ number_format($cyclesDueDate["collection_filing_fee"], 2) }}</td>
+										<td>PHP {{ number_format($cyclesDueDate["collection_service_fee"], 2) }}</td>
 										<td>{{ Form::checkbox('payment_collection_id[]', $cyclesDueDate["id"]) }}</td>
 									</tr>
 								@endforeach
