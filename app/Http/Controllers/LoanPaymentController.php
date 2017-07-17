@@ -114,7 +114,7 @@ class LoanPaymentController extends Controller
         DB::table('payment_collections')
             ->where('loan_application_id', '=', $loan_application_id)
             ->where('is_paid', '=', 0)
-            ->update(array('payment_collection_principal_amount' => 0, 'payment_collection_interest_amount' => 0, 'is_paid' => 1));
+            ->update(array('payment_collection_principal_amount' => 0, 'payment_collection_interest_amount' => 0, 'payment_collection_filing_fee' => 0, 'payment_collection_service_fee' => 0, 'is_paid' => 1));
 
         Session::flash('message', 'Loan Termination Successful!');
 
