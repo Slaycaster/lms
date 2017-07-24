@@ -115,10 +115,14 @@ use App\Company;
             $totalAmountCollectedThisCycle = 0;
             $totalPrincipalCollectedThisCycle = 0;
             $totalIncomeCollectedThisCycle = 0;
+            $totalFilingFeeCollectedThisCycle = 0;
+            $totalServiceFeeCollectedThisCycle = 0;
 
             $totalAmountOutstandingThisCycle = 0;
             $totalPrincipalOutstandingThisCycle = 0;
             $totalIncomeOutstandingThisCycle = 0;
+            $totalFilingFeeOutstandingThisCycle = 0;
+            $totalServiceFeeOutstandingThisCycle = 0;
 
             foreach($payment_collections as $payment_collection)
             {
@@ -128,12 +132,16 @@ use App\Company;
                     $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalCollectedThisCycle += $payment_collection->payment_collection_principal_amount;
                     $totalIncomeCollectedThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
+                    $totalFilingFeeCollectedThisCycle += $payment_collection->payment_collection_filing_fee;
+                    $totalServiceFeeCollectedThisCycle += $payment_collection->payment_collection_service_fee;
                 }
                 else if($payment_collection->is_paid == 0)
                 {
                     $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalOutstandingThisCycle += $payment_collection->payment_collection_principal_amount;
                     $totalIncomeOutstandingThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
+                    $totalFilingFeeOutstandingThisCycle += $payment_collection->payment_collection_filing_fee;
+                    $totalServiceFeeOutstandingThisCycle += $payment_collection->payment_collection_service_fee;
                 }
             }
 
@@ -142,12 +150,7 @@ use App\Company;
             $netIncomeShareThisCycle = $totalIncomeShareThisCycle - $totalIncomePercentageTax;
             $totalIncomeWitholdingTax = $netIncomeShareThisCycle * 0.1;
             $netNetIncomeShareThisCycle = $netIncomeShareThisCycle - $totalIncomeWitholdingTax;
-
-            $totalWithOutstandingShareThisCycle = ($totalIncomeCollectedThisCycle + $totalIncomeOutstandingThisCycle) * ($company->company_income_share * 0.01);
-            $totalWithOutstandingPercentageTax = $totalWithOutstandingShareThisCycle * 0.03;
-            $netWithOutstandingShareThisCycle = $totalWithOutstandingShareThisCycle - $totalWithOutstandingPercentageTax;
-            $totalWithOutstandingWitholdingTax = $netWithOutstandingShareThisCycle * 0.1;
-            $netNetWithOutstandingShareThisCycle = $netWithOutstandingShareThisCycle - $totalWithOutstandingWitholdingTax;
+            $totalFeesShareThisCycle = ($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle) * ($company->company_fees_share * 0.01);
         ?>
 
         <h3>Income Share on the Actual Amount Collection</h3>
@@ -168,9 +171,15 @@ use App\Company;
                 </tr>
 
                 <tr>
-                    <td width="30%">Income Share</td>
+                    <td width="30%">Total Fees</td>
+                    <td width="20%" align="right"></td>
+                    <td width="50%" align="right">{{ number_format($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle, 2) }}</td>
+                </tr>
+
+                <tr>
+                    <td width="30%">Income Share (+ Fees Share [{{ $company->company_fees_share }}%])</td>
                     <td width="20%" align="right">{{$company->company_income_share}}%</td>
-                    <td width="50%" align="right">{{ number_format($totalIncomeShareThisCycle, 2) }}</td>
+                    <td width="50%" align="right">{{ number_format($totalIncomeShareThisCycle + $totalFeesShareThisCycle, 2) }}</td>
                 </tr>
 
                 <tr>
@@ -195,54 +204,6 @@ use App\Company;
                     <td width="30%">NetNet Income Share</td>
                     <td width="20%" align="right"></td>
                     <td width="50%" align="right">{{ number_format($netNetIncomeShareThisCycle, 2) }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <br>
-        <h3>Income Share with Outstanding Amount Collection</h3>
-        <table border="1" width="520">
-            <thead>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td width="30%">Total Income</td>
-                    <td width="20%" align="right"></td>
-                    <td width="50%" align="right">{{ number_format($totalIncomeCollectedThisCycle + $totalIncomeOutstandingThisCycle, 2) }}</td>
-                </tr>
-
-                <tr>
-                    <td width="30%">Income Share with {{ $company->company_name }}</td>
-                    <td width="20%" align="right">{{$company->company_income_share}}%</td>
-                    <td width="50%" align="right">{{ number_format($totalWithOutstandingShareThisCycle, 2) }}</td>
-                </tr>
-
-                <tr>
-                    <td width="30%"><i>Less: Percentage Tax</i></td>
-                    <td width="20%" align="right"><i>3%</i></td>
-                    <td width="50%" align="right"><i>({{ number_format($totalWithOutstandingPercentageTax, 2) }})</i></td>
-                </tr>
-
-                <tr>
-                    <td width="30%">Net Income Share</td>
-                    <td width="20%" align="right"></td>
-                    <td width="50%" align="right">{{ number_format($netWithOutstandingShareThisCycle, 2) }}</td>
-                </tr>
-
-                <tr>
-                    <td width="30%"><i>Less: Witholding Tax</i></td>
-                    <td width="20%" align="right"><i>10%</i></td>
-                    <td width="50%" align="right"><i>({{ number_format($totalWithOutstandingWitholdingTax, 2) }})</i></td>
-                </tr>
-
-                <tr>
-                    <td width="30%">NetNet Income Share</td>
-                    <td width="20%" align="right"></td>
-                    <td width="50%" align="right">{{ number_format($netNetWithOutstandingShareThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>

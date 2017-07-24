@@ -843,7 +843,7 @@ class LoanApplicationController extends Controller
         $loan_application->save();
 
 
-        return Redirect::to('admin/loan_applications');
+        return Redirect::to('admin/loan_applications/active');
     }
 
 
@@ -858,7 +858,7 @@ class LoanApplicationController extends Controller
             $param1 = $request->input('para1');
             $borrowers = Borrower::join('companies', 'borrowers.company_id', '=', 'companies.id')
                 ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
-                ->get(['borrowers.id', DB::raw('CONCAT(borrower_last_name, ", ", borrower_first_name, " ", borrower_middle_name) AS borrower_name'), 'companies.company_code']);
+                ->get(['borrowers.id', DB::raw('CONCAT(borrower_last_name, ", ", borrower_first_name) AS borrower_name'), 'companies.company_code']);
             return json_encode($borrowers, JSON_PRETTY_PRINT);
         }
         else
@@ -867,7 +867,7 @@ class LoanApplicationController extends Controller
             $borrowers = Borrower::join('companies', 'borrowers.company_id', '=', 'companies.id')
                 ->where('borrower_last_name', 'LIKE', '%' . $param1 . '%')
                 ->where('company_id', '=', Auth::user()->company->id)
-                ->get(['borrowers.id', DB::raw('CONCAT(borrower_last_name, ", ", borrower_first_name, " ", borrower_middle_name) AS borrower_name'), 'companies.company_code']);
+                ->get(['borrowers.id', DB::raw('CONCAT(borrower_last_name, ", ", borrower_first_name) AS borrower_name'), 'companies.company_code']);
             return json_encode($borrowers, JSON_PRETTY_PRINT);
         }
     }
