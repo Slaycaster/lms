@@ -170,11 +170,11 @@ use App\Company;
             <tbody>
 
                 <tr>
-                    <td align="right">PHP {{ number_format($totalAmountCollectedThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalPrincipalCollectedThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalIncomeShareThisCycle + $totalFeesShareThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalAmountCollectedThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalPrincipalCollectedThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalIncomeShareThisCycle + $totalFeesShareThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -193,11 +193,11 @@ use App\Company;
             <tbody>
 
                 <tr>
-                    <td align="right">PHP {{ number_format($totalAmountOutstandingThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalPrincipalOutstandingThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalFilingFeeOutstandingThisCycle + $totalServiceFeeOutstandingThisCycle, 2) }}</td>
-                    <td align="right">PHP {{ number_format($totalOutstandingShareThisCycle + $totalOutstandingFeesShareThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalAmountOutstandingThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalPrincipalOutstandingThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalFilingFeeOutstandingThisCycle + $totalServiceFeeOutstandingThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalOutstandingShareThisCycle + $totalOutstandingFeesShareThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>
@@ -216,11 +216,11 @@ use App\Company;
             <tbody>
 
                 <tr>
-                    <td align="right">PHP {{ number_format($total_collection, 2) }}</td>
-                    <td align="right">PHP {{ number_format($total_principal_collection, 2) }}</td>
-                    <td align="right">PHP {{ number_format($total_income_collection, 2) }}</td>
-                    <td align="right">PHP {{ number_format($total_filing_fee_collection + $total_service_fee_collection, 2) }}</td>
-                    <td align="right">PHP {{ number_format($total_income_collection * ($company->company_income_share * 0.01),2) }}</td>
+                    <td align="left">PHP {{ number_format($total_collection, 2) }}</td>
+                    <td align="left">PHP {{ number_format($total_principal_collection, 2) }}</td>
+                    <td align="left">PHP {{ number_format($total_income_collection, 2) }}</td>
+                    <td align="left">PHP {{ number_format($total_filing_fee_collection + $total_service_fee_collection, 2) }}</td>
+                    <td align="left">PHP {{ number_format($total_income_collection * ($company->company_income_share * 0.01),2) }}</td>
                 </tr>
             </tbody>
         </table>
