@@ -152,9 +152,9 @@ use App\Company;
                 }
             }
 
-            $totalIncomeShareThisCycle = $totalIncomeCollectedThisCycle * ($company->company_income_share * 0.01);
+            $totalIncomeShareThisCycle = $totalInterestCollectedThisCycle * ($company->company_income_share * 0.01);
             
-            $totalOutstandingShareThisCycle = $totalIncomeOutstandingThisCycle * ($company->company_income_share * 0.01);
+            $totalOutstandingShareThisCycle = $totalInterestOutstandingThisCycle * ($company->company_income_share * 0.01);
             
             $totalFeesShareThisCycle = ($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle) * ($company->company_fees_share * 0.01);
             $totalOutstandingFeesShareThisCycle = ($totalFilingFeeOutstandingThisCycle + $totalServiceFeeOutstandingThisCycle) * ($company->company_fees_share * 0.01);
