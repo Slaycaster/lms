@@ -167,8 +167,8 @@ use App\Company;
                     <td><strong>Total Amount Collected this Cycle</strong></td>
                     <td><strong>Total Principal Collected this Cycle</strong></td>
                     <td><strong>Total Interest Collected this Cycle</strong></td>
-                    <td><strong>Total Income Collected this Cycle</strong></td>
                     <td><strong>Total Fees Collected this Cycle</strong></td>
+                    <td><strong>Total Income Collected this Cycle</strong></td>
                     <td><strong>Total Income Share Collected this Cycle ({{ $company->company_income_share }}%)<br>+ Fees Share ({{$company->company_fees_share}}%)</strong></td>
                 </tr>
             </thead>
@@ -178,8 +178,8 @@ use App\Company;
                     <td align="left">PHP {{ number_format($totalAmountCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalPrincipalCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalInterestCollectedThisCycle, 2) }}</td>
-                    <td align="left">PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalIncomeShareThisCycle + $totalFeesShareThisCycle, 2) }}</td>
                 </tr>
             </tbody>
@@ -192,8 +192,8 @@ use App\Company;
                     <td><strong>Outstanding Balance this Cycle</strong></td>
                     <td><strong>Outstanding Principal this Cycle</strong></td>
                     <td><strong>Outstanding Interest this Cycle</strong></td>
-                    <td><strong>Outstanding Income this Cycle</strong></td>
                     <td><strong>Outstanding Fees this Cycle</strong></td>
+                    <td><strong>Outstanding Income this Cycle</strong></td>
                     <td><strong>Outstanding Income Share this Cycle ({{ $company->company_income_share }}%)<br>+ Fees Share ({{$company->company_fees_share}}%)</strong></td>
                 </tr>
             </thead>
@@ -203,8 +203,8 @@ use App\Company;
                     <td align="left">PHP {{ number_format($totalAmountOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalPrincipalOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalInterestOutstandingThisCycle, 2) }}</td>
-                    <td align="left">PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalFilingFeeOutstandingThisCycle + $totalServiceFeeOutstandingThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalOutstandingShareThisCycle + $totalOutstandingFeesShareThisCycle, 2) }}</td>
                 </tr>
             </tbody>
