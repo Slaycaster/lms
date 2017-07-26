@@ -114,15 +114,17 @@ use App\Company;
         <?php
             $totalAmountCollectedThisCycle = 0;
             $totalPrincipalCollectedThisCycle = 0;
-            $totalIncomeCollectedThisCycle = 0;
-            $totalFilingFeeCollectedThisCycle = 0;
-            $totalServiceFeeCollectedThisCycle = 0;
+            $totalInterestCollectedThisCycle = 0; //Interest
+            $totalFilingFeeCollectedThisCycle = 0; //Fees
+            $totalServiceFeeCollectedThisCycle = 0; //Fees
+            $totalIncomeCollectedThisCycle = 0; //Interest + Fees
 
             $totalAmountOutstandingThisCycle = 0;
             $totalPrincipalOutstandingThisCycle = 0;
-            $totalIncomeOutstandingThisCycle = 0;
-            $totalFilingFeeOutstandingThisCycle = 0;
-            $totalServiceFeeOutstandingThisCycle = 0;
+            $totalInterestOutstandingThisCycle = 0; //Interest
+            $totalFilingFeeOutstandingThisCycle = 0; //Fees
+            $totalServiceFeeOutstandingThisCycle = 0; //Fees
+            $totalIncomeOutstandingThisCycle = 0; //Interest + Fees
 
             foreach($payment_collections as $payment_collection)
             {
@@ -131,6 +133,7 @@ use App\Company;
                 {
                     $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalCollectedThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalInterestCollectedThisCycle += $payment_collection->payment_collection_interest_amount;
                     $totalIncomeCollectedThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                     $totalFilingFeeCollectedThisCycle += $payment_collection->payment_collection_filing_fee;
                     $totalServiceFeeCollectedThisCycle += $payment_collection->payment_collection_service_fee;
@@ -139,13 +142,14 @@ use App\Company;
                 {
                     $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalOutstandingThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalInterestOutstandingThisCycle += $payment_collection->payment_collection_interest_amount;
                     $totalIncomeOutstandingThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                     $totalFilingFeeOutstandingThisCycle += $payment_collection->payment_collection_filing_fee;
                     $totalServiceFeeOutstandingThisCycle += $payment_collection->payment_collection_service_fee;
                 }
             }
 
-            $totalIncomeShareThisCycle = $totalIncomeCollectedThisCycle * ($company->company_income_share * 0.01);
+            $totalIncomeShareThisCycle = $totalInterestCollectedThisCycle * ($company->company_income_share * 0.01);
             $totalIncomePercentageTax = $totalIncomeShareThisCycle * 0.03;
             $netIncomeShareThisCycle = $totalIncomeShareThisCycle - $totalIncomePercentageTax;
             $totalIncomeWitholdingTax = $netIncomeShareThisCycle * 0.1;
