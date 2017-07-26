@@ -23,6 +23,12 @@
 				</div>
 
 				<div class="panel-body">
+					@if (Session::has('message'))
+                  		<div class="alert alert-info">{{ Session::get('message') }}</div>
+              		@endif
+              		@if (Session::has('message2'))
+                  		<div class="alert alert-warning">{{ Session::get('message2') }}</div>
+              		@endif
 					<div class="table-responsive">					
 						<table class="table table-bordered table-hover" id="users-table">
 				            <thead>

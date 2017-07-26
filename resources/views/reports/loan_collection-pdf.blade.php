@@ -117,15 +117,17 @@ use App\Company;
         <?php
             $totalAmountCollectedThisCycle = 0;
             $totalPrincipalCollectedThisCycle = 0;
-            $totalIncomeCollectedThisCycle = 0;
-            $totalFilingFeeCollectedThisCycle = 0;
-            $totalServiceFeeCollectedThisCycle = 0;
+            $totalInterestCollectedThisCycle = 0; //Interest
+            $totalFilingFeeCollectedThisCycle = 0; //Fees
+            $totalServiceFeeCollectedThisCycle = 0; //Fees
+            $totalIncomeCollectedThisCycle = 0; //Interest + Fees
 
             $totalAmountOutstandingThisCycle = 0;
             $totalPrincipalOutstandingThisCycle = 0;
-            $totalIncomeOutstandingThisCycle = 0;
-            $totalFilingFeeOutstandingThisCycle = 0;
-            $totalServiceFeeOutstandingThisCycle = 0;
+            $totalInterestOutstandingThisCycle = 0; //Interest
+            $totalFilingFeeOutstandingThisCycle = 0; //Fees
+            $totalServiceFeeOutstandingThisCycle = 0; //Fees
+            $totalIncomeOutstandingThisCycle = 0; //Interest + Fees
 
             foreach($payment_collections as $payment_collection)
             {
@@ -134,6 +136,7 @@ use App\Company;
                 {
                     $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalCollectedThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalInterestCollectedThisCycle += $payment_collection->payment_collection_interest_amount;
                     $totalIncomeCollectedThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                     $totalFilingFeeCollectedThisCycle += $payment_collection->payment_collection_filing_fee;
                     $totalServiceFeeCollectedThisCycle += $payment_collection->payment_collection_service_fee;
@@ -142,6 +145,7 @@ use App\Company;
                 {
                     $totalAmountOutstandingThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
                     $totalPrincipalOutstandingThisCycle += $payment_collection->payment_collection_principal_amount;
+                    $totalInterestOutstandingThisCycle += $payment_collection->payment_collection_interest_amount;
                     $totalIncomeOutstandingThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                     $totalFilingFeeOutstandingThisCycle += $payment_collection->payment_collection_filing_fee;
                     $totalServiceFeeOutstandingThisCycle += $payment_collection->payment_collection_service_fee;
@@ -162,6 +166,7 @@ use App\Company;
                 <tr>
                     <td><strong>Total Amount Collected this Cycle</strong></td>
                     <td><strong>Total Principal Collected this Cycle</strong></td>
+                    <td><strong>Total Interest Collected this Cycle</strong></td>
                     <td><strong>Total Income Collected this Cycle</strong></td>
                     <td><strong>Total Fees Collected this Cycle</strong></td>
                     <td><strong>Total Income Share Collected this Cycle ({{ $company->company_income_share }}%)<br>+ Fees Share ({{$company->company_fees_share}}%)</strong></td>
@@ -172,6 +177,7 @@ use App\Company;
                 <tr>
                     <td align="left">PHP {{ number_format($totalAmountCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalPrincipalCollectedThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalInterestCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalIncomeCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalIncomeShareThisCycle + $totalFeesShareThisCycle, 2) }}</td>
@@ -185,6 +191,7 @@ use App\Company;
                 <tr>
                     <td><strong>Outstanding Balance this Cycle</strong></td>
                     <td><strong>Outstanding Principal this Cycle</strong></td>
+                    <td><strong>Outstanding Interest this Cycle</strong></td>
                     <td><strong>Outstanding Income this Cycle</strong></td>
                     <td><strong>Outstanding Fees this Cycle</strong></td>
                     <td><strong>Outstanding Income Share this Cycle ({{ $company->company_income_share }}%)<br>+ Fees Share ({{$company->company_fees_share}}%)</strong></td>
@@ -195,6 +202,7 @@ use App\Company;
                 <tr>
                     <td align="left">PHP {{ number_format($totalAmountOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalPrincipalOutstandingThisCycle, 2) }}</td>
+                    <td align="left">PHP {{ number_format($totalInterestOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalIncomeOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalFilingFeeOutstandingThisCycle + $totalServiceFeeOutstandingThisCycle, 2) }}</td>
                     <td align="left">PHP {{ number_format($totalOutstandingShareThisCycle + $totalOutstandingFeesShareThisCycle, 2) }}</td>
@@ -208,7 +216,7 @@ use App\Company;
                 <tr>
                     <td>Total Collection</td>
                     <td>Total Principal</td>
-                    <td>Total Income</td>
+                    <td>Total Interest</td>
                     <td>Total Fees</td>
                     <td>Total Income Share ({{ $company->company_income_share }}%) + Fees Share ({{$company->company_fees_share}}%)</td>
                 </tr>
