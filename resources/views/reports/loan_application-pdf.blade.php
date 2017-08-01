@@ -293,7 +293,7 @@ use App\PaymentCollection;
                       <td width="50%">
                         <sup>Full Name</sup>
                         <br>
-                        <strong>{{ @$loan_application->comaker1->borrower_last_name }}, {{ @$loan_application->comaker1->borrower_first_name }} {{ $loan_application->comaker1->borrower_middle_name }}</strong>
+                        <strong>{{ @$loan_application->comaker1->borrower_last_name }}, {{ @$loan_application->comaker1->borrower_first_name }} {{ @$loan_application->comaker1->borrower_middle_name }}</strong>
                       </td>
                     </tr>
                   </table>
