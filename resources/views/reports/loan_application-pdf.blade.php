@@ -126,8 +126,6 @@ use App\PaymentCollection;
                       <td><strong>{{ $loan_application->id }}</strong></td>
                     </tr>
                   </table>
-                  <br>
-                  <hr>
 
                   <div class="div_head">
                     <strong>LOAN AMOUNT REQUEST</strong>
@@ -200,7 +198,6 @@ use App\PaymentCollection;
                       </td>
                     </tr>
                   </table>
-                  <br>
 
                   <div class="div_head">
                     <strong>PERSONAL INFORMATION</strong>
@@ -272,8 +269,7 @@ use App\PaymentCollection;
                       </td>
                     </tr>
                   </table>
-                  <br>
-
+                  
                   <div class="div_head">
                     <strong>CO-MAKER 1</strong>
                   </div>
@@ -297,8 +293,7 @@ use App\PaymentCollection;
                       </td>
                     </tr>
                   </table>
-                  <br>
-
+                 
                   <div class="div_head">
                     <strong>CO-MAKER 2</strong>
                   </div>
@@ -324,8 +319,7 @@ use App\PaymentCollection;
                   <br>
 
                   <p style="font-size: 12px;">I hereby allow {{ $loan_application->company->company_code }} to hold the amount of PHP _________________ in my {{ $loan_application->company->company_code }} Deposit account to increase my Loan Entitlement and/or lower my lending rate. This amount shall be not be withdrawn during the loan period until maturity or when the loan balance is fully paid.<br>I hereby certify that all statement made here and on the Promissory Note are true and completed for the purpose of obtaining a loan from Moo Loans Inc. Should the loan be approved, I authorize {{ $loan_application->company->company_code }} personnel to draw from my salary account the loan payment required as per amortization schedule indicated in the Promissory Note.</p>
-                  <br>
-
+                  
                   <table border="1" width="100%">
                     <tr>
                       <td width="80%">
