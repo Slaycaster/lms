@@ -304,17 +304,17 @@ $payment_periods_length = count($payment_periods);
                       <td width="25%">
                         <sup>Client ID</sup>
                         <br>
-                        <strong>{{ $comaker1->id }}</strong>
+                        <strong>{{ @$comaker1->id }}</strong>
                       </td>
                       <td width="25%">
                         <sup>Employee Type</sup>
                         <br>
-                        <strong>{{ $comaker1->borrower_type }}</strong>
+                        <strong>{{ @$comaker1->borrower_type }}</strong>
                       </td>
                       <td width="50%">
                         <sup>Full Name</sup>
                         <br>
-                        <strong>{{ $comaker1->borrower_last_name }}, {{ $comaker1->borrower_first_name }} {{ $comaker1->borrower_middle_name }}</strong>
+                        <strong>{{ @$comaker1->borrower_last_name }}, {{ @$comaker1->borrower_first_name }} {{ @$comaker1->borrower_middle_name }}</strong>
                       </td>
                     </tr>
                   </table>
@@ -328,17 +328,17 @@ $payment_periods_length = count($payment_periods);
                       <td width="25%">
                         <sup>Client ID</sup>
                         <br>
-                        <strong>{{ $comaker2->id }}</strong>
+                        <strong>{{ @$comaker2->id }}</strong>
                       </td>
                       <td width="25%">
                         <sup>Employee Type</sup>
                         <br>
-                        <strong>{{ $comaker2->borrower_type }}</strong>
+                        <strong>{{ @$comaker2->borrower_type }}</strong>
                       </td>
                       <td width="50%">
                         <sup>Full Name</sup>
                         <br>
-                        <strong>{{ $comaker2->borrower_last_name }}, {{ $comaker2->borrower_first_name }} {{ $comaker2->borrower_middle_name }}</strong>
+                        <strong>{{ @$comaker2->borrower_last_name }}, {{ @$comaker2->borrower_first_name }} {{ @$comaker2->borrower_middle_name }}</strong>
                       </td>
                     </tr>
                   </table>

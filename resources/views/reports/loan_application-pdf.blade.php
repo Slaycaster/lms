@@ -283,17 +283,17 @@ use App\PaymentCollection;
                       <td width="25%">
                         <sup>Client ID</sup>
                         <br>
-                        <strong>{{ $loan_application->comaker1->id }}</strong>
+                        <strong>{{ @$loan_application->comaker1->id }}</strong>
                       </td>
                       <td width="25%">
                         <sup>Employee Type</sup>
                         <br>
-                        <strong>{{ $loan_application->comaker1->borrower_type }}</strong>
+                        <strong>{{ @$loan_application->comaker1->borrower_type }}</strong>
                       </td>
                       <td width="50%">
                         <sup>Full Name</sup>
                         <br>
-                        <strong>{{ $loan_application->comaker1->borrower_last_name }}, {{ $loan_application->comaker1->borrower_first_name }} {{ $loan_application->comaker1->borrower_middle_name }}</strong>
+                        <strong>{{ @$loan_application->comaker1->borrower_last_name }}, {{ @$loan_application->comaker1->borrower_first_name }} {{ $loan_application->comaker1->borrower_middle_name }}</strong>
                       </td>
                     </tr>
                   </table>
@@ -307,17 +307,17 @@ use App\PaymentCollection;
                       <td width="25%">
                         <sup>Client ID</sup>
                         <br>
-                        <strong>{{ $loan_application->comaker2->id }}</strong>
+                        <strong>{{ @$loan_application->comaker2->id }}</strong>
                       </td>
                       <td width="25%">
                         <sup>Employee Type</sup>
                         <br>
-                        <strong>{{ $loan_application->comaker2->borrower_type }}</strong>
+                        <strong>{{ @$loan_application->comaker2->borrower_type }}</strong>
                       </td>
                       <td width="50%">
                         <sup>Full Name</sup>
                         <br>
-                        <strong>{{ $loan_application->comaker2->borrower_last_name }}, {{ $loan_application->comaker2->borrower_first_name }} {{ $loan_application->comaker2->borrower_middle_name }}</strong>
+                        <strong>{{ @$loan_application->comaker2->borrower_last_name }}, {{ @$loan_application->comaker2->borrower_first_name }} {{ @$loan_application->comaker2->borrower_middle_name }}</strong>
                       </td>
                     </tr>
                   </table>

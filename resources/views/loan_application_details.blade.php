@@ -135,8 +135,8 @@
 									</div>
 									<div class="col-md-2">
 										<p><strong>Co-Maker 1 ID: </strong><span id="comaker1-id"></span></p>
-										<input type="hidden" name="comaker1_id" id="comaker1_id" value="{!! $key->loan_application_comaker_id1 !!}">
-										<input type="hidden" name="comaker1_text" id="comaker1_text" value="{!! $key->comaker1->borrower_last_name !!}">
+										<input type="hidden" name="comaker1_id" id="comaker1_id" value="{!! @$key->loan_application_comaker_id1 !!}">
+										<input type="hidden" name="comaker1_text" id="comaker1_text" value="{!! @$key->comaker1->borrower_last_name !!}">
 									</div>
 									<div class="col-md-3">
 										<p><strong>Selected Co-Maker 1: </strong><span id="comaker1-txt"></span></p>
@@ -157,8 +157,8 @@
 									</div>
 									<div class="col-md-2">
 										<p><strong>Co-Maker 2 ID: </strong><span id="comaker2-id"></span></p>
-										<input type="hidden" name="comaker2_id" id="comaker2_id" value="{!! $key->loan_application_comaker_id2 !!}">
-										<input type="hidden" name="comaker2_text" id="comaker2_text" value="{!! $key->comaker2->borrower_last_name !!}">
+										<input type="hidden" name="comaker2_id" id="comaker2_id" value="{!! @$key->loan_application_comaker_id2 !!}">
+										<input type="hidden" name="comaker2_text" id="comaker2_text" value="{!! @$key->comaker2->borrower_last_name !!}">
 									</div>
 									<div class="col-md-3">
 										<p><strong>Selected Co-Maker 2: </strong><span id="comaker2-txt"></span></p>
@@ -314,45 +314,45 @@
 							<hr>
 							<div class="col-md-12">
 								<h5>Co-Maker 1:</h5>
-								<h4><strong>{{ $key->comaker1->borrower_last_name }}, {{ $key->comaker1->borrower_first_name }} {{ $key->comaker1->borrower_middle_name }}</strong>
+								<h4><strong>{{ @$key->comaker1->borrower_last_name }}, {{ @$key->comaker1->borrower_first_name }} {{ @$key->comaker1->borrower_middle_name }}</strong>
 								</h4>
 								<p>
 
-									<strong>Client's Address:</strong> {{ $key->comaker1->borrower_home_address }}
+									<strong>Client's Address:</strong> {{ @$key->comaker1->borrower_home_address }}
 									<br>
-									<strong>E-mail:</strong> {{ $key->comaker1->borrower_email }}
+									<strong>E-mail:</strong> {{ @$key->comaker1->borrower_email }}
 									<br>
-									<strong>Civil Status:</strong> {{ $key->comaker1->borrower_civil_status }}
+									<strong>Civil Status:</strong> {{ @$key->comaker1->borrower_civil_status }}
 									<br>
-									<strong>Birth Date:</strong> {{ $key->comaker1->borrower_birth_date }}
+									<strong>Birth Date:</strong> {{ @$key->comaker1->borrower_birth_date }}
 									<br>
-									<strong>Employment Date:</strong> {{ $key->comaker1->borrower_employment_date }}
+									<strong>Employment Date:</strong> {{ @$key->comaker1->borrower_employment_date }}
 									<br>
-									<strong>Assignment Date:</strong> {{ $key->comaker1->borrower_assignment_date }}
+									<strong>Assignment Date:</strong> {{ @$key->comaker1->borrower_assignment_date }}
 									<br>
-									<strong>Company:</strong> {{ $key->comaker1->company->company_name }} ({{ $key->comaker1->company->company_code }})
+									<strong>Company:</strong> {{ @$key->comaker1->company->company_name }} ({{ @$key->comaker1->company->company_code }})
 								</p>
 							</div>
 							<hr>
 							<div class="col-md-12">
 								<h5>Co-Maker 2:</h5>
-								<h4><strong>{{ $key->comaker2->borrower_last_name }}, {{ $key->comaker2->borrower_first_name }} {{ $key->comaker2->borrower_middle_name }}</strong>
+								<h4><strong>{{ @$key->comaker2->borrower_last_name }}, {{ @$key->comaker2->borrower_first_name }} {{ @$key->comaker2->borrower_middle_name }}</strong>
 								</h4>
 								<p>
 
-									<strong>Client's Address:</strong> {{ $key->comaker2->borrower_home_address }}
+									<strong>Client's Address:</strong> {{ @$key->comaker2->borrower_home_address }}
 									<br>
-									<strong>E-mail:</strong> {{ $key->comaker2->borrower_email }}
+									<strong>E-mail:</strong> {{ @$key->comaker2->borrower_email }}
 									<br>
-									<strong>Civil Status:</strong> {{ $key->comaker2->borrower_civil_status }}
+									<strong>Civil Status:</strong> {{ @$key->comaker2->borrower_civil_status }}
 									<br>
-									<strong>Birth Date:</strong> {{ $key->comaker2->borrower_birth_date }}
+									<strong>Birth Date:</strong> {{ @$key->comaker2->borrower_birth_date }}
 									<br>
-									<strong>Employment Date:</strong> {{ $key->comaker2->borrower_employment_date }}
+									<strong>Employment Date:</strong> {{ @$key->comaker2->borrower_employment_date }}
 									<br>
-									<strong>Assignment Date:</strong> {{ $key->comaker2->borrower_assignment_date }}
+									<strong>Assignment Date:</strong> {{ @$key->comaker2->borrower_assignment_date }}
 									<br>
-									<strong>Company:</strong> {{ $key->comaker2->company->company_name }} ({{ $key->comaker2->company->company_code }})
+									<strong>Company:</strong> {{ @$key->comaker2->company->company_name }} ({{ @$key->comaker2->company->company_code }})
 								</p>
 							</div>
 						</div>

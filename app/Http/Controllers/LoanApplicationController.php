@@ -215,18 +215,18 @@ class LoanApplicationController extends Controller
         if (isset($_POST['precompute']))
         {
             Session::put('loan_borrower_id', $request->input('borrower_id'));
-            if ($request->input('comaker1_id') == null)
+            if ($request->input('comaker1_id') == '')
             {
-                Session::put('comaker1_id', 1);
+                Session::put('comaker1_id', null);
             }
             else
             {
-                Session::put('comaker1_id', $request->input('comaker1_id'));
+                Session::put('comaker1_id', $request->input('comaker1_id'));       
             }
 
-            if ($request->input('comaker2_id') == null)
+            if ($request->input('comaker2_id') == '')
             {
-                Session::put('comaker2_id', 2);
+                Session::put('comaker2_id', null);
             }
             else
             {
@@ -327,23 +327,24 @@ class LoanApplicationController extends Controller
         $loan_application->loan_application_disbursement_date = $request->input('disbursement_date');
         $loan_application->loan_application_collection_date = $request->input('collection_date');
         //Relationships
-        if ($request->input('comaker1_id') == null)
+        if ($request->input('comaker1_id') == '')
         {
-            $loan_application->loan_application_comaker_id1 = '1';
+            $loan_application->loan_application_comaker_id1 = null;
         }
         else
         {
-            $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');   
+            $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');       
         }
 
-        if ($request->input('comaker2_id') == null)
+        if ($request->input('comaker2_id') == '')
         {
-            $loan_application->loan_application_comaker_id2 = '2';
+            $loan_application->loan_application_comaker_id2 = null;
         }
         else
         {
-            $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id');
+            $loan_application->loan_application->comaker_id2 = $request->input('comaker2_id');
         }
+        
         $loan_application->loan_borrower_id = $request->input('borrower_id');
         $loan_application->payment_term_id = $request->input('payment_term_id');
         $loan_application->loan_interest_id = $request->input('loan_interest_id');
@@ -388,7 +389,7 @@ class LoanApplicationController extends Controller
                 else if ($filing_service_payment_type == 1)
                 {
                     $payment_collection->payment_collection_filing_fee = round($filing_fee / $paymentPeriod_count ,2);
-                   $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
+                    $payment_collection->payment_collection_service_fee = round($service_fee / $paymentPeriod_count,2); 
                 }
                 else if ($filing_service_payment_type == 2)
                 {
@@ -522,8 +523,8 @@ class LoanApplicationController extends Controller
             $loan_application->loan_application_disbursement_date = $jsonData[$i]['disbursement_date'];
             $loan_application->loan_application_collection_date = $jsonData[$i]['collection_date'];
             //Relationships
-            $loan_application->loan_application_comaker_id1 = '1';
-            $loan_application->loan_application_comaker_id2 = '2';
+            $loan_application->loan_application_comaker_id1 = null;
+            $loan_application->loan_application_comaker_id2 = null;
             $loan_application->loan_borrower_id = $jsonData[$i]['borrower_id'];
             $loan_application->payment_term_id = $jsonData[$i]['payment_term_id'];
             $loan_application->loan_interest_id = $jsonData[$i]['loan_interest_id'];
@@ -688,22 +689,21 @@ class LoanApplicationController extends Controller
             $loan_application->loan_application_disbursement_date = $request->input('disbursement_date');
             $loan_application->loan_application_collection_date = $request->input('collection_date');
             //Relationships
-            if ($request->input('comaker1_id') == null)
+            if ($request->input('comaker1_id') == '')
             {
-                $loan_application->loan_application_comaker_id1 = '1';
+                $loan_application->loan_application_comaker_id1 = null;
             }
             else
             {
-                $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');   
+                $loan_application->loan_application_comaker_id1 = $request->input('comaker1_id');
             }
-            
-            if ($request->input('comaker2_id') == null)
+            if ($request->input('comaker2_id') == '')
             {
-                $loan_application->loan_application_comaker_id2 = '2';
+                $loan_application->loan_application_comaker_id2 = null;
             }
             else
             {
-                $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id');
+                $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id'); 
             }
             $loan_application->loan_borrower_id = $request->input('borrower_id');
             $loan_application->payment_term_id = $request->input('payment_term_id');
@@ -785,24 +785,22 @@ class LoanApplicationController extends Controller
         else if (isset($_POST['precompute']))
         {
             Session::put('loan_borrower_id', $request->input('borrower_id'));
-            if ($request->input('comaker1_id') == null)
+            if ($request->input('comaker1_id') == '')
             {
-                Session::put('comaker1_id', 1);
+                Session::put('comaker1_id', null);
             }
             else
             {
                 Session::put('comaker1_id', $request->input('comaker1_id'));
             }
-
-            if ($request->input('comaker2_id') == null)
+            if ($request->input('comaker2_id') == '')
             {
-                Session::put('comaker2_id', 2);
+                Session::put('comaker2_id', null);
             }
             else
             {
                 Session::put('comaker2_id', $request->input('comaker2_id'));
             }
-            //Initial Input
             Session::put('company', $company->company->company_name);
             Session::put('principal', $request->input('amount'));
             Session::put('purpose', $request->input('purpose'));
