@@ -146,11 +146,11 @@
 						<button type="submit" class="btn btn-block btn-success btn-sm" name="approve">Process Loan Payment</button>
 						</form>
 					<hr>
-						<h4>Process Termination</h4>
+						<h4>Process Pre-termination</h4>
 						<p><strong>Clicking the button below will terminate the current loan application. Please be careful.</strong></p>
-						<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee + $interestTermination,2)}}</strong></p>
+						<p>Pre-termination Fee would be: <strong>PHP {{number_format($terminationFee + $interestTermination,2)}}</strong></p>
 						<p>It will be reflected on the next cycle on: <strong>{{ $nextCollectionDate }}</strong></p>
-						<button type="submit" data-toggle="modal" data-target="#terminationModal" class="btn btn-block btn-danger btn-sm" name="approve">Process Termination</button>
+						<button type="submit" data-toggle="modal" data-target="#terminationModal" class="btn btn-block btn-danger btn-sm" name="approve">Process Pre-termination</button>
 				</div>
 			</div>
 		</div> <!-- Loan Payment -->
@@ -289,9 +289,9 @@
 							{{ Form::hidden('application_id', $key[0]->id) }}
 							{{ Form::hidden('termination_fee', $terminationFee) }}
 							{{ Form::hidden('interest_termination', $interestTermination) }}
-							<p>Termination Fee would be: <strong>PHP {{number_format($terminationFee + $interestTermination,2)}}</strong></p>
+							<p>Pre-termination Fee would be: <strong>PHP {{number_format($terminationFee + $interestTermination,2)}}</strong></p>
 							<p>It will be reflected on the next cycle on: <strong>{{ $nextCollectionDate }}</strong></p>
-							<p>Are you really sure on terminating this loan application?</p>
+							<p>Are you really sure on pre-terminating this loan application?</p>
 					    
                     </div>
 
@@ -305,7 +305,7 @@
                         </button>
                         <button type="submit"
                                 class="btn btn-danger btn-sm btn-block">
-                            Terminate Loan Application
+                            Pre-terminate Loan Application
                         </button>
                         </form>
                     </div>
