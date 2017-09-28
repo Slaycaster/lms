@@ -154,6 +154,8 @@ use App\Company;
             $netIncomeShareThisCycle = $totalIncomeShareThisCycle - $totalIncomePercentageTax;
             $totalIncomeWitholdingTax = $netIncomeShareThisCycle * 0.1;
             $netNetIncomeShareThisCycle = $netIncomeShareThisCycle - $totalIncomeWitholdingTax;
+            $totalIncomeVAT = $netNetIncomeShareThisCycle * 0.12;
+            $netNetNetIncomeShareThisCycle = $$netNetIncomeShareThisCycle - $totalIncomeVAT;
             $totalFeesShareThisCycle = ($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle) * ($company->company_fees_share * 0.01);
         ?>
 
@@ -208,6 +210,18 @@ use App\Company;
                     <td width="30%">NetNet Income Share</td>
                     <td width="20%" align="right"></td>
                     <td width="50%" align="right">{{ number_format($netNetIncomeShareThisCycle, 2) }}</td>
+                </tr>
+
+                <tr>
+                    <td width="30%"><i>Less: VAT</i></td>
+                    <td width="20%" align="right"><i>12%</i></td>
+                    <td width="50%" align="right"><i>({{ number_format($totalIncomeVAT, 2) }})</i></td>
+                </tr>
+
+                <tr>
+                    <td width="30%">NetNetNet Income Share</td>
+                    <td width="20%" align="right"></td>
+                    <td width="50%" align="right">{{ number_format($netNetNetIncomeShareThisCycle, 2) }}</td>
                 </tr>
             </tbody>
         </table>
