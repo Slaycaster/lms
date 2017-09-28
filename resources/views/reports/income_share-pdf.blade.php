@@ -155,7 +155,7 @@ use App\Company;
             $totalIncomeWitholdingTax = $netIncomeShareThisCycle * 0.1;
             $netNetIncomeShareThisCycle = $netIncomeShareThisCycle - $totalIncomeWitholdingTax;
             $totalIncomeVAT = $netNetIncomeShareThisCycle * 0.12;
-            $netNetNetIncomeShareThisCycle = $$netNetIncomeShareThisCycle - $totalIncomeVAT;
+            $netNetNetIncomeShareThisCycle = $netNetIncomeShareThisCycle - $totalIncomeVAT;
             $totalFeesShareThisCycle = ($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle) * ($company->company_fees_share * 0.01);
         ?>
 
