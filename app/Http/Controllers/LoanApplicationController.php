@@ -342,7 +342,7 @@ class LoanApplicationController extends Controller
         }
         else
         {
-            $loan_application->loan_application->comaker_id2 = $request->input('comaker2_id');
+            $loan_application->loan_application_comaker_id2 = $request->input('comaker2_id');
         }
         
         $loan_application->loan_borrower_id = $request->input('borrower_id');
