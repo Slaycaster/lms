@@ -124,45 +124,45 @@ class LoanApplicationController extends Controller
     {
         Session::put('application_id', $id);
         //Session::put('date', Request::input('date'));
-        $pdf = PDF::loadView('reports.promissory-pdf')->setPaper('A4');
-        $pdf->output();
-        $dom_pdf = $pdf->getDomPDF();
-        $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();
+        @$pdf = PDF::loadView('reports.promissory-pdf')->setPaper('A4');
+        @$pdf->output();
+        @$dom_pdf = $pdf->getDomPDF();
+        @$canvas = $dom_pdf ->get_canvas();
+        @$canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return @$pdf->stream();
     }
 
     public function payment_schedule($id)
     {
         Session::put('application_id', $id);
-        $pdf = PDF::loadView('reports.payment_schedule-pdf')->setPaper('A4');
-        $pdf->output();
-        $dom_pdf = $pdf->getDomPDF();
-        $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();
+        @$pdf = PDF::loadView('reports.payment_schedule-pdf')->setPaper('A4');
+        @$pdf->output();
+        @$dom_pdf = $pdf->getDomPDF();
+        @$canvas = $dom_pdf ->get_canvas();
+        @$canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return @$pdf->stream();
     }
 
     public function generate_form($id)
     {
         Session::put('application_id', $id);
-        $pdf = PDF::loadView('reports.loan_application-pdf')->setPaper('A4');
-        $pdf->output();
-        $dom_pdf = $pdf->getDomPDF();
-        $canvas = $dom_pdf ->get_canvas();
-        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();   
+        @$pdf = PDF::loadView('reports.loan_application-pdf')->setPaper('A4');
+        @$pdf->output();
+        @$dom_pdf = $pdf->getDomPDF();
+        @$canvas = $dom_pdf ->get_canvas();
+        @$canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return @$pdf->stream();   
     }
 
     public function statement_of_account($id)
     {
         Session::put('application_id', $id);
-        $pdf = PDF::loadView('reports.statement_of_account-pdf')->setPaper('A4');
-        $pdf->output();
-        $dom_pdf = $pdf->getDomPDF();
-        $canvas = $dom_pdf->get_canvas();
-        $canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
-        return $pdf->stream();   
+        @$pdf = PDF::loadView('reports.statement_of_account-pdf')->setPaper('A4');
+        @$pdf->output();
+        @$dom_pdf = $pdf->getDomPDF();
+        @$canvas = $dom_pdf->get_canvas();
+        @$canvas->page_text(235, 800, "Moo Loans Inc. - Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, array(0, 0, 0));
+        return @$pdf->stream();   
     }
 
 
