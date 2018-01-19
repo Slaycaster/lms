@@ -69,7 +69,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     <a href="{{ url('admin/login') }}">Login</a>
-                    <a href="http://fdenimar.com" target="_blank">FDENIMAR.COM</a>
+                    <a href="https://tekimiinc.com" target="_blank">TEKIMIINC.COM</a>
                     <!--
                     <a href="{{ url('/register') }}">Register</a>
                     -->

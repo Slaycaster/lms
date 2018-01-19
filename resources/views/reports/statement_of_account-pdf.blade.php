@@ -301,7 +301,14 @@ use App\PaymentCollection;
                       @endif
 
                 		@foreach($paid_payment_collections as $paid_payment_collection)
-                          
+                          <!-- Termination -->
+                          @if($paid_payment_collection->payment_collection_interest_amount == 0)
+                            <tr>
+                              <td colspan="5" align="center"></td>Termination</td>
+                            </tr>
+                            @break
+                          @endif
+
                           <!-- Interest -->
                           <tr>
                             <td align="center">{{ $trans_number }}</td> <?php $trans_number++; ?>
@@ -373,6 +380,7 @@ use App\PaymentCollection;
                           </tr>
                       @endif
                         @if($paid_payment_collection->is_paid == 1)
+                          
                           <!-- Payment - Principal -->
                           <tr>
                             <td align="center"> {{ $trans_number }} </td> <?php $trans_number++; ?>

@@ -28,11 +28,11 @@
             <a href="#"><i class="fa fa-certificate"></i> <span>Loan Applications</span> <i class="fa fa-angle-left pull-right"></i></a> 
             <ul class="treeview-menu">
               <li><a href="{{ url('admin/loan_applications') }}"><i class="fa fa-file-text-o"></i> <span>* Loan Applications</span></a></li>
-              <li><a href="{{ url('admin/loan_applications/active') }}"><i class="fa fa-circle-o"></i> <span>* Approve/Decline</span></a></li>
-              <li><a href="{{ url('admin/loan_applications/archives') }}"><i class="fa fa-archive"></i> <span>* Archived</span></a></li>
+              <li><a href="{{ url('admin/loan_applications/active') }}"><i class="fa fa-circle-o"></i> <span>* Pending <br>(for Approval/Decline)</span></a></li>
+              <li><a href="{{ url('admin/loan_applications/archives') }}"><i class="fa fa-archive"></i> <span>* Archived <br>(Cleared/Terminated)</span></a></li>
             </ul>
           </li>
-          <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment</span></a></li>
+          <li><a href="{{ url('admin/loan_payments') }}"><i class="fa fa-money"></i> <span>Loan Payment/Termination</span></a></li>
 
           @role('Admin')
           <li class="header">{{ trans('backpack::base.administration') }}</li>
