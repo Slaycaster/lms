@@ -17,11 +17,18 @@ use App\Company;
             ->with('loan_application.loan_payment_term')
             ->with('loan_application.loan_borrower')
             ->get();
-
+    /*
     $payment_collections_count = PaymentCollection::where('payment_collection_date', '=', $date)
             ->whereHas('loan_application.loan_borrower', function($q) {
                 $company_id = Session::get('company_id', 1);
                 $q->where('company_id', '=', $company_id);
+            })
+            ->count();
+    */
+
+    $payment_collections_count = LoanApplication::where('company_id', '=', $company_id)
+            ->whereHas('payment_collections', function($q) use ($date) {
+                $q->where('payment_collection_date', '=', $date);
             })
             ->count();
 
@@ -122,6 +129,9 @@ use App\Company;
             $totalServiceFeeCollectedThisCycle = 0; //Fees
             $totalIncomeCollectedThisCycle = 0; //Interest + Fees
 
+            $totalIncomeShareThisCycle = 0;
+            $totalOutstandingShareThisCycle = 0;
+
             $totalAmountOutstandingThisCycle = 0;
             $totalPrincipalOutstandingThisCycle = 0;
             $totalInterestOutstandingThisCycle = 0; //Interest
@@ -132,6 +142,7 @@ use App\Company;
             foreach($payment_collections as $payment_collection)
             {
                 $payment_collection_count_loan_application = PaymentCollection::where('loan_application_id', '=', $payment_collection->loan_application_id)->count();
+
                 if($payment_collection->is_paid == 1)
                 {
                     $totalAmountCollectedThisCycle += $payment_collection->payment_collection_principal_amount + $payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee;
@@ -140,6 +151,12 @@ use App\Company;
                     $totalIncomeCollectedThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                     $totalFilingFeeCollectedThisCycle += $payment_collection->payment_collection_filing_fee;
                     $totalServiceFeeCollectedThisCycle += $payment_collection->payment_collection_service_fee;
+
+                    //If the interest rate is at 2.5% only, don't collect its income share
+                    if ($payment_collection->loan_application->loan_interest->loan_interest_rate != 2.5)
+                    {
+                        $totalIncomeShareThisCycle += $payment_collection->payment_collection_interest_amount * ($company->company_income_share * 0.01);
+                    }
                 }
                 else if($payment_collection->is_paid == 0)
                 {
@@ -149,12 +166,18 @@ use App\Company;
                     $totalIncomeOutstandingThisCycle += ($payment_collection->payment_collection_interest_amount + $payment_collection->payment_collection_filing_fee + $payment_collection->payment_collection_service_fee);
                     $totalFilingFeeOutstandingThisCycle += $payment_collection->payment_collection_filing_fee;
                     $totalServiceFeeOutstandingThisCycle += $payment_collection->payment_collection_service_fee;
+
+                    //If the interest rate is at 2.5% only, don't collect its outstanding share
+                    if ($payment_collection->loan_application->loan_interest->loan_interest_rate != 2.5)
+                    {
+                        $totalOutstandingShareThisCycle += $payment_collection->payment_collection_interest_amount * ($company->company_income_share * 0.01);
+                    }
                 }
             }
 
-            $totalIncomeShareThisCycle = $totalInterestCollectedThisCycle * ($company->company_income_share * 0.01);
+            //$totalIncomeShareThisCycle = $totalInterestCollectedThisCycle * ($company->company_income_share * 0.01);
             
-            $totalOutstandingShareThisCycle = $totalInterestOutstandingThisCycle * ($company->company_income_share * 0.01);
+            //$totalOutstandingShareThisCycle = $totalInterestOutstandingThisCycle * ($company->company_income_share * 0.01);
             
             $totalFeesShareThisCycle = ($totalFilingFeeCollectedThisCycle + $totalServiceFeeCollectedThisCycle) * ($company->company_fees_share * 0.01);
             $totalOutstandingFeesShareThisCycle = ($totalFilingFeeOutstandingThisCycle + $totalServiceFeeOutstandingThisCycle) * ($company->company_fees_share * 0.01);
@@ -245,7 +268,7 @@ use App\Company;
             </thead>
             <tbody>
                 @foreach($payment_collections as $payment_collection)
-                    @if(($payment_collection->payment_collection_principal_amount != 0 || $payment_collection->payment_collection_interest_amount != 0))
+                    @if( ($payment_collection->payment_collection_principal_amount != 0 || $payment_collection->payment_collection_interest_amount != 0))
                         <tr>
                             <td>{{ $payment_collection->loan_application->id }}</td>
                             <td>{{ $payment_collection->loan_application->loan_borrower->borrower_last_name }}, {{ $payment_collection->loan_application->loan_borrower->borrower_first_name }} {{ $payment_collection->loan_application->loan_borrower->borrower_middle_name }}</td>
